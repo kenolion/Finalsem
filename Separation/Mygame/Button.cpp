@@ -21,9 +21,9 @@ Button::~Button()
 
 bool Button::onHover(int mouseX, int mouseY)
 {
-	if (mouseX >= position.x && mouseX <= position.x + spriteRect.right)
+	if (mouseX >= position.x && mouseX <= position.x + spriteWidth)
 	{
-		if (mouseY >= position.y&& mouseY <= position.y + spriteRect.bottom)
+		if (mouseY >= position.y&& mouseY <= position.y + spriteHeight)
 		{
 			return true;
 		}

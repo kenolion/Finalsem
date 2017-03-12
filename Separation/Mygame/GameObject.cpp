@@ -59,10 +59,10 @@ bool GameObject::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int wi
 	this->spriteCol = col;
 	spriteHeight = height / spriteRow;
 	spriteWidth = width / spriteCol;
-	col_width = width * falseColl; //if number lower means collision box smaller than player
-	col_height = height *falseColl;
-	col_xOffset = (width - col_width) / 2;
-	col_yOffset = (height - col_height) / 2;
+	col_width = this->width * falseColl; //if number lower means collision box smaller than player
+	col_height = this->height *falseColl;
+	col_xOffset = (this->width - col_width) / 2;
+	col_yOffset = (this->height - col_height) / 2;
 	if (scaling.x > 1) {
 		position.x += (spriteWidth / 2) * scaling.x;
 
