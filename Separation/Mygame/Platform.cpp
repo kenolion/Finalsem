@@ -2,7 +2,7 @@
 
 
 
-void Platform::draw(GameStateManager * game)
+void Platform::draw(GameEngine * game)
 {
 	GameObject::draw(game);
 	collisionRect.top = position.y - 25;

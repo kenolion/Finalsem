@@ -6,7 +6,7 @@
 #include "GameSprite.h"
 #include <iostream>
 #include "Constants.h"
-class GameStateManager;
+class GameEngine;
 
 class GameObject
 {
@@ -21,7 +21,7 @@ public:
 	~GameObject();
 	virtual bool initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int width, int height, int row, int col, bool frameHorizontal, D3DXCOLOR color,float falseColl);
 	virtual void update(int &gameTime) = 0;
-	virtual void draw(GameStateManager * game);
+	virtual void draw(GameEngine * game);
 	
 	//Sprite
 	GameSprite *spriteClass;
@@ -69,7 +69,7 @@ public:
 	int jumpCD;
 	//
 	void printData(); // used to print players data
-	void setMatrix(D3DXVECTOR2 scaling,D3DXVECTOR2 spriteCentre,float rotation,D3DXVECTOR2 position, GameStateManager * game);	//scaling,spritecentre,rotation,position
+	void setMatrix(D3DXVECTOR2 scaling,D3DXVECTOR2 spriteCentre,float rotation,D3DXVECTOR2 position, GameEngine * game);	//scaling,spritecentre,rotation,position
 protected:
 	//informational data(name, desc wtv u want)
 	std::string name;

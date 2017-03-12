@@ -8,7 +8,7 @@
 #include "LevelMainMenu.h"
 #include "LevelPlayerWins.h"
 #include "FlappyBird.h"
-#include "GameStateManager.h"
+#include "GameEngine.h"
 #include <iostream>
 #include <conio.h>
 
@@ -17,7 +17,7 @@
 #define WIN32_LEAN_AND_MEAN
 //Global Player Sprites
 LRESULT WINAPI WinProc(HWND, UINT, WPARAM, LPARAM);
-GameStateManager *gsm;
+GameEngine *gameEngine;
 
 void RedirectIOToConsole() //THE FUNCTION TO CREATE A CONSOLE BEN IF U READ THIS CODE EVENTUALLY
 {
@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	WNDCLASSEX wcex;
 	MSG msg;
 
-	gsm = new GameStateManager();
+	gameEngine = new GameEngine();
 
 	RECT rect;
 	rect.bottom = GetSystemMetrics(SM_CYSCREEN) / 2 - GAME_HEIGHT / 2 + GAME_HEIGHT - 20;
@@ -78,12 +78,12 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	ShowWindow(hwnd, nCmdShow);
 	ZeroMemory(&msg, sizeof(MSG));
-	if (gsm->initialize(hwnd)) {
-		gsm->changeState(LevelMainMenu::getInstance(), hwnd);
+	if (gameEngine->initialize(hwnd)) {
+		gameEngine->changeState(LevelMainMenu::getInstance(), hwnd);
 		//========================================================================================================================================================================
-		while (msg.message != WM_QUIT || gsm->exit == true) {							//checks if either exit or wm_quit
+		while (msg.message != WM_QUIT || gameEngine->exit == true) {							//checks if either exit or wm_quit
 																// here saves the state in game state before i delete it!																					// 
-			if (gsm->exit == true) {												//checks if the state from game state is exit or not
+			if (gameEngine->exit == true) {												//checks if the state from game state is exit or not
 				msg.message = WM_QUIT;																	//
 			}																							//
 
@@ -93,14 +93,14 @@ int WINAPI WinMain(HINSTANCE hInstance,
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
-			//ClipCursor(&rect);
-			gsm->handleEvents();
-			gsm->run();
+			ClipCursor(&rect);
+			gameEngine->handleEvents();
+			gameEngine->run();
 		}
 	}
-	//dltPtr(gsm->game);
+	//dltPtr(GameEngine->game);
 
-	dltPtr(gsm);
+	dltPtr(gameEngine);
 
 	//========================================================================================================================================================================
 	UnregisterClass(wcex.lpszClassName, hInstance);

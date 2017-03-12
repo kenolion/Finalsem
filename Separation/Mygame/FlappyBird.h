@@ -7,12 +7,12 @@
 class FlappyBird:public Game
 {
 public:
-	bool initializeGame(HWND hwnd, GameStateManager * game);
-	void update(int gameTime, GameStateManager * game);
-	void draw(GameStateManager * game);
-	void collisions(GameStateManager * game);
+	bool initializeGame(HWND hwnd, GameEngine * game);
+	void update(int gameTime, GameEngine * game);
+	void draw(GameEngine * game);
+	void collisions(GameEngine * game);
 	void deleteAll();
-	void handleEvents(GameStateManager *game);
+	void handleEvents(GameEngine *game);
 	int randomNumber;
 
 	GameObject *object[FLAPPYBIRDOBJECTS];

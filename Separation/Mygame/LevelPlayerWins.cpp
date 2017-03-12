@@ -1,10 +1,10 @@
 #include "LevelPlayerWins.h"
 #include "LevelMainMenu.h"
 #include "FlappyBird.h"
-#include "GameStateManager.h"
+#include "GameEngine.h"
 
 LevelPlayerWins LevelPlayerWins::winState;
-bool LevelPlayerWins::initializeGame(HWND hwnd, GameStateManager * game)
+bool LevelPlayerWins::initializeGame(HWND hwnd, GameEngine * game)
 {
 
 	game->sound->playPlayerWinMusic();
@@ -54,7 +54,7 @@ bool LevelPlayerWins::initializeGame(HWND hwnd, GameStateManager * game)
 
 }
 
-void LevelPlayerWins::update(int gameTime, GameStateManager * game)
+void LevelPlayerWins::update(int gameTime, GameEngine * game)
 {
 
 	game->cursor->posVector = { (float)mouseX,(float)mouseY };
@@ -89,7 +89,7 @@ void LevelPlayerWins::update(int gameTime, GameStateManager * game)
 	}
 }
 
-void LevelPlayerWins::collisions(GameStateManager * game)
+void LevelPlayerWins::collisions(GameEngine * game)
 {
 	//Collision should not update players position
 	//	for (int i = 0; i<GOBJECTNUML1; i++) {
@@ -99,7 +99,7 @@ void LevelPlayerWins::collisions(GameStateManager * game)
 
 }
 
-void LevelPlayerWins::handleEvents(GameStateManager * game)
+void LevelPlayerWins::handleEvents(GameEngine * game)
 {
 	switch (game->state) {
 	case GameStates::MENU:
@@ -112,7 +112,7 @@ void LevelPlayerWins::handleEvents(GameStateManager * game)
 
 }
 
-void LevelPlayerWins::draw(GameStateManager * game)
+void LevelPlayerWins::draw(GameEngine * game)
 {
 	game->graphics->clear(D3DCOLOR_XRGB(255, 204, 255)); //255 204 255 = Pink
 	game->graphics->begin();

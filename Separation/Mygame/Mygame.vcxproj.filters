@@ -31,9 +31,6 @@
     <ClCompile Include="GameSprite.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
-    <ClCompile Include="GameStateManager.cpp">
-      <Filter>Engine\Cpp</Filter>
-    </ClCompile>
     <ClCompile Include="GameTime.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
@@ -56,6 +53,9 @@
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
     <ClCompile Include="WinMain.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,9 +93,6 @@
     <ClInclude Include="GameSprite.h">
       <Filter>Engine\Header</Filter>
     </ClInclude>
-    <ClInclude Include="GameStateManager.h">
-      <Filter>Engine\Header</Filter>
-    </ClInclude>
     <ClInclude Include="GameTime.h">
       <Filter>Engine\Header</Filter>
     </ClInclude>
@@ -115,6 +112,9 @@
       <Filter>Engine\Header</Filter>
     </ClInclude>
     <ClInclude Include="UserInterface.h">
+      <Filter>Engine\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine.h">
       <Filter>Engine\Header</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #include "GameObject.h"
-#include "GameStateManager.h"
+#include "GameEngine.h"
 GameObject::GameObject(float x, float y, D3DXVECTOR2 scaling, int animSpeed)
 {
 	position.x = x;
@@ -109,7 +109,7 @@ bool GameObject::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int wi
 
 
 
-void GameObject::draw(GameStateManager * game)		//Function that draw sprite
+void GameObject::draw(GameEngine * game)		//Function that draw sprite
 {
 	//for RECT collision
 	left = position.x + col_xOffset;
@@ -175,7 +175,7 @@ void GameObject::printData()
 
 }
 
-void GameObject::setMatrix(D3DXVECTOR2 scaling, D3DXVECTOR2 spriteCentre, float rotation, D3DXVECTOR2 position, GameStateManager * game)
+void GameObject::setMatrix(D3DXVECTOR2 scaling, D3DXVECTOR2 spriteCentre, float rotation, D3DXVECTOR2 position, GameEngine * game)
 {
 
 	D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &position);

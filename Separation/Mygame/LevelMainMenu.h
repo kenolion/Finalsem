@@ -17,12 +17,12 @@ public:
 
 	//YOU DONT NEED A HITBOXLINE POINTER OBJECT, BECAUSE GRAPHICS IS ALREADY DECLARED	Graphics * hitBoxLines;
 
-	bool initializeGame(HWND hwnd, GameStateManager * game);
-	void update(int gameTime, GameStateManager * game);
-	void collisions(GameStateManager * game);
-	void handleEvents(GameStateManager *game);
+	bool initializeGame(HWND hwnd, GameEngine * game);
+	void update(int gameTime, GameEngine * game);
+	void collisions(GameEngine * game);
+	void handleEvents(GameEngine *game);
 
-	void draw(GameStateManager * game);
+	void draw(GameEngine * game);
 	void deleteAll();
 	static LevelMainMenu * getInstance() {
 		return &mainMenuState;

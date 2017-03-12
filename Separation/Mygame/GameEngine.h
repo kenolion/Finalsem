@@ -1,5 +1,5 @@
-#ifndef GAMESTATEMANAGER_H
-#define GAMESTATEMANGER_H
+#ifndef GAMEENGINE_H
+#define GAMEENGINE_H
 #include <Windows.h>
 #include <vector>
 #include "DxSound.h"
@@ -10,11 +10,11 @@
 #include "PlayerInput.h"
 class Game;
 
-class GameStateManager
+class GameEngine
 {
 public:
-	GameStateManager();
-	~GameStateManager();
+	GameEngine();
+	~GameEngine();
 	bool initialize(HWND hwnd);
 	void changeState(Game *game,HWND hwnd);
 	void pushState(Game *game, HWND hwnd);

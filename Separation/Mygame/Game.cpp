@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "GameStateManager.h"
+#include "GameEngine.h"
 Game::Game()
 {
 
@@ -14,7 +14,7 @@ Game::~Game()
 
 
 
-void Game::run(GameStateManager * game)	// This function is called repeatedly by main message loop
+void Game::run(GameEngine * game)	// This function is called repeatedly by main message loop
 {
 	framesToUpdate = game->gameTime->update();
 

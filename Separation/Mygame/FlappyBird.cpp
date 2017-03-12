@@ -1,10 +1,10 @@
 #include "FlappyBird.h"
 #include "LevelMainMenu.h"
-#include "GameStateManager.h"
+#include "GameEngine.h"
 #include "LevelPlayerWins.h"
 FlappyBird FlappyBird::level1State;
 
-bool FlappyBird::initializeGame(HWND hwnd, GameStateManager * game)
+bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 {
 	game->sound->playMainMenuMusic();
 	game->sound->channel->setVolume(0.0f);
@@ -54,7 +54,7 @@ bool FlappyBird::initializeGame(HWND hwnd, GameStateManager * game)
 	return initialize = true;
 }
 
-void FlappyBird::update(int gameTime,GameStateManager * game)
+void FlappyBird::update(int gameTime,GameEngine * game)
 {
 	randomNumber = rand() % 3 + 1;
 	if (childrenPointer->onHover(mouseX, mouseY))
@@ -84,7 +84,7 @@ void FlappyBird::update(int gameTime,GameStateManager * game)
 	game->cursor->update(gameTime);
 }
 
-void FlappyBird::draw(GameStateManager * game)
+void FlappyBird::draw(GameEngine * game)
 {
 	game->graphics->clear(D3DCOLOR_XRGB(0, 100, 100));
 	game->graphics->begin();
@@ -104,7 +104,7 @@ void FlappyBird::draw(GameStateManager * game)
 	game->graphics->present();
 }
 
-void FlappyBird::collisions(GameStateManager * game)
+void FlappyBird::collisions(GameEngine * game)
 {
 
 	object[1]->forceVector = { 0,0 };
@@ -160,7 +160,7 @@ void FlappyBird::deleteAll()
 	}
 }
 
-void FlappyBird::handleEvents(GameStateManager * game)
+void FlappyBird::handleEvents(GameEngine * game)
 {
 	switch (game->state) {
 	case GameStates::LEVELPLAYERWIN:

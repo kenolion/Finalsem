@@ -11,7 +11,7 @@
 #include "Enemy.h"
 #include "Pictures.h"
 #include "Button.h"
-class GameStateManager;
+class GameEngine;
 
 class Game		//
 {
@@ -22,13 +22,13 @@ protected:
 public:
 	int framesToUpdate;
 	bool initialize;
-	void run(GameStateManager * game);
+	void run(GameEngine * game);
 	virtual void deleteAll()=0;
-	virtual bool initializeGame(HWND hwnd,GameStateManager* game) = 0;
-	virtual void draw(GameStateManager * game)=0;
-	virtual void update(int gameTime, GameStateManager * game) = 0;
-	virtual void collisions(GameStateManager * game)=0;
-	virtual void handleEvents(GameStateManager *game) = 0;
+	virtual bool initializeGame(HWND hwnd,GameEngine* game) = 0;
+	virtual void draw(GameEngine * game)=0;
+	virtual void update(int gameTime, GameEngine * game) = 0;
+	virtual void collisions(GameEngine * game)=0;
+	virtual void handleEvents(GameEngine *game) = 0;
 
 	int mouseX, mouseY;
 protected:

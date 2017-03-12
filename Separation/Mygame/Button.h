@@ -20,7 +20,7 @@ public:
 	//FUNCTIONS
 	Button(float x, float y, D3DXVECTOR2 scaling, int animSpeed, LPCSTR string,int noOfCharacters,int r, int g, int b, LPD3DXFONT font);
 
-	void draw(GameStateManager * game);
+	void draw(GameEngine * game);
 	void update(int &gameTime);
 
 	~Button();

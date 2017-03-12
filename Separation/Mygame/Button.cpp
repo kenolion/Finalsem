@@ -1,5 +1,5 @@
 #include "Button.h"
-#include "GameStateManager.h"
+#include "GameEngine.h"
 
 
 Button::Button(float x, float y, D3DXVECTOR2 scaling, int animSpeed,LPCSTR string, int noOfCharacters, int r,int g, int b,LPD3DXFONT font) : GameObject(x, y, scaling , animSpeed)
@@ -41,7 +41,7 @@ bool Button::isClicked(bool leftClickDown)
 }
 
 
-void Button::draw(GameStateManager * game) {
+void Button::draw(GameEngine * game) {
 
 	GameObject::draw(game);
 	buttonRect.top = spriteHeight / 2 - 10;

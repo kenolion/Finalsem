@@ -1,14 +1,14 @@
-#include "GameStateManager.h"
+#include "GameEngine.h"
 #include "Game.h"
 
 
-GameStateManager::GameStateManager()
+GameEngine::GameEngine()
 {
 	
 }
 
 
-GameStateManager::~GameStateManager()
+GameEngine::~GameEngine()
 {
 	while (!games.empty()) {
 		games.back()->deleteAll();
@@ -25,7 +25,7 @@ GameStateManager::~GameStateManager()
 
 }
 
-bool GameStateManager::initialize(HWND hwnd)
+bool GameEngine::initialize(HWND hwnd)
 {
 	sprite = NULL;
 
@@ -89,7 +89,7 @@ bool GameStateManager::initialize(HWND hwnd)
 	return initialized = true;
 }
 
-void GameStateManager::changeState(Game * game, HWND hwnd)
+void GameEngine::changeState(Game * game, HWND hwnd)
 {
 	if (!games.empty()) {
 		games.back()->deleteAll();
@@ -100,7 +100,7 @@ void GameStateManager::changeState(Game * game, HWND hwnd)
 
 }
 
-void GameStateManager::pushState(Game * game, HWND hwnd)
+void GameEngine::pushState(Game * game, HWND hwnd)
 {
 	games.push_back(game);
 	if (!(games.back()->initializeGame(hwnd,this))) {
@@ -110,13 +110,13 @@ void GameStateManager::pushState(Game * game, HWND hwnd)
 
 }
 
-void GameStateManager::handleEvents()
+void GameEngine::handleEvents()
 {
 	games.back()->handleEvents(this);
 
 }
 
-void GameStateManager::popState()
+void GameEngine::popState()
 {
 	
 		// cleanup the current state
@@ -126,7 +126,7 @@ void GameStateManager::popState()
 	}
 }
 
-void GameStateManager::run()
+void GameEngine::run()
 {
 	games.back()->run(this);
 }
