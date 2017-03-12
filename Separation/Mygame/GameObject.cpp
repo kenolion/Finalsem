@@ -241,7 +241,13 @@ bool GameObject::collideWith(GameObject &object, D3DXVECTOR2 &collisionVector)
 		if (left > object.right)return false;
 	}
 
+	if (object.getType() == ObjectType::Platform) {
+		if (bottom < object.top)return false;
+		if (top > object.bottom)return false;
+		if (right < object.left)return false;
+		if (left > object.right)return false;
 
+	}
 
 
 	//distance = object.getObjectPos() - position;			// Distance = object2 position - object1 position		

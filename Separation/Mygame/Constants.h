@@ -27,7 +27,7 @@ enum class GameStates			//Strongly Type enumartions may come in handy if this fr
 	LEVELPLAYERWIN		//ArreSTay 3
 };
 
-const int FLAPPYBIRDOBJECTS = 16;
+const int FLAPPYBIRDOBJECTS = 3;
 const float MAXYVELOCITY = 7;
 
 template<typename T>
