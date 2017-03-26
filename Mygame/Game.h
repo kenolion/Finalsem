@@ -38,7 +38,9 @@ public:
 	int numOfTiles;
 	char tempChar;
 	bool loadLevel();
+	
 	void initializeTiles(GameEngine*game);
+
 	int mouseX, mouseY;
 protected:
 	Game();

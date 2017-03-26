@@ -45,7 +45,7 @@ public:
 	void calculateVelocity();
 	float getMass();
 	bool collideWith(GameObject *object);
-
+	bool getOnGround();
 
 
 	//TEMP data used for calculating physics
@@ -65,6 +65,12 @@ public:
 	//
 	void printData(); // used to print players data
 	void setMatrix(D3DXVECTOR2 scaling, D3DXVECTOR2 spriteCentre, float rotation, D3DXVECTOR2 position, GameEngine * game);	//scaling,spritecentre,rotation,position
+	
+	//TILES
+	TileType tile;
+	bool checkGround(D3DXVECTOR2 position);
+
+	RECT spriteRect;
 protected:
 	//informational data(name, desc wtv u want)
 	std::string name;
@@ -110,7 +116,7 @@ protected:
 	//SPRITE INFO
 	D3DXVECTOR2 radius;			//if theres any
 	D3DCOLOR color;
-	RECT spriteRect;
+	
 	int height;
 	int width;
 	int spriteRow;				// this int changes according to its sprite sheet
@@ -123,9 +129,6 @@ protected:
 	bool frameHorizontal;
 	int animSpeed;
 	int animTimer;
-private:
-	int test;
-	
 
 
 };

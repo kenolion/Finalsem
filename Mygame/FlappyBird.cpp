@@ -39,7 +39,6 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 		return initialize = false;
 	}
 	initializeTiles(game);
-	std::cout << numOfTiles << std::endl;
 	gravity = { 0,GRAVITY };
 	object[1]->setState(3);
 	game->exit = false;
@@ -84,9 +83,8 @@ void FlappyBird::draw(GameEngine * game)
 
 		object[i]->draw(game);
 	}
-
 	menuButton->draw(game);
-
+	
 	game->cursor->setMatrix(D3DXVECTOR2(1.0f, 1.0f), D3DXVECTOR2(0.0f, 0.0f), 0.0f, D3DXVECTOR2(GAME_WIDTH / 2, 25), game);		//Set this to draw my font
 	game->graphics->drawfont("Score : ", timer * 10, 13, 500, 50, game->sprite, D3DCOLOR_XRGB(255, 0, 0), 30);			// last parameter depends on the size of your font
 	game->cursor->draw(game);
@@ -100,8 +98,21 @@ void FlappyBird::collisions(GameEngine * game)
 
 	object[1]->forceVector = { 0,0 };
 	object[1]->physics(game->input);
-	game->camera->centerOnObject(object[1]);
-	
+	for (int i = 0;i<numOfTiles ; i++) {
+		if (object[1]->collideWith(tiles[i])) {
+			if (object[1]->getOnGround()) {
+				std::cout << "true";
+			}
+			break;
+		}
+		
+		
+
+	}
+	if (!object[1]->getOnGround()) {
+		std::cout << "false";
+	}
+	game->camera->centerOnObject(object[1]);	
 }
 
 void FlappyBird::deleteAll()

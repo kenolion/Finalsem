@@ -128,12 +128,12 @@ void GameObject::draw(GameEngine * game)		//Function that draw sprite
 
 	spriteCentre = D3DXVECTOR2(spriteWidth / 2, spriteHeight / 2);
 	if (type == ObjectType::Player || type == ObjectType::Platform) {
-		screenPos = position - positionOffset;		
-		
+		screenPos = position - positionOffset;
+
 		D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &screenPos);
 	}
 	else {
-		D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &position);
+		D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &position);		// This code is for objects that are not affected by camera
 	}
 	game->sprite->SetTransform(&mat);
 	if (game->sprite)
@@ -181,6 +181,12 @@ void GameObject::setMatrix(D3DXVECTOR2 scaling, D3DXVECTOR2 spriteCentre, float 
 
 	D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &position);
 	game->sprite->SetTransform(&mat);
+}
+
+bool GameObject::checkGround(D3DXVECTOR2 position)
+{
+	
+	return true;
 }
 
 void GameObject::calculateVelocity()
@@ -251,10 +257,13 @@ bool GameObject::collideWith(GameObject *object)
 	}
 
 	if (object->getType() == ObjectType::Platform) {
-		if (collisionRect.bottom < object->collisionRect.top)return false;
-		if (collisionRect.top > object->collisionRect.bottom)return false;
-		if (collisionRect.right < object->collisionRect.left)return false;
-		if (collisionRect.left > object->collisionRect.right)return false;
+		if (tile == TileType::Block) {
+			onGround = false;
+			if (collisionRect.bottom < object->collisionRect.top)return false;
+			if (collisionRect.top > object->collisionRect.bottom)return false;
+			if (collisionRect.right < object->collisionRect.left)return false;
+			if (collisionRect.left > object->collisionRect.right)return false;
+		}
 
 	}
 
@@ -270,9 +279,15 @@ bool GameObject::collideWith(GameObject *object)
 	//																																			// spritecentre = object radius
 	//	return true;
 	//}
-
+	onGround = true;
+	position.y = object->position.y - object->spriteHeight;
 	return true;
 	//means there is collision
+}
+
+bool GameObject::getOnGround()
+{
+	return onGround;
 }
 
 

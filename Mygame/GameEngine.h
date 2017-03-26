@@ -23,6 +23,7 @@ public:
 	void popState();
 	void run();
 	GameCamera *camera;
+	
 	LPD3DXSPRITE sprite;
 	Cursor *cursor;
 	GameStates state;

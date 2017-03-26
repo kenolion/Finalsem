@@ -20,8 +20,7 @@ private:
 	int height;
 public:
 	LP_3DDEVICE device3d;
-
-	LPD3DXLINE line = NULL; // Zer add Line Pointer 
+	LPD3DXLINE line = NULL; 
 	LPD3DXFONT font;
 	HWND hwnd;
 	HRESULT result;
@@ -30,7 +29,7 @@ public:
 	bool initialize(HWND hwnd,int w,int h);
 	void clear(D3DCOLOR color);
 	void begin();
-
+	
 	//=======================================================USED TO DRAW LINES and font IN YOUR LEVEL================================================================
 	void createLine();  //Needs to be called in your level's draw function if you want to start creating lines. This initializes the line device.
 	void lineBegin(); //Needs to be called in your level's draw function if you want to start creating lines. This begins the line device.

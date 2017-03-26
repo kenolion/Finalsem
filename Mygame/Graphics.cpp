@@ -59,7 +59,6 @@ bool Graphics::initialize(HWND hw, int w, int h)
 	}
 
 
-
 	return true;
 
 }
@@ -76,6 +75,7 @@ void Graphics::begin()
 {
 	device3d->BeginScene();
 }
+
 
 void Graphics::createLine()
 {

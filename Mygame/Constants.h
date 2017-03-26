@@ -18,6 +18,7 @@ const int REQFPS = 60;
 const int GOBJECTNUML1 = 5;
 enum class ObjectStatus { Active, Dying, Dead };
 enum class ObjectType { Enemy, Player, Platform };
+enum class TileType {Block};
 const int FLAPPYBIRDOBJECTS = 2;
 const float MAXYVELOCITY = 7;
 

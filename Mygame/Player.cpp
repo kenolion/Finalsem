@@ -6,7 +6,7 @@ Player::Player(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int mass) :
 	this->type = ObjectType::Player;
 	jump = false;
 	fsm = CharacterState::Idle;
-	jumpSpeed = -10.0f;
+	jumpSpeed = -20.0f;
 	walkSpeed = 10.0f;
 
 
@@ -20,7 +20,9 @@ void Player::update(int &gameTime, float xOffSet, float yOffSet)
 
 		for (int i = 0; i < gameTime; i++) {
 			//setDrawingPoint(0, 0);
-
+			if (onGround && velocity.y > 0) {
+				velocity.y = 0;
+			}
 			position += velocity;
 			positionOffset.x = xOffSet;
 			positionOffset.y = yOffSet;
@@ -28,13 +30,8 @@ void Player::update(int &gameTime, float xOffSet, float yOffSet)
 			
 			//std::cout << positionOffset.x << "     " << std::endl;
 			//position = { round(position.x), round(position.y) };
-			if (position.y > GAME_HEIGHT - spriteHeight * 2) {
-				position.y = GAME_HEIGHT - spriteHeight * 2;
-				onGround = true;
-			}
-			else {
-				onGround = false;
-			}
+		
+			
 			if (animTimer >= REQFPS) {
 				animTimer = 0;
 				frame++;
@@ -55,7 +52,7 @@ void Player::update(int &gameTime, float xOffSet, float yOffSet)
 void Player::physics(PlayerInput * input)
 {
 	oldPosition = position;
-	oldVelocity = forceVector;
+	oldVelocity = velocity;
 
 	wasOnGround = onGround;
 	pushedRightWall = pushesRightWall;
@@ -64,7 +61,7 @@ void Player::physics(PlayerInput * input)
 
 	switch (fsm) {
 	case CharacterState::Idle:
-
+	
 		state = 1;			//set to idle state
 		if (!onGround) {
 			fsm = CharacterState::Jumping;

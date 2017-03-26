@@ -41,9 +41,7 @@ bool Game::loadLevel()
 		for (int collumn = 0; collumn < TILECOLUMN; collumn++) {
 			tileMapLoader >> tileMap[row][collumn];
 			tileMapLoader.get(tempChar);
-			std::cout << tileMap[row][collumn];
 		}
-		std::cout << std::endl;
 	}
 	tileMapLoader.close();
 	return true;
@@ -66,4 +64,6 @@ void Game::initializeTiles(GameEngine*game)
 
 
 }
+
+
 
