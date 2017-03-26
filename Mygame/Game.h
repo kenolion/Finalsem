@@ -19,7 +19,6 @@ class Game		//
 {
 protected:
 	HWND hwnd;
-	
 	D3DXVECTOR2 friction;
 public:
 	

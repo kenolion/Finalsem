@@ -114,6 +114,7 @@ void LevelPlayerWins::handleEvents(GameEngine * game)
 
 void LevelPlayerWins::draw(GameEngine * game)
 {
+	
 	game->graphics->clear(D3DCOLOR_XRGB(255, 204, 255)); //255 204 255 = Pink
 	game->graphics->begin();
 

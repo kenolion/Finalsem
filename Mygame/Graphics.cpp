@@ -65,10 +65,20 @@ bool Graphics::initialize(HWND hw, int w, int h)
 
 
 
+void Graphics::clear(D3DCOLOR color,RECT test)
+{
+
+	rect.x1 = test.left;
+	rect.x2 = test.right;
+	rect.y1 = test.top;
+	rect.y2 = test.bottom;
+
+	device3d->Clear(1, &rect, D3DCLEAR_TARGET,color, 1.0f, 0);  // 0x00000000 = black
+}
+
 void Graphics::clear(D3DCOLOR color)
 {
-	device3d->Clear(0, NULL, D3DCLEAR_TARGET,
-		color, 1.0f, 0);  // 0x00000000 = black
+	device3d->Clear(0, NULL, D3DCLEAR_TARGET, color, 1.0f, 0);
 }
 
 void Graphics::begin()

@@ -71,6 +71,8 @@ public:
 	bool checkGround(D3DXVECTOR2 position);
 
 	RECT spriteRect;
+	RECT collisionRect; //used if you want to make additional rectangles to check for collision
+	RECT legRect;
 protected:
 	//informational data(name, desc wtv u want)
 	std::string name;
@@ -92,6 +94,9 @@ protected:
 	D3DXVECTOR2 spriteCentre;
 	D3DXMATRIX mat;
 	//Bools
+	bool legRectCollided;
+	bool bodyRectCollided;
+
 	bool pushedRightWall;
 	bool pushesRightWall;
 
@@ -104,14 +109,14 @@ protected:
 	bool wasAtCeiling;
 	bool atCeiling;
 
-
+	
 
 	//RECT COLLISION
 	float col_width;
 	float col_height;
 	float col_xOffset;
 	float col_yOffset;
-	RECT collisionRect; //used if you want to make additional rectangles to check for collision
+	
 
 	//SPRITE INFO
 	D3DXVECTOR2 radius;			//if theres any

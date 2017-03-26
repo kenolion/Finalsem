@@ -54,6 +54,8 @@ bool GameObject::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int wi
 	col_height = this->height *falseColl;
 	col_xOffset = (this->width - col_width) / 2;
 	col_yOffset = (this->height - col_height) / 2;
+	//col_xOffset = spriteWidth / 3;
+	//col_yOffset = spriteHeight / 3;
 	if (scaling.x > 1) {
 		position.x += (spriteWidth / 2) * scaling.x;
 
@@ -105,10 +107,17 @@ bool GameObject::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int wi
 void GameObject::draw(GameEngine * game)		//Function that draw sprite
 {
 	//for RECT collision
-	collisionRect.left = position.x + col_xOffset;
-	collisionRect.right = position.x + spriteWidth;
-	collisionRect.top = position.y + col_yOffset;
-	collisionRect.bottom = position.y + spriteHeight*scaling.y;
+	collisionRect.left = screenPos.x + col_xOffset;
+	collisionRect.right = screenPos.x + spriteWidth - col_xOffset;
+	collisionRect.top = screenPos.y + col_yOffset;
+	collisionRect.bottom = screenPos.y + spriteHeight*scaling.y;
+
+	if (type == ObjectType::Player) {
+		legRect.top = screenPos.y + (spriteHeight * 2) / 3;
+		legRect.bottom = screenPos.y + spriteHeight;
+		legRect.left = collisionRect.left;
+		legRect.right = collisionRect.right;
+	}
 
 	if (frameHorizontal)					//Changes if the sprite sheet frames are going horizontally or vertically
 	{
@@ -185,7 +194,7 @@ void GameObject::setMatrix(D3DXVECTOR2 scaling, D3DXVECTOR2 spriteCentre, float 
 
 bool GameObject::checkGround(D3DXVECTOR2 position)
 {
-	
+
 	return true;
 }
 
@@ -259,10 +268,21 @@ bool GameObject::collideWith(GameObject *object)
 	if (object->getType() == ObjectType::Platform) {
 		if (tile == TileType::Block) {
 			onGround = false;
-			if (collisionRect.bottom < object->collisionRect.top)return false;
-			if (collisionRect.top > object->collisionRect.bottom)return false;
-			if (collisionRect.right < object->collisionRect.left)return false;
-			if (collisionRect.left > object->collisionRect.right)return false;
+			legRectCollided = true;
+			bodyRectCollided = true;			// lets just assume true for now and if all the test fails it will still remain true
+			if (legRect.bottom < object->collisionRect.top) legRectCollided = false;			//if false means theres no collision
+			if (legRect.top > object->collisionRect.bottom) legRectCollided = false;
+			if (legRect.right < object->collisionRect.left)legRectCollided = false;
+			if (legRect.left > object->collisionRect.right)legRectCollided = false;
+			if (collisionRect.bottom < object->collisionRect.top)  bodyRectCollided = false;
+			if (collisionRect.top > object->collisionRect.bottom) bodyRectCollided = false;
+			if (collisionRect.right < object->collisionRect.left) bodyRectCollided = false;
+			if (collisionRect.left > object->collisionRect.right) bodyRectCollided = false;
+			
+			if (legRectCollided == false && bodyRectCollided == false) {
+				return false;
+			}
+			
 		}
 
 	}
@@ -279,8 +299,15 @@ bool GameObject::collideWith(GameObject *object)
 	//																																			// spritecentre = object radius
 	//	return true;
 	//}
-	onGround = true;
-	position.y = object->position.y - object->spriteHeight;
+	if (legRectCollided == true && bodyRectCollided == true) {
+		onGround = true;
+	}
+	if (onGround && velocity.y > 0) {
+		velocity.y = 0;
+		position.y = object->position.y - object->spriteHeight;
+
+	}
+	
 	return true;
 	//means there is collision
 }

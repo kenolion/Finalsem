@@ -16,7 +16,7 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 		MessageBox(NULL, "There was an issue creating the sprite", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
 		return initialize = false;
 	}
-	if (!object[1]->initialize(game->graphics->device3d, "sprite\\ben.png", 128, 192, 4, 4, true, D3DCOLOR_XRGB(0, 0, 0), 0.80f)) {
+	if (!object[1]->initialize(game->graphics->device3d, "sprite\\ben.png", 128, 192, 4, 4, true, D3DCOLOR_XRGB(0, 0, 0), 0.90f)) {
 		MessageBox(NULL, "There was an issue creating the sprite", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
 		return initialize = false;
 	}
@@ -71,7 +71,10 @@ void FlappyBird::update(int gameTime, GameEngine * game)
 
 void FlappyBird::draw(GameEngine * game)
 {
-	game->graphics->clear(D3DCOLOR_XRGB(0, 100, 100));
+
+	game->graphics->clear(D3DCOLOR_XRGB(255, 255, 255));
+	game->graphics->clear(D3DCOLOR_XRGB(0, 100, 100),object[1]->collisionRect);
+	game->graphics->clear(D3DCOLOR_XRGB(100, 0, 0), object[1]->legRect);
 	game->graphics->begin();
 	game->sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
@@ -100,18 +103,10 @@ void FlappyBird::collisions(GameEngine * game)
 	object[1]->physics(game->input);
 	for (int i = 0;i<numOfTiles ; i++) {
 		if (object[1]->collideWith(tiles[i])) {
-			if (object[1]->getOnGround()) {
-				std::cout << "true";
-			}
 			break;
 		}
-		
-		
+	}
 
-	}
-	if (!object[1]->getOnGround()) {
-		std::cout << "false";
-	}
 	game->camera->centerOnObject(object[1]);	
 }
 

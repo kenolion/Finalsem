@@ -6,7 +6,7 @@ Player::Player(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int mass) :
 	this->type = ObjectType::Player;
 	jump = false;
 	fsm = CharacterState::Idle;
-	jumpSpeed = -20.0f;
+	jumpSpeed = -15.0f;
 	walkSpeed = 10.0f;
 
 
@@ -20,7 +20,8 @@ void Player::update(int &gameTime, float xOffSet, float yOffSet)
 
 		for (int i = 0; i < gameTime; i++) {
 			//setDrawingPoint(0, 0);
-			if (onGround && velocity.y > 0) {
+			
+			if (!onGround && velocity.y < 0 && bodyRectCollided == true) {
 				velocity.y = 0;
 			}
 			position += velocity;

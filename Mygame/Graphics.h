@@ -26,7 +26,9 @@ public:
 	HRESULT result;
 	D3DPRESENT_PARAMETERS d3dpp;
 	RECT fontRect;
+	D3DRECT rect;
 	bool initialize(HWND hwnd,int w,int h);
+	void clear(D3DCOLOR color, RECT test);//to draw rectangles
 	void clear(D3DCOLOR color);
 	void begin();
 	
