@@ -22,7 +22,9 @@ const int FLAPPYBIRDOBJECTS = 2;
 const float MAXYVELOCITY = 7;
 
 const int TILEROW = 15;
-const int TILECOLUMN = 16;
+const int TILECOLUMN = 32;
+const int TILEWIDTH = 48;
+const int TILEHEIGHT = 48;
 
 enum class GameStates			//Strongly Type enumartions may come in handy if this framework includes a level editor, other states that might have it's own main menu, exit enum and etcetera.
 {

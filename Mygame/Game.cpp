@@ -41,9 +41,11 @@ bool Game::loadLevel()
 		for (int collumn = 0; collumn < TILECOLUMN; collumn++) {
 			tileMapLoader >> tileMap[row][collumn];
 			tileMapLoader.get(tempChar);
+			std::cout << tileMap[row][collumn];
 		}
+		std::cout << std::endl;
 	}
-
+	tileMapLoader.close();
 	return true;
 }
 
@@ -54,7 +56,7 @@ void Game::initializeTiles(GameEngine*game)
 		for (int collumn = 0; collumn < TILECOLUMN; collumn++) {
 			
 			if(tileMap[row][collumn]>0){
-				tiles[numOfTiles] = new Platform(collumn, row, D3DXVECTOR2(1.0f, 1.0f), 1, 48, 48,tileMap[row][collumn]);
+				tiles[numOfTiles] = new Platform(collumn, row, D3DXVECTOR2(1.0f, 1.0f), 1, TILEWIDTH, TILEHEIGHT,tileMap[row][collumn]);
 				tiles[numOfTiles]->initialize(game->graphics->device3d, "sprite\\TileMap.png", 288, 480, 10, 6, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f);
 				numOfTiles++;
 			}

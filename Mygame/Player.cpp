@@ -19,15 +19,14 @@ void Player::update(int &gameTime, float xOffSet, float yOffSet)
 	if (status == ObjectStatus::Active) {
 
 		for (int i = 0; i < gameTime; i++) {
-			setDrawingPoint(0, 0);
+			//setDrawingPoint(0, 0);
 
 			position += velocity;
 			positionOffset.x = xOffSet;
 			positionOffset.y = yOffSet;
 
-			std::cout << screenPos.x << std::endl;
-			std::cout << xOffSet << "      " << std::endl;
-			std::cout << position.y << std::endl;
+			
+			//std::cout << positionOffset.x << "     " << std::endl;
 			//position = { round(position.x), round(position.y) };
 			if (position.y > GAME_HEIGHT - spriteHeight * 2) {
 				position.y = GAME_HEIGHT - spriteHeight * 2;

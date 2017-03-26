@@ -128,8 +128,8 @@ void GameObject::draw(GameEngine * game)		//Function that draw sprite
 
 	spriteCentre = D3DXVECTOR2(spriteWidth / 2, spriteHeight / 2);
 	if (type == ObjectType::Player || type == ObjectType::Platform) {
-		if (type == ObjectType::Platform)
-			screenPos = position - positionOffset;		// This code moves the tiles but not the player because i dont want the player to move
+		screenPos = position - positionOffset;		
+		
 		D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &screenPos);
 	}
 	else {

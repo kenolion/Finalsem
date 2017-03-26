@@ -24,7 +24,7 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 	menuButton = new Button(0, 0, D3DXVECTOR2(1.0f, 1.0f), 30, "Main Menu", 10, 255, 155, 0, game->graphics->font);
 	menuButton->setX(600);
-	menuButton->setY(600);
+	menuButton->setY(0);
 
 
 
@@ -39,6 +39,7 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 		return initialize = false;
 	}
 	initializeTiles(game);
+	std::cout << numOfTiles << std::endl;
 	gravity = { 0,GRAVITY };
 	object[1]->setState(3);
 	game->exit = false;

@@ -36,8 +36,22 @@ void GameCamera::setYOffset(float yOffset) {
 
 void GameCamera::centerOnObject(GameObject * object)
 {
-	xOffset = object->getObjectX() - GAME_WIDTH/2 + object->getWidth();
-	yOffset = object->getObjectY() - GAME_HEIGHT/2 + object->getHeight();
+	xOffset = object->getObjectX() - GAME_WIDTH / 2 + object->getWidth();
+	yOffset = object->getObjectY() - GAME_HEIGHT / 2 + object->getHeight();
+
+	if (xOffset < 0) {
+		xOffset = 0;
+	}
+	else if (xOffset > TILECOLUMN *TILEWIDTH - GAME_WIDTH) {
+		xOffset = TILECOLUMN *TILEWIDTH - GAME_WIDTH;
+	}
+	if (yOffset < 0) {
+		yOffset = 0;
+	}
+	else if (yOffset > TILEROW *TILEHEIGHT - GAME_HEIGHT) {
+		yOffset = TILEROW *TILEHEIGHT - GAME_HEIGHT;
+	}
+
 }
 
 GameCamera::~GameCamera()
