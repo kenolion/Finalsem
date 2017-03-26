@@ -11,7 +11,7 @@ public:
 	bool initializeGame(HWND hwnd, GameEngine * game);
 	void update(int gameTime, GameEngine * game);
 	void draw(GameEngine * game);
-	void collisions(GameEngine * game);
+	void collisions(GameEngine * game, int gameTime);
 	void deleteAll();
 	void handleEvents(GameEngine *game);
 	

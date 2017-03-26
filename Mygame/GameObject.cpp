@@ -288,6 +288,8 @@ bool GameObject::collideWith(GameObject *object)
 	}
 
 
+
+
 	//distance = object.getObjectPos() - position;			// Distance = object2 position - object1 position		
 	//
 	//if (D3DXVec2Length(&distance) < (spriteCentre.x + object.spriteCentre.x)) {
@@ -301,6 +303,7 @@ bool GameObject::collideWith(GameObject *object)
 	//}
 	if (legRectCollided == true && bodyRectCollided == true) {
 		onGround = true;
+		
 	}
 	if (onGround && velocity.y > 0) {
 		velocity.y = 0;
@@ -308,6 +311,7 @@ bool GameObject::collideWith(GameObject *object)
 
 	}
 	
+
 	return true;
 	//means there is collision
 }

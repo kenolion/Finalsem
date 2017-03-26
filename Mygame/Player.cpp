@@ -126,7 +126,7 @@ void Player::physics(PlayerInput * input)
 				velocity.x = walkSpeed;
 		}
 		else if (input->leftArrowKey) {
-
+			
 			if (pushesLeftWall)
 				velocity.x = 0.0f;
 			else

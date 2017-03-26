@@ -19,7 +19,7 @@ public:
 
 	bool initializeGame(HWND hwnd, GameEngine * game);
 	void update(int gameTime, GameEngine * game);
-	void collisions(GameEngine * game);
+	void collisions(GameEngine * game,int gameTime);
 	void handleEvents(GameEngine *game);
 
 	void draw(GameEngine * game);

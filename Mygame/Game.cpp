@@ -22,7 +22,7 @@ void Game::run(GameEngine * game)	// This function is called repeatedly by main 
 	game->input->convertRelativeToAbsolute();								//Converts Relative X and Y mouse position to Absolute position
 	game->input->GetMouseLocation(mouseX, mouseY);						//Stores the converted absolute position to the Input class's mouseX and mouseY variable
 	game->cursor->posVector = { (float)mouseX,(float)mouseY };			//Sets the Cursor Position to the Absolute MouseX and MouseY in the window.
-	collisions(game);
+	collisions(game,framesToUpdate);
 	update(framesToUpdate, game);
 	draw(game);// draws the games graphics
 

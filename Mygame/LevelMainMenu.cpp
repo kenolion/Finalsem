@@ -102,7 +102,7 @@ void LevelMainMenu::update(int gameTime, GameEngine * game)
 	
 }
 
-void LevelMainMenu::collisions(GameEngine * game)
+void LevelMainMenu::collisions(GameEngine * game, int gameTime)
 {
 	//Collision should not update players position
 //	for (int i = 0; i<GOBJECTNUML1; i++) {

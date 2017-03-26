@@ -29,7 +29,7 @@ public:
 	virtual bool initializeGame(HWND hwnd,GameEngine* game) = 0;
 	virtual void draw(GameEngine * game)=0;
 	virtual void update(int gameTime, GameEngine * game) = 0;
-	virtual void collisions(GameEngine * game)=0;
+	virtual void collisions(GameEngine * game,int gameTime)=0;
 	virtual void handleEvents(GameEngine *game) = 0;
 	GameObject *tiles[100];
 	std::string mapName;

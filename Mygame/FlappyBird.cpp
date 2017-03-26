@@ -10,7 +10,7 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 	mapName = "TileMap.txt";
 	game->sound->playMainMenuMusic();
 	game->sound->channel->setVolume(0.0f);
-	object[1] = new Player(GAME_WIDTH / 2, GAME_HEIGHT/2, D3DXVECTOR2(1.0f, 1.0f), 10, 5);
+	object[1] = new Player(GAME_WIDTH / 2, GAME_HEIGHT / 2, D3DXVECTOR2(1.0f, 1.0f), 10, 5);
 	object[0] = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);						//(x,y,Scaling)
 	if (!object[0]->initialize(game->graphics->device3d, "sprite\\skybackground.png", 1280, 720, 1, 1, true, D3DCOLOR_XRGB(0, 0, 0), 1.0f)) {
 		MessageBox(NULL, "There was an issue creating the sprite", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
@@ -58,7 +58,7 @@ void FlappyBird::update(int gameTime, GameEngine * game)
 
 	}
 	for (int i = 0; i < numOfTiles; i++) {
-		tiles[i]->update(gameTime,game->camera->getXOffset(), game->camera->getYOffset());
+		tiles[i]->update(gameTime, game->camera->getXOffset(), game->camera->getYOffset());
 	}
 	for (int i = 0; i < FLAPPYBIRDOBJECTS; i++) {
 		object[i]->update(gameTime, game->camera->getXOffset(), game->camera->getYOffset());
@@ -73,7 +73,7 @@ void FlappyBird::draw(GameEngine * game)
 {
 
 	game->graphics->clear(D3DCOLOR_XRGB(255, 255, 255));
-	game->graphics->clear(D3DCOLOR_XRGB(0, 100, 100),object[1]->collisionRect);
+	game->graphics->clear(D3DCOLOR_XRGB(0, 100, 100), object[1]->collisionRect);
 	game->graphics->clear(D3DCOLOR_XRGB(100, 0, 0), object[1]->legRect);
 	game->graphics->begin();
 	game->sprite->Begin(D3DXSPRITE_ALPHABLEND);
@@ -87,7 +87,7 @@ void FlappyBird::draw(GameEngine * game)
 		object[i]->draw(game);
 	}
 	menuButton->draw(game);
-	
+
 	game->cursor->setMatrix(D3DXVECTOR2(1.0f, 1.0f), D3DXVECTOR2(0.0f, 0.0f), 0.0f, D3DXVECTOR2(GAME_WIDTH / 2, 25), game);		//Set this to draw my font
 	game->graphics->drawfont("Score : ", timer * 10, 13, 500, 50, game->sprite, D3DCOLOR_XRGB(255, 0, 0), 30);			// last parameter depends on the size of your font
 	game->cursor->draw(game);
@@ -96,18 +96,19 @@ void FlappyBird::draw(GameEngine * game)
 	game->graphics->present();
 }
 
-void FlappyBird::collisions(GameEngine * game)
+void FlappyBird::collisions(GameEngine * game,int gameTime)
 {
-
-	object[1]->forceVector = { 0,0 };
-	object[1]->physics(game->input);
-	for (int i = 0;i<numOfTiles ; i++) {
-		if (object[1]->collideWith(tiles[i])) {
-			break;
+	//for (int i = 0; i < gameTime; i++) {
+		object[1]->forceVector = { 0,0 };
+		object[1]->physics(game->input);
+		for (int i = 0; i < numOfTiles; i++) {
+			if (object[1]->collideWith(tiles[i])) {
+				break;
+			}
 		}
-	}
 
-	game->camera->centerOnObject(object[1]);	
+		game->camera->centerOnObject(object[1]);
+	//}
 }
 
 void FlappyBird::deleteAll()

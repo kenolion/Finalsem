@@ -89,7 +89,7 @@ void LevelPlayerWins::update(int gameTime, GameEngine * game)
 	}
 }
 
-void LevelPlayerWins::collisions(GameEngine * game)
+void LevelPlayerWins::collisions(GameEngine * game, int gameTime)
 {
 	//Collision should not update players position
 	//	for (int i = 0; i<GOBJECTNUML1; i++) {
