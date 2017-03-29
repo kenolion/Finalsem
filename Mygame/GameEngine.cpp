@@ -15,6 +15,7 @@ GameEngine::~GameEngine()
 		games.pop_back();
 	}
 	if (exit) {
+		
 		graphics->cleanup();
 		dltPtr(graphics);
 		dltPtr(gameTime);

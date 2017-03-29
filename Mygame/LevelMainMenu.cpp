@@ -87,7 +87,6 @@ void LevelMainMenu::update(int gameTime, GameEngine * game)
 		{
 			//quit game; Game state = (something) to quit
 			game->state = GameStates::EXITPROGRAM;
-			game->sound->fmodSystem->release();
 		}
 		quitButton->update(gameTime, game->camera->getXOffset(), game->camera->getYOffset());
 	}

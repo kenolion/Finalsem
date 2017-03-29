@@ -10,6 +10,8 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 	mapName = "TileMap.txt";
 	game->sound->playMainMenuMusic();
 	game->sound->channel->setVolume(0.0f);
+	
+
 	object[1] = new Player(GAME_WIDTH / 2, GAME_HEIGHT / 2, D3DXVECTOR2(1.0f, 1.0f), 10, 5);
 	object[0] = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);						//(x,y,Scaling)
 	if (!object[0]->initialize(game->graphics->device3d, "sprite\\skybackground.png", 1280, 720, 1, 1, true, D3DCOLOR_XRGB(0, 0, 0), 1.0f)) {
@@ -53,7 +55,8 @@ void FlappyBird::update(int gameTime, GameEngine * game)
 		if (childrenPointer->isClicked(game->input->leftClickDown))
 		{
 			game->state = GameStates::MENU;
-			game->sound->fmodSystem->release();
+			//game->sound->channel->setVolume(0.0f);
+			//game->sound->pauseMainMenuMusic();
 		}
 
 	}
@@ -71,7 +74,7 @@ void FlappyBird::update(int gameTime, GameEngine * game)
 
 void FlappyBird::draw(GameEngine * game)
 {
-
+	
 	game->graphics->clear(D3DCOLOR_XRGB(255, 255, 255));
 	game->graphics->clear(D3DCOLOR_XRGB(0, 100, 100), object[1]->collisionRect);
 	game->graphics->clear(D3DCOLOR_XRGB(100, 0, 0), object[1]->legRect);
@@ -98,7 +101,8 @@ void FlappyBird::draw(GameEngine * game)
 
 void FlappyBird::collisions(GameEngine * game,int gameTime)
 {
-	//for (int i = 0; i < gameTime; i++) {
+	
+	
 		object[1]->forceVector = { 0,0 };
 		object[1]->physics(game->input);
 		for (int i = 0; i < numOfTiles; i++) {
@@ -106,9 +110,9 @@ void FlappyBird::collisions(GameEngine * game,int gameTime)
 				break;
 			}
 		}
-
+	
 		game->camera->centerOnObject(object[1]);
-	//}
+	
 }
 
 void FlappyBird::deleteAll()

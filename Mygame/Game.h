@@ -34,6 +34,7 @@ public:
 	GameObject *tiles[100];
 	std::string mapName;
 	int tileMap[TILEROW][TILECOLUMN];
+	bool isSolid(int x,int y);
 	int numOfTiles;
 	char tempChar;
 	bool loadLevel();

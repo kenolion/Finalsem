@@ -36,8 +36,8 @@ void GameCamera::setYOffset(float yOffset) {
 
 void GameCamera::centerOnObject(GameObject * object)
 {
-	xOffset = object->getObjectX() - GAME_WIDTH / 2 + object->getWidth();
-	yOffset = object->getObjectY() - GAME_HEIGHT / 2 + object->getHeight();
+	xOffset = object->getObjectPos().x - GAME_WIDTH / 2 + object->getWidth();
+	yOffset = object->getObjectPos().y - GAME_HEIGHT / 2 + object->getHeight();
 
 	if (xOffset < 0) {
 		xOffset = 0;

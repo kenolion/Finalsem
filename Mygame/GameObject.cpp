@@ -211,16 +211,6 @@ D3DXVECTOR2 GameObject::getObjectPos()
 	return position;
 }
 
-float GameObject::getObjectX()
-{
-	return position.x;
-}
-
-float GameObject::getObjectY()
-{
-	return position.y;
-}
-
 void GameObject::setX(float x)
 {
 	position.x = x;

@@ -113,5 +113,6 @@ DxSound::DxSound()
 
 DxSound::~DxSound()
 {
+	fmodSystem->release();
 	//fmodSystem->release();
 }

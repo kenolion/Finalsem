@@ -54,15 +54,15 @@ void Player::physics(PlayerInput * input)
 {
 	oldPosition = position;
 	oldVelocity = velocity;
-
+	
 	wasOnGround = onGround;
 	pushedRightWall = pushesRightWall;
 	pushedLeftWall = pushesLeftWall;
 	wasAtCeiling = atCeiling;
-
+	setDrawingPoint(0, 0);
 	switch (fsm) {
 	case CharacterState::Idle:
-	
+		std::cout << "idling     ";
 		state = 1;			//set to idle state
 		if (!onGround) {
 			fsm = CharacterState::Jumping;
@@ -76,12 +76,14 @@ void Player::physics(PlayerInput * input)
 			velocity.y = jumpSpeed;
 			fsm = CharacterState::Jumping;
 			break;
+			
 		}
 		break;
 	case CharacterState::Jumping:
+		std::cout << "Jumping     ";
 		velocity.y += GRAVITY;
 
-		velocity.y = min(velocity.y, 10.0f);
+		velocity.y = min(velocity.y, 15.0f);
 
 		if (input->rightArrowKey == input->leftArrowKey) {
 			velocity.x = 0.0f;
@@ -113,6 +115,7 @@ void Player::physics(PlayerInput * input)
 		break;
 	case CharacterState::Walking:
 		//set to walking animation
+		std::cout << "Walking     ";
 		if (input->rightArrowKey == input->leftArrowKey) {
 			//set to idle animation
 			fsm = CharacterState::Idle;

@@ -50,8 +50,6 @@ public:
 
 	//TEMP data used for calculating physics
 	D3DXVECTOR2 getObjectPos();
-	float getObjectX();
-	float getObjectY();
 	void setX(float x);
 	void setY(float y);
 
@@ -87,6 +85,7 @@ protected:
 	D3DXVECTOR2 oldVelocity;
 	D3DXVECTOR2 velocity;
 	D3DXVECTOR2 acceleration;
+	D3DXVECTOR2 oldAcceleration;
 	D3DXVECTOR2 scaling;
 	float mass;
 	ObjectStatus status;
