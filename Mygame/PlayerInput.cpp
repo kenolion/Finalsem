@@ -23,36 +23,34 @@ bool PlayerInput::ReadMouse()
 void PlayerInput::convertRelativeToAbsolute()
 {
 	
-	m_mouseX += m_mouseState.lX; //mousestate.IX IS THE RELATIVE X POSITION 
-	m_mouseY += m_mouseState.lY; //mousestate.IY is the RELATIVE Y position
+	mouseX += m_mouseState.lX; //mousestate.IX IS THE RELATIVE X POSITION 
+	mouseY += m_mouseState.lY; //mousestate.IY is the RELATIVE Y position
 
 	//Ensure the mouse location doesn't exceed the screen width or height.
-	if (m_mouseX <= 0)
+	if (mouseX <= 0)
 	{
-		m_mouseX = 0;
+		mouseX = 0;
 	}
-	if (m_mouseY <= 0)
+	if (mouseY <= 0)
 	{
-		m_mouseY = 0;
+		mouseY = 0;
 	}
 
-	if (m_mouseX > GAME_WIDTH)
+	if (mouseX > GAME_WIDTH)
 	{ 
-		m_mouseX = GAME_WIDTH;
+		mouseX = GAME_WIDTH;
 	}
-	if (m_mouseY > GAME_HEIGHT)
+	if (mouseY > GAME_HEIGHT)
 	{
-		m_mouseY = GAME_HEIGHT;
+		mouseY = GAME_HEIGHT;
 	}
 
-	return;
 }
 
-void PlayerInput::GetMouseLocation(int & mouseX, int & mouseY) //Stores the mouseX and mouseY into the mouseXandmouseY in this class
+D3DXVECTOR2 PlayerInput::GetMouseLocation() //Stores the mouseX and mouseY into the mouseXandmouseY in this class
 {
-	mouseX = m_mouseX;
-	mouseY = m_mouseY;
-	return;
+	return D3DXVECTOR2(mouseX, mouseY);
+
 }
 
 
@@ -80,7 +78,7 @@ bool PlayerInput::initializeKeyboard(HWND hwnd)		//Function that displays error 
 		system("pause");
 		return false;
 	}
-	hr = DI_Device->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	hr = DI_Device->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	if (FAILED(hr)) {
 		std::cout << "Failed to set cooperative level";
 		system("pause");
@@ -110,7 +108,7 @@ bool PlayerInput::initializeMouse(HWND hwnd)
 		return false;
 	}
 
-	hr = M_Device->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	hr = M_Device->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	if (FAILED(hr)) {
 		std::cout << "Failed to set cooperative level";
 		system("pause");

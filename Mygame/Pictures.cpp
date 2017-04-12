@@ -16,10 +16,9 @@ Pictures::~Pictures()
 {
 }
 
-void Pictures::update(int &gameTime, float xOffSet, float yOffSet)
+void Pictures::update(int &gameTime, GameEngine * game)
 {
 	for (int i = 0; i < gameTime; i++) {
-		for (int i = 0; i < gameTime; i++) {
 			//position += velocity;
 			if (position.x <= -100) {
 				position.x = GAME_WIDTH;
@@ -32,6 +31,6 @@ void Pictures::update(int &gameTime, float xOffSet, float yOffSet)
 				}
 			}
 			animTimer += animSpeed;
-		}
+		
 	}
 }

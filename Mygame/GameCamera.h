@@ -1,8 +1,7 @@
 #ifndef GAMECAMERA_H
 #define GAMECAMERA_H
-#include "GameObject.h"
-#include "Constants.h"
 
+class GameObject;
 class GameCamera
 {
 public:

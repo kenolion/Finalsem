@@ -4,26 +4,31 @@
 
 
 
-void Platform::update(int &gameTime, float xOffSet, float yOffSet)
+void Platform::update(int &gameTime, GameEngine * game)
 {
 	for (int i = 0; i < gameTime; i++) {
-		positionOffset.x = xOffSet;
-		positionOffset.y = yOffSet;
-
-
+		positionOffset.x = game->camera->getXOffset();
+		positionOffset.y = game->camera->getYOffset();
+		screenPos = position - positionOffset;
+		collisionRect.left = screenPos.x + col_xOffset;
+		collisionRect.right = screenPos.x + spriteWidth - col_xOffset;
+		collisionRect.top = screenPos.y + col_yOffset;
+		collisionRect.bottom = screenPos.y + spriteHeight*scaling.y;
 	}
 
 }
 
 
 
-Platform::Platform(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int tileWidth, int tileHeight, int tileType) :GameObject(x, y, scaling, animSpeed)
+Platform::Platform(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int tileWidth, int tileHeight, int tileType,int tileID) :GameObject(x, y, scaling, animSpeed)
 {
 	this->tileType = tileType;
 	this->type = ObjectType::Platform;
-	
-	position.x = x*tileWidth;
-	position.y = y*tileHeight;
+	row = x;
+	column = y;
+	position.x = row*tileWidth;
+	position.y = column*tileHeight;
+
 }
 
 bool Platform::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int width, int height, int row, int col, bool frameHorizontal, D3DXCOLOR color, float falseColl)
@@ -32,7 +37,7 @@ bool Platform::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int widt
 	this->tile = TileType::Block;
 	if (tileType > 6) {
 		state += tileType / 6.0f;
-		setFrame(tileType % 6);
+		frame = tileType % 6;
 	}
 	else {
 		setFrame(tileType);
@@ -44,4 +49,10 @@ bool Platform::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int widt
 
 Platform::~Platform()
 {
+}
+
+
+int Platform::getTileID()
+{
+	return tileID;
 }

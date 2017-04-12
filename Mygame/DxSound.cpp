@@ -1,7 +1,6 @@
 #include "DxSound.h"
 
 
-
 bool DxSound::initializeSound()
 {
 	if (fmodSystem == NULL) {
@@ -114,5 +113,4 @@ DxSound::DxSound()
 DxSound::~DxSound()
 {
 	fmodSystem->release();
-	//fmodSystem->release();
 }

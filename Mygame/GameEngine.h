@@ -1,14 +1,14 @@
 #ifndef GAMEENGINE_H
 #define GAMEENGINE_H
-#include <Windows.h>
 #include <vector>
+#include "Network.h"
 #include "DxSound.h"
-#include "UserInterface.h"
-#include "Cursor.h"
 #include "Graphics.h"
 #include "GameTime.h"
 #include "PlayerInput.h"
 #include "GameCamera.h"
+#include "LevelMainMenu.h"
+
 class Game;
 
 class GameEngine
@@ -22,10 +22,12 @@ public:
 	void handleEvents();
 	void popState();
 	void run();
-	GameCamera *camera;
+	static void setDrawingPoint(int x, int y);
 	
+	GameCamera *camera;
+	Network *network;
 	LPD3DXSPRITE sprite;
-	Cursor *cursor;
+	GameObject *cursor;
 	GameStates state;
 	Graphics * graphics;
 	GameTime *gameTime;

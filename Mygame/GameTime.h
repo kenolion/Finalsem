@@ -1,8 +1,9 @@
 #ifndef GAMETIME_H
 #define GAMETIME_H
-#include <Windows.h>
-#include <iostream>
 
+#include <iostream>
+#include "Constants.h"
+#include <Windows.h>
 class GameTime
 {
 public:

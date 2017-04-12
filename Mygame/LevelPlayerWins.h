@@ -1,6 +1,7 @@
-#ifndef LEVELPLAYERWINS_H		//ZER ADD
+#ifndef LEVELPLAYERWINS_H		
 #define LEVELPLAYERWINS_H
 #include "Game.h"
+
 class LevelPlayerWins: public Game
 {
 public:
@@ -9,11 +10,6 @@ public:
 	GameObject * backgroundImage;
 	GameObject * youWinTextLogo;
 	GameObject * quitButton;
-
-
-	Button *childrenPointer1;
-	Button *childrenPointer2;
-
 	bool initializeGame(HWND hwnd, GameEngine * game);
 	void update(int gameTime, GameEngine * game);
 	void collisions(GameEngine * game, int gameTime);
@@ -26,7 +22,7 @@ public:
 	void draw(GameEngine * game);
 	void deleteAll();
 protected:
-	LevelPlayerWins() {}
+	LevelPlayerWins();
 	~LevelPlayerWins();
 private:
 	static LevelPlayerWins winState;

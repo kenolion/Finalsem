@@ -18,11 +18,11 @@ public:
 
 
 	//FUNCTIONS
-	Button(float x, float y, D3DXVECTOR2 scaling, int animSpeed, LPCSTR string,int noOfCharacters,int r, int g, int b, LPD3DXFONT font);
+	Button(float x, float y, D3DXVECTOR2 scaling, int animSpeed, LPCSTR string,int noOfCharacters,int r, int g, int b, LPD3DXFONT font,GameStates state);
 
 	void draw(GameEngine * game);
-	void update(int &gameTime, float xOffSet, float yOffSet);
-
+	void update(int &gameTime, GameEngine * game);
+	GameStates state;
 	~Button();
 	bool onHover(int mouseX, int mouseY);
 	bool isClicked(bool leftClickDown);

@@ -1,6 +1,6 @@
 #ifndef GAMESPRITE_H
 #define GAMESPRITE_H
-#include <d3dx9.h>
+#include "Graphics.h"
 #include <string>
 
 class GameSprite

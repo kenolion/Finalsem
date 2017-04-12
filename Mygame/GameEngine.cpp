@@ -1,6 +1,6 @@
 #include "GameEngine.h"
 #include "Game.h"
-
+#include "Cursor.h"
 
 GameEngine::GameEngine()
 {
@@ -23,6 +23,7 @@ GameEngine::~GameEngine()
 		dltPtr(sound);
 		dltPtr(cursor);
 		dltPtr(camera);
+		dltPtr(network);
 	}
 
 }
@@ -32,6 +33,7 @@ bool GameEngine::initialize(HWND hwnd)
 	sprite = NULL;
 	camera = new GameCamera(0.0f, 0.0f);
 	camera->move(0.0f, 0.0f);
+
 
 	if (graphics == NULL) {
 		graphics = new Graphics();
@@ -79,6 +81,8 @@ bool GameEngine::initialize(HWND hwnd)
 			return false;
 		}
 	}
+	network = new Network();
+	//network->initializeWinSock();
 
 	//sound->playSoundtrack();
 
@@ -136,6 +140,17 @@ void GameEngine::popState()
 void GameEngine::run()
 {
 	games.back()->run(this);
+	
+}
+
+void GameEngine::setDrawingPoint(int x, int y)
+{
+	
+		COORD coord; //Does not need to be define because if we right click COORD and go to definition it is already defined in another library
+		coord.X = x;
+		coord.Y = y;
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+
 	
 }
 

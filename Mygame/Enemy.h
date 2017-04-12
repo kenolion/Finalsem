@@ -7,7 +7,7 @@ public:
 	Enemy();
 	Enemy(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int mass);
 	~Enemy();
-	void update(int &gameTime, float xOffSet, float yOffSet);
+	void update(int &gameTime, GameEngine * game);
 	
 
 

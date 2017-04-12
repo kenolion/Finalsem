@@ -2,7 +2,7 @@
 #include "GameEngine.h"
 
 
-Button::Button(float x, float y, D3DXVECTOR2 scaling, int animSpeed,LPCSTR string, int noOfCharacters, int r,int g, int b,LPD3DXFONT font) : GameObject(x, y, scaling , animSpeed)
+Button::Button(float x, float y, D3DXVECTOR2 scaling, int animSpeed, LPCSTR string, int noOfCharacters, int r, int g, int b, LPD3DXFONT font, GameStates state) : GameObject(x, y, scaling, animSpeed)
 {
 	this->string = string;
 	this->noOfCharacters = noOfCharacters;
@@ -10,11 +10,12 @@ Button::Button(float x, float y, D3DXVECTOR2 scaling, int animSpeed,LPCSTR strin
 	this->g = g;
 	this->b = b;
 	this->font = font;
+	this->state = state;
 }
 
 Button::~Button()
 {
-	
+
 }
 
 
@@ -65,19 +66,31 @@ void Button::draw(GameEngine * game) {
 	//	D3DCOLOR_XRGB(255, 255, 255)); //MOUSE X COORDINATE DRAWING POSITION		    //(6th Parameter) [D3DXCOLOR] Colour of the text	
 }
 
-void Button::update(int &gameTime, float xOffSet, float yOffSet)
+void Button::update(int &gameTime, GameEngine * game)
 {
 
-	for(int i = 0 ; i < gameTime;i++){
-	if (animTimer >= 60) {
-		animTimer = 0;
-		frame++;
-		if (frame > maxFrame) {
-			frame = maxFrame;
+	for (int i = 0; i < gameTime; i++) {
+		if (onHover(game->input->mouseX, game->input->mouseY))
+		{
+			if (isClicked(game->input->leftClickDown))
+			{
+				game->state = state;
+			}
+			if (animTimer >= 60) {
+				animTimer = 0;
+				frame++;
+				if (frame > maxFrame) {
+					frame = maxFrame;
+				}
+			}
+			animTimer += animSpeed;
+		}
+		else {
+			frame = 1;
 		}
 	}
-	animTimer += animSpeed;
-	}
+
+
 }
 
 

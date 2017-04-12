@@ -49,9 +49,6 @@
     <ClCompile Include="PlayerInput.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface.cpp">
-      <Filter>Engine\Cpp</Filter>
-    </ClCompile>
     <ClCompile Include="WinMain.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
@@ -59,6 +56,9 @@
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
     <ClCompile Include="GameCamera.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Network.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
   </ItemGroup>
@@ -114,13 +114,13 @@
     <ClInclude Include="PlayerInput.h">
       <Filter>Engine\Header</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface.h">
-      <Filter>Engine\Header</Filter>
-    </ClInclude>
     <ClInclude Include="GameEngine.h">
       <Filter>Engine\Header</Filter>
     </ClInclude>
     <ClInclude Include="GameCamera.h">
+      <Filter>Engine\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Network.h">
       <Filter>Engine\Header</Filter>
     </ClInclude>
   </ItemGroup>
@@ -147,9 +147,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameTime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UserInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LevelMainMenu.cpp">
@@ -190,7 +187,6 @@
     <ClInclude Include="LevelPlayerWins.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerInput.h" />
-    <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="FontFormats.txt">

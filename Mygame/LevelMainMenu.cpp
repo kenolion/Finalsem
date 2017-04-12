@@ -2,6 +2,8 @@
 #include "FlappyBird.h"
 #include "LevelPlayerWins.h"
 #include "GameEngine.h"
+#include "Button.h"
+#include "Pictures.h"
 LevelMainMenu LevelMainMenu::mainMenuState;
 
 bool LevelMainMenu::initializeGame(HWND hwnd, GameEngine * game)
@@ -16,7 +18,7 @@ bool LevelMainMenu::initializeGame(HWND hwnd, GameEngine * game)
 		return initialize = false;
 	}
 	//---------------------------------------------------------------------------------------------------------------------------------------------
-	gameLogo = new Pictures(100,100, D3DXVECTOR2(1.0f, 1.0f), 1);
+	gameLogo = new Pictures(100, 100, D3DXVECTOR2(1.0f, 1.0f), 1);
 	if (!gameLogo->initialize(game->graphics->device3d, "sprite\\gameLogo.png", 1130, 97, 1, 1, true, D3DCOLOR_XRGB(0, 0, 0), 1.0f)) {
 		MessageBox(NULL, "There was an issue creating the game logo image", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
 		return initialize = false;
@@ -24,32 +26,31 @@ bool LevelMainMenu::initializeGame(HWND hwnd, GameEngine * game)
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 
-	startButton = new Button(0, 0, D3DXVECTOR2(1.0f, 1.0f),30, "Start Game", 10, 255,155,0, game->graphics->font); //X to print, Y to print position and scaling.
-	startButton->setX(50);
-	startButton->setY(600);
+	startButton = new Button(0, 0, D3DXVECTOR2(1.0f, 1.0f), 30, "Start Game", 10, 255, 155, 0, game->graphics->font, GameStates::LEVEL1); //X to print, Y to print position and scaling.
+	//startButton->setX(50);
+	//startButton->setY(600);
+	startButton->setPosition(50, 600);
 
-
-	if(!startButton->initialize(game->graphics->device3d, "sprite\\buttonTemplateAnimation.png", 1116, 76, 1, 4, true, D3DCOLOR_XRGB(255,255,255),1.0f)) //Width, Height of the pic when printed in game, SpriteWidth, SpriteHeight, 
+	if (!startButton->initialize(game->graphics->device3d, "sprite\\buttonTemplateAnimation.png", 1116, 76, 1, 4, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f)) //Width, Height of the pic when printed in game, SpriteWidth, SpriteHeight, 
 	{
 		MessageBox(NULL, "There was an issue creating the start button", NULL, NULL);
 		return initialize = false; //If false program wont run
 	}
 	//---------------------------------------------------------------------------------------------------------------------------------------------
-	quitButton = new Button(0, 0, D3DXVECTOR2(1.0f, 1.0f), 30, "Exit Game", 10, 255, 155, 0, game->graphics->font);
-	quitButton->setX(950);
-	quitButton->setY(600);
+	quitButton = new Button(0, 0, D3DXVECTOR2(1.0f, 1.0f), 30, "Exit Game", 10, 255, 155, 0, game->graphics->font, GameStates::EXITPROGRAM);
+	quitButton->setPosition(950, 600);
 
 	if (!quitButton->initialize(game->graphics->device3d, "sprite\\buttonTemplateAnimation.png", 1116, 76, 1, 4, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f)) //Width, Height of the pic when printed in game, SpriteWidth, SpriteHeight, 
 	{
 		MessageBox(NULL, "There was an issue creating the quit button", NULL, NULL);
 		return initialize = false; //If false program wont run
 	}
-	
+
 	//---------------------------------------------------------------------------------------------------------------------------------------------
-	childrenPointer = dynamic_cast<Button*>(startButton); //This makes it so that a derived class can access base class methods and variables through pointing with "childrenPointer2"
-	childrenPointer2 = dynamic_cast<Button*>(quitButton); //Children class = Parent class
+
 	game->exit = false;
 	game->state = GameStates::MENU;
+
 	return initialize = true;
 
 }
@@ -57,48 +58,10 @@ bool LevelMainMenu::initializeGame(HWND hwnd, GameEngine * game)
 void LevelMainMenu::update(int gameTime, GameEngine * game)
 {
 
-	game->cursor->update(gameTime,game->camera->getXOffset(), game->camera->getYOffset()); //Update cursor according to mouseX and mouseY
-	//---------------------------------------------------------------------------------------------------------------------------------------------
+	game->cursor->update(gameTime, game); //Update cursor according to mouseX and mouseY
+	startButton->update(gameTime, game);
+	quitButton->update(gameTime, game);
 
-	Button *childrenPointer = dynamic_cast<Button*>(startButton); //Children class = Parent 
-
-	if (childrenPointer->onHover(mouseX, mouseY)) 
-	{
-		if (childrenPointer->isClicked(game->input->leftClickDown))
-		{
-			//change to level one
-			game->state = GameStates::LEVEL1;
-			game->sound->pauseMainMenuMusic();
-			
-		}
-		startButton->update(gameTime, game->camera->getXOffset(), game->camera->getYOffset());
-	}
-	else{
-		startButton->setFrame(1);
-	}
-
-	//---------------------------------------------------------------------------------------------------------------------------------------------
-
-	Button *childrenPointer2 = dynamic_cast<Button*>(quitButton); //Children class = Parent class
-	
-	if (childrenPointer2->onHover(mouseX, mouseY))
-	{
-		if (childrenPointer2->isClicked(game->input->leftClickDown))
-		{
-			//quit game; Game state = (something) to quit
-			game->state = GameStates::EXITPROGRAM;
-		}
-		quitButton->update(gameTime, game->camera->getXOffset(), game->camera->getYOffset());
-	}
-	else {
-		quitButton->setFrame(1);
-	}
-
-	//---------------------------------------------------------------------------------------------------------------------------------------------
-
-	
-
-	
 }
 
 void LevelMainMenu::collisions(GameEngine * game, int gameTime)
@@ -107,7 +70,7 @@ void LevelMainMenu::collisions(GameEngine * game, int gameTime)
 //	for (int i = 0; i<GOBJECTNUML1; i++) {
 //		object[i]->posVector = object[i]->getObjectPos();
 //	}
-
+	
 }
 
 void LevelMainMenu::handleEvents(GameEngine *game)
@@ -117,7 +80,7 @@ void LevelMainMenu::handleEvents(GameEngine *game)
 		game->exit = true;
 		break;
 	case GameStates::LEVEL1:
-		game->pushState(FlappyBird::getInstance(),hwnd);
+		game->pushState(FlappyBird::getInstance(), hwnd);
 		break;
 	}
 
@@ -125,7 +88,7 @@ void LevelMainMenu::handleEvents(GameEngine *game)
 
 void LevelMainMenu::draw(GameEngine * game)
 {
-	game->graphics->clear(D3DCOLOR_XRGB(0,0,0)); //255 204 255 = Pink
+	game->graphics->clear(D3DCOLOR_XRGB(0, 0, 0)); //255 204 255 = Pink
 	game->graphics->begin();
 
 	game->graphics->createLine();
@@ -138,7 +101,7 @@ void LevelMainMenu::draw(GameEngine * game)
 	gameLogo->draw(game);
 	startButton->draw(game);
 	quitButton->draw(game);
-	
+
 
 	//==============================================================================================================================================
 	game->cursor->draw(game);
@@ -158,8 +121,8 @@ void LevelMainMenu::deleteAll()
 	dltPtr(backgroundImage);
 	dltPtr(gameLogo);
 	
-		
-}		
+
+}
 
 
 LevelMainMenu::LevelMainMenu()
@@ -169,5 +132,6 @@ LevelMainMenu::LevelMainMenu()
 
 LevelMainMenu::~LevelMainMenu()
 {
+	freeAStar();
 }
 
