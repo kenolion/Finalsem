@@ -8,7 +8,31 @@ Player::Player(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int mass) :
 	fsm = CharacterState::Idle;
 	jumpSpeed = -15.0f;
 	walkSpeed = 3.0f;
+	//animation[0] = new AnimationManager();
+	//animation[0]->initialize(0, 183, 276, 86, 4, true);				//idle
+	//animation[1] = new AnimationManager();
+	//animation[1]->initialize(0, 91, 330, 92, 6, true);				//walking
+	//animation[2] = new AnimationManager();
+	//animation[2]->initialize(0, 0, 332, 91, 4, false);		//jumping
+	//animation[3] = new AnimationManager();
+	//animation[3]->initialize(0, 64, 0, 48, 1, true);
+	//animation[4] = new AnimationManager();
+	//animation[4]->initialize(184, 172, 167, 138, 4, true);
 
+	animation[0] = new AnimationManager();
+	animation[0]->initialize(0, 48, 192, 48, 4, true);				//idlek
+	animation[1] = new AnimationManager();
+	animation[1]->initialize(192, 0, 192, 48, 6, true);				//walking
+	animation[2] = new AnimationManager();
+	animation[2]->initialize(0, 144, 192, 48, 4, false);		//jumping
+
+	animation[3] = new AnimationManager();
+	animation[3]->initialize(0, 0, 192, 48, 4, true);		// idle left
+	animation[4] = new AnimationManager();
+	animation[4]->initialize(0, 96, 192, 48, 4, false); // jump left
+	animation[5] = new AnimationManager();
+	animation[5]->initialize(0, 192, 192, 48, 6, true); //wlaking
+	face = 1;
 }
 
 
@@ -22,7 +46,7 @@ void Player::update(int &gameTime, GameEngine * game)
 	//std::cout << onGround << std::endl;
 		for (int i = 0; i < gameTime; i++) {
 			position = posVector;
-			//position = posVector;
+			//scaling = { (float)face,1.0f };
 			positionOffset.x = game->camera->getXOffset();
 			positionOffset.y = game->camera->getYOffset();
 
@@ -30,14 +54,9 @@ void Player::update(int &gameTime, GameEngine * game)
 
 			//std::cout << positionOffset.x << "     " << std::endl;
 			//position = { round(position.x), round(position.y) };
-
-			//std::cout << position.x << std::endl;
 			if (animTimer >= REQFPS) {
 				animTimer = 0;
-				frame++;
-				if (frame > maxFrame) {
-					frame = 1;
-				}
+				animation[state]->nextFrame();
 			}
 			animTimer += animSpeed;
 
@@ -60,11 +79,19 @@ void Player::physics(PlayerInput * input, int gameTime)
 	pushedRightWall = pushesRightWall;
 	pushedLeftWall = pushesLeftWall;
 	wasAtCeiling = atCeiling;
+	std::cout << state << std::endl;
 	//setDrawingPoint(0, 0);
 	switch (fsm) {
 	case CharacterState::Idle:
-		//std::cout << "idle" << std::endl;
-		state = 1;			//set to idle state
+		std::cout << "idle" << std::endl;
+
+		
+			if (face == 1)
+				state = 0;
+			else
+				state = 3;
+			animation[state]->start();
+		
 		if (!onGround) {
 			fsm = CharacterState::Jumping;
 			break;
@@ -80,19 +107,31 @@ void Player::physics(PlayerInput * input, int gameTime)
 			break;
 
 		}
+		break;
 
 	case CharacterState::Jumping:
-		//std::cout << "jumping" << std::endl;
+
+		std::cout << "jumping" << std::endl;
+		
+		animation[state]->start();
+
 		if (!onGround) {
 			velocity.y += GRAVITY;
 			velocity.y = min(velocity.y, 10.0f);
 		}
 		if (input->rightArrowKey == input->leftArrowKey) {
+			if (face == 1)
+				state = 2;
+			else
+				state = 4;
 			acceleration.x = 0.0f;
 			//velocity.x = 0.0f;
 		}
 		else if (input->rightArrowKey) {
+			face = 1;
+			state = 2;
 			if (pushesRightWall) {
+
 				velocity.x = 0.0f;
 				acceleration.x = 0.0f;
 			}
@@ -103,16 +142,21 @@ void Player::physics(PlayerInput * input, int gameTime)
 			}
 		}
 		else if (input->leftArrowKey) {
+			face = -1;
+			state = 4;
 			if (pushesLeftWall) {
+
 				velocity.x = 0.0f;
 				acceleration.x = 0.0f;
 			}
 			else {
+			
 				acceleration.x = -walkSpeed;
 				velocity.x = max(velocity.x, -2.0f);
 			}
 		}
 		if (onGround) {
+			
 			if (input->leftArrowKey == input->rightArrowKey) {
 				fsm = CharacterState::Idle;
 				velocity.x = 0.0f;
@@ -125,8 +169,13 @@ void Player::physics(PlayerInput * input, int gameTime)
 		}
 		break;
 	case CharacterState::Walking:
+
+
+		if (animation[state]->isEOS())
+			animation[state]->start();
+
 		//set to walking animation
-		//std::cout << "walking" << std::endl;
+		std::cout << "walking" << std::endl;
 		if (input->rightArrowKey == input->leftArrowKey) {
 			//set to idle animation
 			fsm = CharacterState::Idle;
@@ -135,18 +184,24 @@ void Player::physics(PlayerInput * input, int gameTime)
 			break;
 		}
 		if (input->rightArrowKey) {
+			face = 1;
+			state = 1;
 			if (pushesRightWall) {
+				
 				acceleration.x = 0.0f;
 				velocity.x = 0.0f;
 			}
 			else {
+		
 				acceleration.x = walkSpeed;
 				velocity.x = min(velocity.x, 2.0f);
 			}
 		}
 		else if (input->leftArrowKey) {
-
+			face = -1;
+			state = 5;
 			if (pushesLeftWall) {
+				
 				velocity.x = 0.0f;
 				acceleration.x = 0.0f;
 			}
@@ -175,6 +230,38 @@ void Player::physics(PlayerInput * input, int gameTime)
 
 }
 
+void Player::draw(GameEngine * game)
+{
+
+	//if (frameHorizontal)					//Changes if the sprite sheet frames are going horizontally or vertically
+	//{
+	//	spriteRect.top = (state - 1)*spriteHeight;
+	//	spriteRect.bottom = spriteRect.top + spriteHeight;
+	//	spriteRect.left = (frame - 1)*spriteWidth;
+	//	spriteRect.right = spriteRect.left + spriteWidth;
+	//}
+	//else
+	//{
+	//	spriteRect.top = (frame - 1)*spriteHeight;
+	//	spriteRect.bottom = spriteRect.top + spriteHeight;
+	//	spriteRect.left = (state - 1)*spriteWidth;
+	//	spriteRect.right = spriteRect.left + spriteWidth;
+
+	//}
+
+	spriteCentre = D3DXVECTOR2((spriteWidth) / 2, (spriteHeight) / 2);
+
+	D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &screenPos);
+	game->sprite->SetTransform(&mat);
+	if (game->sprite)
+	{
+		spriteClass->draw(game->sprite, animation[state]->getFrame(), color);
+	}
+
+
+
+}
+
 float Player::getWalkSpeed()
 {
 	return walkSpeed;
@@ -193,4 +280,7 @@ CharacterState Player::getCharacterState()
 
 Player::~Player()
 {
+	for (int i = 0; i < 5; i++) {
+		dltPtr(animation[i]);
+	}
 }

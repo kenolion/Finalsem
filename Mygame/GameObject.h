@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Constants.h"
 #include "PlayerInput.h"
+#include "AnimationManager.h"
 
 class GameEngine;
 

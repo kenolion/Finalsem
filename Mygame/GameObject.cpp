@@ -154,7 +154,7 @@ void GameObject::draw(GameEngine * game)		//Function that draw sprite
 	}
 
 	spriteCentre = D3DXVECTOR2(spriteWidth / 2, spriteHeight / 2);
-	if (type == ObjectType::Player || type == ObjectType::Platform) {
+	if ( type == ObjectType::Platform) {
 
 
 		D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &screenPos);
@@ -386,9 +386,9 @@ void GameObject::handleYAxisCollision()
 		if((int)positionOffset.y % 48 == 0)
 			overlap.y = (collisionRect.bottom) - ((int)(((collisionRect.bottom) / 48) * 48));
 		else {
-			overlap.y = (collisionRect.bottom+positionOffset.y-spriteHeight) - ((int)((((collisionRect.bottom + positionOffset.y - spriteHeight) / 48)) * 48));
+			overlap.y = (collisionRect.bottom+positionOffset.y-48) - ((int)((collisionRect.bottom + positionOffset.y - 48) / 48) * 48);
 		}
-		std::cout << ((int)((((collisionRect.bottom + positionOffset.y - spriteHeight) / 48)) * 48) ) << "        " << std::endl;
+		//std::cout << ((int)((((collisionRect.bottom + positionOffset.y - spriteHeight) / 48)) * 48) ) << "        " << std::endl;
 		posVector.y -= overlap.y;
 	}
 

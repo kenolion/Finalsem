@@ -7,8 +7,10 @@ enum class CharacterState { Idle,Walking,Jumping,LedgeGrab };
 class Player:public GameObject
 {
 private:
-
+	float walkSpeed;
+	float jumpSpeed;
 public:
+	AnimationManager *animation[6];
 	// spriteData contains the data required to draw the image by Graphics::drawSprite()
 	//int     cols;           // number of cols (1 to n) in multi-frame sprite
 	//int     startFrame;     // first frame of current animation
@@ -22,11 +24,10 @@ public:
 	Player(float x, float y,D3DXVECTOR2 scaling,int animSpeed,int mass);
 	void update(int &gameTime, GameEngine * game);
 	void physics(PlayerInput *input, int gameTime);
-	float walkSpeed;
-	float jumpSpeed;
+	void draw(GameEngine * game);
 	float getWalkSpeed();
 	float getJumpSpeed();
-
+	int face;
 	CharacterState fsm;
 	CharacterState getCharacterState();
 	~Player();

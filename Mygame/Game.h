@@ -9,6 +9,8 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <list>
+#include <set>
 
 
 class GameEngine;
@@ -85,6 +87,7 @@ public:
 	std::vector<Node> openList;
 	std::vector<Node> closeList;
 	std::vector<Node> neighbour;
+	std::list<Node> negs;
 	std::vector<Node> path;
 	//std::vector<Node> blocks;
 	Node *blocks[400];
