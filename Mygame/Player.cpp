@@ -79,7 +79,6 @@ void Player::physics(PlayerInput * input, int gameTime)
 	pushedRightWall = pushesRightWall;
 	pushedLeftWall = pushesLeftWall;
 	wasAtCeiling = atCeiling;
-	setDrawingPoint(0, 0);
 	switch (fsm) {
 	case CharacterState::Idle:
 		std::cout << "idle" << std::endl;

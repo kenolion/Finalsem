@@ -43,8 +43,6 @@ bool Button::isClicked(bool leftClickDown)
 }
 
 
-}
-
 void Button::draw(GameEngine * game) {
 
 	GameObject::draw(game);

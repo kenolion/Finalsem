@@ -103,32 +103,8 @@ void FlappyBird::collisions(GameEngine * game, int gameTime)
 		}
 
 	}
-
-
-
-void FlappyBird::collisions(GameEngine * game, int gameTime)
-{
-	//object[2]->physics(game->input, gameTime);
-	checkGround(object[2], game->camera->getXOffset(), game->camera->getXOffset());
-	checkRightSide(object[2], game->camera->getXOffset(), game->camera->getXOffset());
-	checkLeftSide(object[2], game->camera->getXOffset(), game->camera->getXOffset());
-
-	object[1]->physics(game->input,gameTime);
-	checkGround(object[1], game->camera->getXOffset(), game->camera->getXOffset());
-	checkRightSide(object[1], game->camera->getXOffset(), game->camera->getXOffset());
-	checkLeftSide(object[1], game->camera->getXOffset(), game->camera->getXOffset());
-
-
-	//for (int i = 0; i < numOfTiles; i++) {
-	//	if (object[1]->collideWith(tiles[i])) {
-	//		break;
-	//	}
-	//}
-
-
-	game->camera->centerOnObject(object[1]);
-
 }
+
 
 void FlappyBird::update(int gameTime, GameEngine * game)
 {
@@ -165,15 +141,15 @@ void FlappyBird::draw(GameEngine * game)
 	game->graphics->clear(D3DCOLOR_XRGB(100, 0, 0), object[1]->legRect);
 	game->graphics->begin();
 	game->sprite->Begin(D3DXSPRITE_ALPHABLEND);
-
+	parallaxBG1->draw(game);
+	parallaxBG2->draw(game);
+	parallaxBG3->draw(game);
 	for (int row = 0; row < TILEROW; row++) {
 		for (int col = 0; col < TILECOLUMN; col++) {
 			if (tiles[row][col] != NULL)
 				tiles[row][col]->draw(game);
 		}
-	parallaxBG1->draw(game);
-	parallaxBG2->draw(game);
-	parallaxBG3->draw(game);
+
 
 
 	}

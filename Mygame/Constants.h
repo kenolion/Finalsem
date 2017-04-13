@@ -2,7 +2,6 @@
 
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-#include <Windows.h>
 const int GAME_WIDTH = 1280;
 const int GAME_HEIGHT = 720;
 const char CLASS_NAME[] = "Keith Class";
