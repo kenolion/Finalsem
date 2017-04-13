@@ -1,0 +1,14 @@
+Changes
+1. Modified game object initialize function
+2.Moved Font to be created in the graphics class
+3. removed some unnecessary code in the level main menu cpp like the goomba object that was used for testing '
+4. deleted objects in flappybird.cpp
+5. added function to draw ur own text. 
+6.Added a timer to count how long the player has survived
+7. removed hitbox variables in gameobject
+
+8. Fixed RUNTIME ERRORS FOR
+/////////(Suspecting sound that's giving all those runtime errors)
+9. Added Sin calculation for the pipes to go in a sin wave
+
+10. CreateFont parameters replaced with text string length

@@ -7,7 +7,7 @@ class Cursor : public GameObject
 public:
 	Cursor(float x, float y, D3DXVECTOR2 scaling, int animSpeed);
 	~Cursor();
-	void update(int &gameTime, float xOffSet, float yOffSet);
+	void update(int &gameTime, GameEngine * game);
 
 	
 };

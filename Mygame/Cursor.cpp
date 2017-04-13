@@ -13,9 +13,8 @@ Cursor::~Cursor()
 {
 }
 
-void Cursor::update(int & gameTime, float xOffSet, float yOffSet)
+void Cursor:: update(int &gameTime, GameEngine * game)
 {
-	this->position = posVector;
 	for (int i = 0; i < gameTime; i++) {
 		if (animTimer >= 60) {
 			animTimer = 0;

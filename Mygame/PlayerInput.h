@@ -8,8 +8,7 @@
 //#define DIK_LEFT 0x1F
 #include <iostream>
 #include "Constants.h"
-#include "DxSound.h"
-
+#include <d3dx9.h>
 class PlayerInput
 {
 public: 
@@ -18,16 +17,14 @@ public:
 	LPDIRECTINPUTDEVICE8 DI_Device;
 	LPDIRECTINPUTDEVICE8 M_Device;	
 
-	//Zer add these ====================================================
 	DIMOUSESTATE m_mouseState;			//MOUSESTATE IS USED FOR RECORDING THE CURRENT STATE OF KEYBOARD AND MOUSE DEVICES
-	int m_mouseX, m_mouseY;
 	bool ReadMouse();
 	void convertRelativeToAbsolute();
-	int mouseX, mouseY; //To be used to do checking.
+	int mouseX, mouseY;
 
-	void GetMouseLocation(int& mouseX, int& mouseY);
+	D3DXVECTOR2 GetMouseLocation();
 	bool leftClickDown;
-	//Zer add these ====================================================
+	bool rightClickDown;
 
 	//RAWINPUTDEVICE rawinput[1];
 	bool initializeKeyboard( HWND hwnd);
@@ -47,6 +44,29 @@ public:
 	bool rightArrowKey;
 	bool leftArrowKey;
 	bool jumpKey;
+
+	bool zeroKey;
+	int zroKey;
+	bool oneKey;
+	int onKey;
+	bool twoKey;
+	int twKey;
+	bool threeKey;
+	int threKey;
+	bool fourKey;
+	int forKey;
+	bool fiveKey;
+	int fveKey;
+	bool sixKey;
+	int sxKey;
+	bool sevenKey;
+	int svenKey;
+	bool eightKey;
+	int eghtKey;
+	bool nineKey;
+	int ninKey;
+	bool dotKey;
+	int dtKey;
 
 	bool keyPressed;
 

@@ -1,6 +1,5 @@
 #include "GameTime.h"
 
-
 bool GameTime::initialize(int fps)
 {
 

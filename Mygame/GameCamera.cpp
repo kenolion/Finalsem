@@ -1,5 +1,5 @@
 #include "GameCamera.h"
-
+#include "GameObject.h"
 
 
 float GameCamera::getXOffset()
@@ -37,7 +37,7 @@ void GameCamera::setYOffset(float yOffset) {
 void GameCamera::centerOnObject(GameObject * object)
 {
 	xOffset = object->getObjectPos().x - GAME_WIDTH / 2 + object->getWidth();
-	yOffset = object->getObjectPos().y - GAME_HEIGHT / 2 + object->getHeight();
+	yOffset = object->getObjectPos().y - GAME_HEIGHT / 2 +object->getHeight();
 
 	if (xOffset < 0) {
 		xOffset = 0;

@@ -17,7 +17,7 @@ Enemy::Enemy(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int mass) :Ga
 
 }
 
-void Enemy::update(int &gameTime, float xOffSet, float yOffSet)
+void Enemy::update(int &gameTime, GameEngine * game)
 {
 	for (int i = 0; i < gameTime; i++){
 		position += velocity;

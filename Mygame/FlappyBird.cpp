@@ -2,6 +2,9 @@
 #include "LevelMainMenu.h"
 #include "GameEngine.h"
 #include "LevelPlayerWins.h"
+#include "Button.h"
+#include "Pictures.h"
+#include "Player.h"
 FlappyBird FlappyBird::level1State;
 
 bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
@@ -10,10 +13,15 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 	mapName = "TileMap.txt";
 	game->sound->playMainMenuMusic();
 	game->sound->channel->setVolume(0.0f);
-	
 
+
+	object[2] = new Player(200,200, D3DXVECTOR2(1.0f, 1.0f), 10, 5);
 	object[1] = new Player(GAME_WIDTH / 2, GAME_HEIGHT / 2, D3DXVECTOR2(1.0f, 1.0f), 10, 5);
 	object[0] = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);						//(x,y,Scaling)
+	parallaxBG1 = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);
+	parallaxBG2 = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);
+	parallaxBG3 = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);
+
 	if (!object[0]->initialize(game->graphics->device3d, "sprite\\skybackground.png", 1280, 720, 1, 1, true, D3DCOLOR_XRGB(0, 0, 0), 1.0f)) {
 		MessageBox(NULL, "There was an issue creating the sprite", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
 		return initialize = false;
@@ -23,19 +31,37 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 		return initialize = false;
 	}
 
+	if (!object[2]->initialize(game->graphics->device3d, "sprite\\ben.png", 128, 192, 4, 4, true, D3DCOLOR_XRGB(0, 0, 0), 0.90f)) {
+		MessageBox(NULL, "There was an issue creating the sprite", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
+		return initialize = false;
+	}
+
+	if (!parallaxBG1->initialize(game->graphics->device3d, "sprite\\parallax 1 (7).png", 1280, 720, 1, 1, true, D3DCOLOR_XRGB(0, 0, 0), 1.0f)) {
+		MessageBox(NULL, "There was an issue creating the bg", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
+		return initialize = false;
+	}
+
+	if (!parallaxBG2->initialize(game->graphics->device3d, "sprite\\parallax 1 (2).png", 1280, 720, 1, 1, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f)) {
+		MessageBox(NULL, "There was an issue creating the bg", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
+		return initialize = false;
+	}
+
+	if (!parallaxBG3->initialize(game->graphics->device3d, "sprite\\parallax 1 (3).png", 1280, 720, 1, 1, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f)) {
+		MessageBox(NULL, "There was an issue creating the bg", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
+		return initialize = false;
+	}
+
+
+
 	//---------------------------------------------------------------------------------------------------------------------------------------------
-	menuButton = new Button(0, 0, D3DXVECTOR2(1.0f, 1.0f), 30, "Main Menu", 10, 255, 155, 0, game->graphics->font);
-	menuButton->setX(600);
-	menuButton->setY(0);
-
-
+	menuButton = new Button(0, 0, D3DXVECTOR2(1.0f, 1.0f), 30, "Main Menu", 10, 255, 155, 0, game->graphics->font,GameStates::MENU, ButtonType::NORMAL);
+	menuButton->setPosition(600, 0);
 
 	if (!menuButton->initialize(game->graphics->device3d, "sprite\\buttonTemplateAnimation.png", 1116, 76, 1, 4, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f)) //Width, Height of the pic when printed in game, SpriteWidth, SpriteHeight, 
 	{
 		MessageBox(NULL, "There was an issue creating the menuButton", NULL, NULL);
 		return initialize = false; //If false program wont run
 	}
-	childrenPointer = dynamic_cast<Button*>(menuButton);
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 	if (!loadLevel()) {
 		return initialize = false;
@@ -48,39 +74,61 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 	return initialize = true;
 }
 
+
+
+void FlappyBird::collisions(GameEngine * game, int gameTime)
+{
+	//object[2]->physics(game->input, gameTime);
+	checkGround(object[2], game->camera->getXOffset(), game->camera->getXOffset());
+	checkRightSide(object[2], game->camera->getXOffset(), game->camera->getXOffset());
+	checkLeftSide(object[2], game->camera->getXOffset(), game->camera->getXOffset());
+
+	object[1]->physics(game->input,gameTime);
+	checkGround(object[1], game->camera->getXOffset(), game->camera->getXOffset());
+	checkRightSide(object[1], game->camera->getXOffset(), game->camera->getXOffset());
+	checkLeftSide(object[1], game->camera->getXOffset(), game->camera->getXOffset());
+
+
+	//for (int i = 0; i < numOfTiles; i++) {
+	//	if (object[1]->collideWith(tiles[i])) {
+	//		break;
+	//	}
+	//}
+
+
+	game->camera->centerOnObject(object[1]);
+
+}
+
 void FlappyBird::update(int gameTime, GameEngine * game)
 {
-	if (childrenPointer->onHover(mouseX, mouseY))
-	{
-		if (childrenPointer->isClicked(game->input->leftClickDown))
-		{
-			game->state = GameStates::MENU;
-			//game->sound->channel->setVolume(0.0f);
-			//game->sound->pauseMainMenuMusic();
-		}
-
-	}
+	
 	for (int i = 0; i < numOfTiles; i++) {
-		tiles[i]->update(gameTime, game->camera->getXOffset(), game->camera->getYOffset());
+		tiles[i]->update(gameTime, game);
 	}
 	for (int i = 0; i < FLAPPYBIRDOBJECTS; i++) {
-		object[i]->update(gameTime, game->camera->getXOffset(), game->camera->getYOffset());
+		object[i]->update(gameTime, game);
 
 	}
-	menuButton->update(gameTime, game->camera->getXOffset(), game->camera->getYOffset());
-	game->cursor->update(gameTime, game->camera->getXOffset(), game->camera->getYOffset());
+	parallaxBG1->update(gameTime, game);
+	parallaxBG2->update(gameTime, game);
+	parallaxBG3->update(gameTime, game);
+	menuButton->update(gameTime, game);
+	game->cursor->update(gameTime, game);
 
 }
 
 void FlappyBird::draw(GameEngine * game)
 {
-	
+
 	game->graphics->clear(D3DCOLOR_XRGB(255, 255, 255));
 	game->graphics->clear(D3DCOLOR_XRGB(0, 100, 100), object[1]->collisionRect);
-	game->graphics->clear(D3DCOLOR_XRGB(100, 0, 0), object[1]->legRect);
+	//game->graphics->clear(D3DCOLOR_XRGB(100, 0, 0), object[1]->legRect);
 	game->graphics->begin();
 	game->sprite->Begin(D3DXSPRITE_ALPHABLEND);
-
+	parallaxBG1->draw(game);
+	parallaxBG2->draw(game);
+	parallaxBG3->draw(game);
 	for (int i = 0; i < numOfTiles; i++) {
 		tiles[i]->draw(game);
 	}
@@ -99,22 +147,6 @@ void FlappyBird::draw(GameEngine * game)
 	game->graphics->present();
 }
 
-void FlappyBird::collisions(GameEngine * game,int gameTime)
-{
-	
-	
-		object[1]->forceVector = { 0,0 };
-		object[1]->physics(game->input);
-		for (int i = 0; i < numOfTiles; i++) {
-			if (object[1]->collideWith(tiles[i])) {
-				break;
-			}
-		}
-	
-		game->camera->centerOnObject(object[1]);
-	
-}
-
 void FlappyBird::deleteAll()
 {
 	for (int i = 0; i < numOfTiles; i++) {
@@ -124,7 +156,9 @@ void FlappyBird::deleteAll()
 		dltPtr(object[i]);
 	}
 	dltPtr(menuButton);
-
+	dltPtr(parallaxBG1);
+	dltPtr(parallaxBG2);
+	dltPtr(parallaxBG3);
 }
 
 void FlappyBird::handleEvents(GameEngine * game)
@@ -137,6 +171,24 @@ void FlappyBird::handleEvents(GameEngine * game)
 	case GameStates::MENU:
 		game->popState();
 		break;
+	}
+
+}
+
+void FlappyBird::multiplayer(GameEngine * game)
+{
+	if (game->network->recvbuf == "left") {
+		object[2]->setPosition(object[2]->getObjectPos().x + 1, object[2]->getObjectPos().y);
+		*game->network->recvbuf = 0;
+	}
+	if (game->network->recvbuf == "right") {
+		*game->network->recvbuf = 0;
+	}
+	if (game->network->recvbuf == "jump") {
+		*game->network->recvbuf = 0;
+	}
+	if (game->network->recvbuf == "up") {
+		*game->network->recvbuf = 0;
 	}
 
 }

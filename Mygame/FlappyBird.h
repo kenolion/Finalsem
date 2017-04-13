@@ -14,13 +14,15 @@ public:
 	void collisions(GameEngine * game, int gameTime);
 	void deleteAll();
 	void handleEvents(GameEngine *game);
-	
+
+	void multiplayer(GameEngine * game);
 	
 	GameObject *object[FLAPPYBIRDOBJECTS];
 	GameObject *menuButton;
 
-	Button* childrenPointer;
-	D3DXVECTOR2 gravity;
+	GameObject * parallaxBG1;
+	GameObject * parallaxBG2;
+	GameObject * parallaxBG3;
 
 	int timer;				//increase by 1 each time count reaches the targeted fps
 	int counter;			// used to count 1 second

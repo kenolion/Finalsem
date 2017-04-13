@@ -5,13 +5,9 @@
 #include <cmath>
 #include "constants.h"
 #include "GameObject.h"
-#include "Player.h"
 #include <iostream>
-#include "Platform.h"
-#include "Enemy.h"
-#include "Pictures.h"
-#include "Button.h"
 #include <fstream>
+
 
 class GameEngine;
 
@@ -25,6 +21,7 @@ public:
 	int framesToUpdate;
 	bool initialize;
 	void run(GameEngine * game);
+	virtual void multiplayer(GameEngine * game );
 	virtual void deleteAll()=0;
 	virtual bool initializeGame(HWND hwnd,GameEngine* game) = 0;
 	virtual void draw(GameEngine * game)=0;
@@ -34,14 +31,16 @@ public:
 	GameObject *tiles[100];
 	std::string mapName;
 	int tileMap[TILEROW][TILECOLUMN];
-	bool isSolid(int x,int y);
 	int numOfTiles;
 	char tempChar;
 	bool loadLevel();
-	
+	bool isSolid(float x, int y);
+	bool checkGround(GameObject *object, int xOffset, int yOffset);
+	bool checkCeiling(GameObject *object);
+	bool checkRightSide(GameObject *object, int xOffset, int yOffset);
+	bool checkLeftSide(GameObject *object, int xOffset, int yOffset);
+	D3DXVECTOR2 gravity;
 	void initializeTiles(GameEngine*game);
-
-	int mouseX, mouseY;
 protected:
 	Game();
 	~Game();

@@ -1,14 +1,15 @@
 #ifndef GAMEENGINE_H
 #define GAMEENGINE_H
-#include <Windows.h>
 #include <vector>
+#include "Network.h"
 #include "DxSound.h"
-#include "UserInterface.h"
-#include "Cursor.h"
 #include "Graphics.h"
 #include "GameTime.h"
 #include "PlayerInput.h"
 #include "GameCamera.h"
+#include "LevelMainMenu.h"
+#include <thread>
+
 class Game;
 
 class GameEngine
@@ -23,19 +24,33 @@ public:
 	void popState();
 	void run();
 	GameCamera *camera;
-	
+	Network *network;
 	LPD3DXSPRITE sprite;
-	Cursor *cursor;
+	GameObject *cursor;
 	GameStates state;
 	Graphics * graphics;
 	GameTime *gameTime;
 	PlayerInput *input;
 	DxSound *sound;
+	LRESULT winProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+	std::thread netThread;
+
+	WPARAM wParam;
+	std::vector<Game*> games;
+	char keyboardbuffer;
+
+	std::string ipAddress;
+	std::string hostIpAddress;
+
+	bool ipAddresslocked = true;
+	bool hostIpAddresslocked = true;
+
 	bool exit;
 private:
 	bool initialized;
 	
-	std::vector<Game*> games;
+	
 };
 
 #endif

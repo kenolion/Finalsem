@@ -1,20 +1,12 @@
-#include "Windows.h"
-#include <windows.h>
-#include <d3d9.h>
-#include "Constants.h"
-#include "Graphics.h"
-#include "GameSprite.h"
-#include "Game.h"
-#include "LevelMainMenu.h"
-#include "LevelPlayerWins.h"
-#include "FlappyBird.h"
+#define WIN32_LEAN_AND_MEAN
 #include "GameEngine.h"
+
 #include <iostream>
 #include <conio.h>
 
 
 //CONSTANTS
-#define WIN32_LEAN_AND_MEAN
+
 //Global Player Sprites
 LRESULT WINAPI WinProc(HWND, UINT, WPARAM, LPARAM);
 GameEngine *gameEngine;
@@ -75,7 +67,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		gameEngine->changeState(LevelMainMenu::getInstance(), hwnd);
 		//========================================================================================================================================================================
 		while (msg.message != WM_QUIT || gameEngine->exit == true) {							//checks if either exit or wm_quit
-																// here saves the state in game state before i delete it!																					// 
+																															// 
 			if (gameEngine->exit == true) {												//checks if the state from game state is exit or not
 				msg.message = WM_QUIT;																	//
 			}																							//
@@ -103,31 +95,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 
 LRESULT WINAPI WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {		//Windows procedure
-	switch (msg)
-	{
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-		break;
-	case WM_KEYDOWN:
-
-		switch (wParam) {
-		case VK_ESCAPE:
-			PostQuitMessage(0);
-			return 0;
-			break;
-			//case VK_F1:
-			//	input->remapKeys();//<---- underconstruction used to remap keys but needs to be switched to windows input instead of directinput
-
-			//break;
-		}
-		break;
-	case WM_LBUTTONDOWN:
-		break;
-
-	}
-	return DefWindowProc(hwnd, msg, wParam, lParam);
-
+	
+	return gameEngine->winProc(hwnd, msg, wParam, lParam);
+	// now u decide how u wan pass the wparam around
 }
 
 
