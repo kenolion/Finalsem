@@ -61,6 +61,9 @@
     <ClCompile Include="Network.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationManager.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FlappyBird.h">
@@ -121,6 +124,9 @@
       <Filter>Engine\Header</Filter>
     </ClInclude>
     <ClInclude Include="Network.h">
+      <Filter>Engine\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationManager.h">
       <Filter>Engine\Header</Filter>
     </ClInclude>
   </ItemGroup>

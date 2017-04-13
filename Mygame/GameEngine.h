@@ -23,6 +23,8 @@ public:
 	void handleEvents();
 	void popState();
 	void run();
+	static void setDrawingPoint(int x, int y);
+	
 	GameCamera *camera;
 	Network *network;
 	LPD3DXSPRITE sprite;

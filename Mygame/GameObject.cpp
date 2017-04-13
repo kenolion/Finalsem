@@ -98,6 +98,32 @@ bool GameObject::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int wi
 	if (type == ObjectType::Player) {
 		screenPos.y = position.y - spriteHeight;
 		screenPos.x = position.x - spriteWidth;
+		//	headRect.left = position.x + 6;
+		//	headRect.right = headRect.left + 18;
+		//	headRect.top = position.y + 3;
+		//	headRect.bottom = headRect.top + 16;
+
+
+		//	legRect.left = position.x + 10 +col_xOffset;
+		//	legRect.right = headRect.left + 12;
+		//	legRect.top = position.y + 33 + col_yOffset;
+		//	legRect.bottom = headRect.top + 12;
+
+
+		//	leftBodyRect.left = position.x ;
+		//	leftBodyRect.right = leftBodyRect.left + 10;
+		//	leftBodyRect.top = headRect.bottom;
+		//	leftBodyRect.bottom = leftBodyRect.top + 10;
+		///*	leftBodyRect.left = position.x + 6;
+		//	leftBodyRect.right = headRect.left + 18;
+		//	leftBodyRect.top = position.y + 3;
+		//	leftBodyRect.bottom = headRect.top + 16;
+
+
+
+
+
+
 	}
 	posVector = position;
 	return true;
@@ -108,8 +134,8 @@ bool GameObject::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int wi
 void GameObject::draw(GameEngine * game)		//Function that draw sprite
 {
 	//for RECT collision
-	
-	
+
+
 
 	if (frameHorizontal)					//Changes if the sprite sheet frames are going horizontally or vertically
 	{
@@ -128,8 +154,8 @@ void GameObject::draw(GameEngine * game)		//Function that draw sprite
 	}
 
 	spriteCentre = D3DXVECTOR2(spriteWidth / 2, spriteHeight / 2);
-	if (type == ObjectType::Player || type == ObjectType::Platform) {
-	
+	if ( type == ObjectType::Platform) {
+
 
 		D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &screenPos);
 	}
@@ -184,6 +210,12 @@ void GameObject::setMatrix(D3DXVECTOR2 scaling, D3DXVECTOR2 spriteCentre, float 
 	game->sprite->SetTransform(&mat);
 }
 
+int GameObject::getTileID()
+{
+	return 0;
+}
+
+
 
 void GameObject::calculateVelocity()
 {
@@ -200,7 +232,7 @@ D3DXVECTOR2 GameObject::getObjectPos()
 
 void GameObject::setPosition(float x, float y)
 {
-	
+
 	position = D3DXVECTOR2(x, y);
 }
 
@@ -298,6 +330,77 @@ void GameObject::setOnGround(bool onGround)
 	this->onGround = onGround;
 }
 
+bool GameObject::getAtCeiling()
+{
+	return onGround;
+}
+
+void GameObject::setAtCeiling(bool onGround)
+{
+	this->atCeiling = onGround;
+}
+
+
+void GameObject::moveXdirection()
+{
+	velocity.x += acceleration.x;
+	posVector.x += velocity.x;
+
+
+	collisionRect.left = posVector.x + col_xOffset - positionOffset.x;
+	collisionRect.right = posVector.x + spriteWidth - col_xOffset - positionOffset.x;
+	collisionRect.top = posVector.y + col_yOffset - positionOffset.y;
+	collisionRect.bottom = posVector.y + spriteHeight*scaling.y - positionOffset.y;
+
+
+}
+
+void GameObject::moveYdirection()
+{
+	velocity.y += acceleration.y;
+	posVector.y += velocity.y;
+
+	collisionRect.left = posVector.x + col_xOffset - positionOffset.x;
+	collisionRect.right = posVector.x + spriteWidth - col_xOffset - positionOffset.x;
+	collisionRect.top = posVector.y + col_yOffset - positionOffset.y;
+	collisionRect.bottom = posVector.y + spriteHeight*scaling.y - positionOffset.y;
+
+
+}
+
+void GameObject::handleXAxisCollision()
+{
+	//if (pushesLeftWall) {
+	//	overlap.x = (collisionRect.left + positionOffset.x) - ((int)((collisionRect.right) / 48) * 48);
+	//	//posVector.x -= overlap.x;
+	//}
+
+
+
+} 
+
+void GameObject::handleYAxisCollision()
+{
+
+	if (onGround) {
+		if((int)positionOffset.y % 48 == 0)
+			overlap.y = (collisionRect.bottom) - ((int)(((collisionRect.bottom) / 48) * 48));
+		else {
+			overlap.y = (collisionRect.bottom+positionOffset.y-48) - ((int)((collisionRect.bottom + positionOffset.y - 48) / 48) * 48);
+		}
+		//std::cout << ((int)((((collisionRect.bottom + positionOffset.y - spriteHeight) / 48)) * 48) ) << "        " << std::endl;
+		posVector.y -= overlap.y;
+	}
+
+	if (atCeiling) {
+		overlap.y = (collisionRect.top) - (int)((ceil((collisionRect.bottom) / 48) * 48));
+		posVector.y -= overlap.y;
+		velocity.y = 0;
+
+	}
+
+}
+
 
 D3DXVECTOR2 GameObject::getAcceleration()
 {
@@ -325,7 +428,17 @@ void GameObject::setAcceleration(D3DXVECTOR2 accel)
 	acceleration = accel;
 }
 
-void GameObject::setVelocity(float x,float y)
+void GameObject::setVelocity(float x, float y)
 {
-	velocity = D3DXVECTOR2(x,y);
+	velocity = D3DXVECTOR2(x, y);
+}
+
+float GameObject::getWalkSpeed()
+{
+	return 0.0f;
+}
+
+float GameObject::getJumpSpeed()
+{
+	return 0.0f;
 }

@@ -2,8 +2,7 @@
 
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-
-
+#include <Windows.h>
 const int GAME_WIDTH = 1280;
 const int GAME_HEIGHT = 720;
 const char CLASS_NAME[] = "Keith Class";
@@ -16,7 +15,6 @@ const float PLAYERMAXVEL = 1.0f;
 const int REQFPS = 60;
 
 //LEVEL1
-const int GOBJECTNUML1 = 5;
 enum class ObjectStatus { Active, Dying, Dead };
 enum class ObjectType { Enemy, Player, Platform };
 enum class TileType {Block};

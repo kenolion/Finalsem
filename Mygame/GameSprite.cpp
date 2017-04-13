@@ -3,7 +3,7 @@
 
 GameSprite::GameSprite()
 {
-	// When color is set to white, what you see is exactly what the image looks like
+
 	
 }
 

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <conio.h>
+#include <Windows.h>
 
 
 //CONSTANTS
@@ -94,11 +95,15 @@ int WINAPI WinMain(HINSTANCE hInstance,
 }
 
 
+
 LRESULT WINAPI WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {		//Windows procedure
 	
 	return gameEngine->winProc(hwnd, msg, wParam, lParam);
 	// now u decide how u wan pass the wparam around
 }
+
+
+
 
 
 

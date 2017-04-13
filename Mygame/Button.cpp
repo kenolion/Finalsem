@@ -42,52 +42,6 @@ bool Button::isClicked(bool leftClickDown)
 	return false;
 }
 
-void Button::numberedTextInput(GameEngine * game)
-{
-	/*if (game->input->zeroKey == true)
-	{
-		numberedInputs += '0';
-	}
-	if (game->input->oneKey == true)
-	{
-		numberedInputs += '1';
-	}
-	if (game->input->twoKey == true)
-	{
-		numberedInputs += '2';
-	}
-	if (game->input->threeKey == true)
-	{
-		numberedInputs += '3';
-	}
-	if (game->input->fourKey == true)
-	{
-		numberedInputs += '4';
-	}
-	if (game->input->fiveKey == true)
-	{
-		numberedInputs += '5';
-	}
-	if (game->input->sixKey == true)
-	{
-		numberedInputs += '6';
-	}
-	if (game->input->sevenKey == true)
-	{
-		numberedInputs += '7';
-	}
-	if (game->input->eightKey == true)
-	{
-		numberedInputs += '8';
-	}
-	if (game->input->nineKey == true)
-	{
-		numberedInputs += '9';
-	}
-	if (game->input->dotKey == true)
-	{
-		numberedInputs += '.';
-	}*/
 
 }
 

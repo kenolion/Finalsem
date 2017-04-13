@@ -45,6 +45,7 @@ bool LevelPlayerWins::initializeGame(HWND hwnd, GameEngine * game)
 		return initialize = false; //If false program wont run
 	}
 	game->state = GameStates::LEVELPLAYERWIN;			//<---- important to set to its current state
+	
 	game->exit = false;
 	return initialize = true;
 
@@ -108,6 +109,7 @@ void LevelPlayerWins::deleteAll()
 	dltPtr(backgroundImage);
 	dltPtr(returnToMainMenuButton);
 	dltPtr(quitButton);
+
 }
 
 

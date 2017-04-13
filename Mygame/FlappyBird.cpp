@@ -5,6 +5,7 @@
 #include "Button.h"
 #include "Pictures.h"
 #include "Player.h"
+#include "Platform.h"
 FlappyBird FlappyBird::level1State;
 
 bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
@@ -26,8 +27,9 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 		MessageBox(NULL, "There was an issue creating the sprite", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
 		return initialize = false;
 	}
-	if (!object[1]->initialize(game->graphics->device3d, "sprite\\ben.png", 128, 192, 4, 4, true, D3DCOLOR_XRGB(0, 0, 0), 0.90f)) {
-		MessageBox(NULL, "There was an issue creating the sprite", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
+
+	if (!object[1]->initialize(game->graphics->device3d, "sprite\\tallguyfull.png", 512, 256, 5,10, true, D3DCOLOR_XRGB(0, 0, 0), 0.95f)) {
+		MessageBox(NULL, "There was an issue creating the sprite", NULL, NULL);				//Device3d,sprite file name, width , height , row,collumn
 		return initialize = false;
 	}
 
@@ -67,12 +69,40 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 		return initialize = false;
 	}
 	initializeTiles(game);
+
 	gravity = { 0,GRAVITY };
 	object[1]->setState(3);
+	//initializeAstar();
+	//findPath(object[1]->getObjectPos(), D3DXVECTOR2(200,600));
 	game->exit = false;
 	game->state = GameStates::LEVEL1;
 	return initialize = true;
 }
+
+
+void FlappyBird::collisions(GameEngine * game, int gameTime)
+{
+	//game->setDrawingPoint(0, 0);
+
+
+	object[1]->physics(game->input, gameTime);
+	for (int i = 0; i < gameTime; i++) {
+		object[1]->moveYdirection();
+		if (checkGround(object[1], game->camera->getXOffset(), game->camera->getYOffset())) {			// to do split x and y and calculate overlap.
+			object[1]->handleYAxisCollision();
+		}
+		if (checkCeiling(object[1], game->camera->getXOffset(), game->camera->getYOffset())) {
+			object[1]->handleYAxisCollision();
+		}
+		object[1]->moveXdirection();
+		if (checkRightSide(object[1], game->camera->getXOffset(), game->camera->getYOffset())) {			// to do split x and y and calculate overlap.
+			object[1]->handleXAxisCollision();
+		}
+		if (checkLeftSide(object[1], game->camera->getXOffset(), game->camera->getYOffset())) {			// to do split x and y and calculate overlap.
+			object[1]->handleXAxisCollision();
+		}
+
+	}
 
 
 
@@ -102,9 +132,14 @@ void FlappyBird::collisions(GameEngine * game, int gameTime)
 
 void FlappyBird::update(int gameTime, GameEngine * game)
 {
-	
-	for (int i = 0; i < numOfTiles; i++) {
-		tiles[i]->update(gameTime, game);
+
+
+	for (int row = 0; row < TILEROW; row++) {
+		for (int col = 0; col < TILECOLUMN; col++) {
+			if (tiles[row][col] != NULL)
+				tiles[row][col]->update(gameTime, game);
+		}
+
 	}
 	for (int i = 0; i < FLAPPYBIRDOBJECTS; i++) {
 		object[i]->update(gameTime, game);
@@ -116,21 +151,31 @@ void FlappyBird::update(int gameTime, GameEngine * game)
 	menuButton->update(gameTime, game);
 	game->cursor->update(gameTime, game);
 
+
+	menuButton->update(gameTime, game);
+	game->cursor->update(gameTime, game);
+	game->camera->centerOnObject(object[1]);
 }
 
 void FlappyBird::draw(GameEngine * game)
 {
-
+	
 	game->graphics->clear(D3DCOLOR_XRGB(255, 255, 255));
 	game->graphics->clear(D3DCOLOR_XRGB(0, 100, 100), object[1]->collisionRect);
-	//game->graphics->clear(D3DCOLOR_XRGB(100, 0, 0), object[1]->legRect);
+	game->graphics->clear(D3DCOLOR_XRGB(100, 0, 0), object[1]->legRect);
 	game->graphics->begin();
 	game->sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+	for (int row = 0; row < TILEROW; row++) {
+		for (int col = 0; col < TILECOLUMN; col++) {
+			if (tiles[row][col] != NULL)
+				tiles[row][col]->draw(game);
+		}
 	parallaxBG1->draw(game);
 	parallaxBG2->draw(game);
 	parallaxBG3->draw(game);
-	for (int i = 0; i < numOfTiles; i++) {
-		tiles[i]->draw(game);
+
+
 	}
 
 	for (int i = 1; i < FLAPPYBIRDOBJECTS; i++) {
@@ -149,8 +194,13 @@ void FlappyBird::draw(GameEngine * game)
 
 void FlappyBird::deleteAll()
 {
-	for (int i = 0; i < numOfTiles; i++) {
-		dltPtr(tiles[i]);
+
+	for (int row = 0; row < TILEROW; row++) {
+		for (int col = 0; col < TILECOLUMN; col++) {
+			if (tiles[row][col] != NULL)
+				dltPtr(tiles[row][col]);
+		}
+
 	}
 	for (int i = 0; i < FLAPPYBIRDOBJECTS; i++) {
 		dltPtr(object[i]);
@@ -159,6 +209,8 @@ void FlappyBird::deleteAll()
 	dltPtr(parallaxBG1);
 	dltPtr(parallaxBG2);
 	dltPtr(parallaxBG3);
+	//freeAStar();
+
 }
 
 void FlappyBird::handleEvents(GameEngine * game)
@@ -202,4 +254,5 @@ FlappyBird::FlappyBird()
 
 FlappyBird::~FlappyBird()
 {
+
 }

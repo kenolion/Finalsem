@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Constants.h"
 #include "PlayerInput.h"
+#include "AnimationManager.h"
 
 class GameEngine;
 
@@ -37,7 +38,9 @@ public:
 	//physics
 	void setAcceleration(D3DXVECTOR2 accel);
 	void setVelocity(float x, float y);
-	
+	virtual float getWalkSpeed();
+	virtual float getJumpSpeed();
+
 	D3DXVECTOR2 getAcceleration();
 	D3DXVECTOR2 getVelocity();
 	void setScaling(D3DXVECTOR2 scaling);
@@ -46,7 +49,13 @@ public:
 	bool collideWith(GameObject *object);
 	bool getOnGround();
 	void setOnGround(bool onGround);
-
+	bool getAtCeiling();
+	void setAtCeiling(bool onGround);
+	void handleXAxisCollision();
+	void handleYAxisCollision();
+	void moveXdirection();
+	void moveYdirection();
+	D3DXVECTOR2 overlap;
 	//TEMP data used for calculating physics
 	D3DXVECTOR2 getObjectPos();
 	void setPosition(float x, float y);
@@ -63,11 +72,19 @@ public:
 	
 	//TILES
 	TileType tile;
-
+	virtual int getTileID();
 	
-	RECT spriteRect;
+	RECT spriteRect; // to cut out the prites
 	RECT collisionRect; //used if you want to make additional rectangles to check for collision
 	RECT legRect;
+	////////
+	RECT headRect;
+	RECT leftBodyRect;
+	RECT rightBodyRect;
+
+
+
+
 	bool legRectCollided;
 	bool bodyRectCollided;
 
@@ -79,10 +96,19 @@ public:
 
 	bool wasOnGround;
 	bool onGround;
+	
+	bool collided;
 
 	bool wasAtCeiling;
 	bool atCeiling;
 
+	bool btmLeft;
+	bool btmRight;
+	bool topLeft;
+	bool topRight;
+
+	D3DXVECTOR2 positionOffset;
+	D3DXVECTOR2 screenPos;
 protected:
 	//informational data(name, desc wtv u want)
 	std::string name;
@@ -91,8 +117,8 @@ protected:
 
 	D3DXVECTOR2 oldPosition;
 	D3DXVECTOR2 position;
-	D3DXVECTOR2 screenPos;
-	D3DXVECTOR2 positionOffset;
+
+
 
 	
 	D3DXVECTOR2 oldVelocity;

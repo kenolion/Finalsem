@@ -214,8 +214,6 @@ LRESULT GameEngine::winProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		this->wParam = wParam;
 		// static_cast<char>(wParam);
-
-
 		if (wParam == VK_RETURN)
 		{
 			if (ipAddresslocked == false)
@@ -278,4 +276,17 @@ LRESULT GameEngine::winProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
+void GameEngine::setDrawingPoint(int x, int y)
+{
+	
+		COORD coord; //Does not need to be define because if we right click COORD and go to definition it is already defined in another library
+		coord.X = x;
+		coord.Y = y;
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+
+	
+}
+
+
+		
 

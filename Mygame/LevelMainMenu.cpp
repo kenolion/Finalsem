@@ -100,6 +100,7 @@ bool LevelMainMenu::initializeGame(HWND hwnd, GameEngine * game)
 
 	game->exit = false;
 	game->state = GameStates::MENU;
+
 	return initialize = true;
 
 }
@@ -206,7 +207,7 @@ void LevelMainMenu::collisions(GameEngine * game, int gameTime)
 //	for (int i = 0; i<GOBJECTNUML1; i++) {
 //		object[i]->posVector = object[i]->getObjectPos();
 //	}
-
+	
 }
 
 void LevelMainMenu::handleEvents(GameEngine *game)
@@ -332,5 +333,6 @@ LevelMainMenu::LevelMainMenu()
 
 LevelMainMenu::~LevelMainMenu()
 {
+	freeAStar();
 }
 

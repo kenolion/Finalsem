@@ -20,7 +20,7 @@ void Platform::update(int &gameTime, GameEngine * game)
 
 
 
-Platform::Platform(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int tileWidth, int tileHeight, int tileType) :GameObject(x, y, scaling, animSpeed)
+Platform::Platform(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int tileWidth, int tileHeight, int tileType,int tileID) :GameObject(x, y, scaling, animSpeed)
 {
 	this->tileType = tileType;
 	this->type = ObjectType::Platform;
@@ -36,7 +36,7 @@ bool Platform::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int widt
 	this->tile = TileType::Block;
 	if (tileType > 6) {
 		state += tileType / 6.0f;
-		setFrame(tileType % 6);
+		frame = tileType % 6;
 	}
 	else {
 		setFrame(tileType);
@@ -48,4 +48,10 @@ bool Platform::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int widt
 
 Platform::~Platform()
 {
+}
+
+
+int Platform::getTileID()
+{
+	return tileID;
 }
