@@ -27,7 +27,7 @@ bool LevelPlayerWins::initializeGame(HWND hwnd, GameEngine * game)
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 
-	returnToMainMenuButton = new Button(0, 0, D3DXVECTOR2(1.0f, 1.0f), 30, " Main Menu", 10, 255, 155, 0, game->graphics->font, GameStates::MENU); //X to print, Y to print position and scaling.
+	returnToMainMenuButton = new Button(0, 0, D3DXVECTOR2(1.0f, 1.0f), 30, " Main Menu", 10, 255, 155, 0, game->graphics->font, GameStates::MENU, ButtonType::NORMAL); //X to print, Y to print position and scaling.
 	returnToMainMenuButton->setPosition(50, 600);
 
 	if (!returnToMainMenuButton->initialize(game->graphics->device3d, "sprite\\buttonTemplateAnimation.png", 1116, 76, 1, 4, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f)) //Width, Height of the pic when printed in game, SpriteWidth, SpriteHeight, 
@@ -37,7 +37,7 @@ bool LevelPlayerWins::initializeGame(HWND hwnd, GameEngine * game)
 	}
 	//---------------------------------------------------------------------------------------------------------------------------------------------
 
-	quitButton = new Button(0, 0, D3DXVECTOR2(1.0f, 1.0f), 30, "Exit Game", 10, 255, 155, 0, game->graphics->font, GameStates::EXITPROGRAM);
+	quitButton = new Button(0, 0, D3DXVECTOR2(1.0f, 1.0f), 30, "Exit Game", 10, 255, 155, 0, game->graphics->font, GameStates::EXITPROGRAM, ButtonType::NORMAL);
 	quitButton->setPosition(950, 600);
 	if (!quitButton->initialize(game->graphics->device3d, "sprite\\buttonTemplateAnimation.png", 1116, 76, 1, 4, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f)) //Width, Height of the pic when printed in game, SpriteWidth, SpriteHeight, 
 	{

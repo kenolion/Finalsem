@@ -25,9 +25,10 @@ public:
 	int framesToUpdate;
 	bool initialize;
 	void run(GameEngine * game);
-	virtual void deleteAll() = 0;
-	virtual bool initializeGame(HWND hwnd, GameEngine* game) = 0;
-	virtual void draw(GameEngine * game) = 0;
+	virtual void multiplayer(GameEngine * game );
+	virtual void deleteAll()=0;
+	virtual bool initializeGame(HWND hwnd,GameEngine* game) = 0;
+	virtual void draw(GameEngine * game)=0;
 	virtual void update(int gameTime, GameEngine * game) = 0;
 	virtual void collisions(GameEngine * game, int gameTime) = 0;
 	virtual void handleEvents(GameEngine *game) = 0;

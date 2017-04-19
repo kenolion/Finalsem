@@ -8,6 +8,7 @@
 #include "PlayerInput.h"
 #include "GameCamera.h"
 #include "LevelMainMenu.h"
+#include <thread>
 
 class Game;
 
@@ -33,11 +34,25 @@ public:
 	GameTime *gameTime;
 	PlayerInput *input;
 	DxSound *sound;
+	LRESULT winProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+	std::thread netThread;
+
+	WPARAM wParam;
+	std::vector<Game*> games;
+	char keyboardbuffer;
+
+	std::string ipAddress;
+	std::string hostIpAddress;
+
+	bool ipAddresslocked = true;
+	bool hostIpAddresslocked = true;
+
 	bool exit;
 private:
 	bool initialized;
 	
-	std::vector<Game*> games;
+	
 };
 
 #endif

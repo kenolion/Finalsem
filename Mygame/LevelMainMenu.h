@@ -6,11 +6,31 @@
 class LevelMainMenu : public Game
 {
 public:
-
 	GameObject * startButton;
 	GameObject * quitButton;
+
+	GameObject * connectButton;
+	GameObject * hostButton;
+	GameObject * acceptConnectionButton;
+	GameObject * startClientThreadButton;
+
+	GameObject * textInputButton;
+	GameObject * hostTextInputButton;
+
 	GameObject * backgroundImage;
 	GameObject * gameLogo;
+
+
+	bool alreadytrue = FALSE;
+	bool alreadytrue2 = FALSE;
+	bool alreadytrue3 = FALSE;
+	bool alreadytrue4 = FALSE;
+	bool alreadytrue5 = FALSE;
+	bool alreadytrue6 = FALSE;
+	bool sendTehPacketsAndReceiveThyPackets = FALSE;
+
+	bool drawAcceptButton = FALSE;
+
 
 	//YOU DONT NEED A HITBOXLINE POINTER OBJECT, BECAUSE GRAPHICS IS ALREADY DECLARED	Graphics * hitBoxLines;
 

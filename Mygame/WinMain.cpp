@@ -1,5 +1,6 @@
-
+#define WIN32_LEAN_AND_MEAN
 #include "GameEngine.h"
+
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
@@ -96,27 +97,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 
 LRESULT WINAPI WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {		//Windows procedure
-	switch (msg)
-	{
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-		break;
-	case WM_KEYDOWN:
-		switch (wParam) {
-		case VK_ESCAPE:
-			PostQuitMessage(0);
-			return 0;
-			break;
-		}
-		break;
-	case WM_LBUTTONDOWN:
-		break;
-
-	}
-	return DefWindowProc(hwnd, msg, wParam, lParam);
-
-
+	
+	return gameEngine->winProc(hwnd, msg, wParam, lParam);
+	// now u decide how u wan pass the wparam around
 }
 
 

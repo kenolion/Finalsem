@@ -2,7 +2,6 @@
 
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-
 const int GAME_WIDTH = 1280;
 const int GAME_HEIGHT = 720;
 const char CLASS_NAME[] = "Keith Class";
@@ -18,11 +17,11 @@ const int REQFPS = 60;
 enum class ObjectStatus { Active, Dying, Dead };
 enum class ObjectType { Enemy, Player, Platform };
 enum class TileType {Block};
-const int FLAPPYBIRDOBJECTS = 2;
+const int FLAPPYBIRDOBJECTS = 3;
 const float MAXYVELOCITY = 7;
 
-const int TILEROW = 17;
-const int TILECOLUMN = 43;
+const int TILEROW = 16;
+const int TILECOLUMN = 32;
 const int TILEWIDTH = 48;
 const int TILEHEIGHT = 48;
 
@@ -31,7 +30,19 @@ enum class GameStates			//Strongly Type enumartions may come in handy if this fr
 	EXITPROGRAM,		//Array 0
 	MENU,				//Array 1
 	LEVEL1,				//Array 2
-	LEVELPLAYERWIN		//Array 3
+	LEVELPLAYERWIN,		//Array 3
+	CONNECTSTATE,
+	HOSTSERVER,
+	ACCEPTCONNECTION,
+	STARTCLIENTTHREAD,
+	NULLSTATE
+};
+
+//BUTTON TYPE
+enum class ButtonType
+{
+	NORMAL,
+	TEXTBUTTON
 };
 
 
@@ -47,6 +58,14 @@ inline void dltPtr(T& ptr) {
 
 }
 //
+//static void setDrawingPoint(int x, int y)
+//{
+//	COORD coord; //Does not need to be define because if we right click COORD and go to definition it is already defined in another library
+//	coord.X = x;
+//	coord.Y = y;
+//	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+//
+//}
 
 
 

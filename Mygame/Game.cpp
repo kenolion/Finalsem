@@ -94,13 +94,17 @@ void Game::run(GameEngine * game)	// This function is called repeatedly by main 
 	game->input->ReadMouse();												//Read the mouse Device
 	game->input->convertRelativeToAbsolute();								//Converts Relative X and Y mouse position to Absolute position
 	game->cursor->setPosition(game->input->GetMouseLocation().x, game->input->GetMouseLocation().y);		//Sets the Cursor Position to the Absolute MouseX and MouseY in the window.
-	game->setDrawingPoint(0,0);
-	std::cout << game->input->GetMouseLocation().x << "     " << std::endl;
-
-	std::cout << game->input->GetMouseLocation().y << "     " << std::endl;
+	//std::cout << mouseX << "     " << mouseY << "      " << std::endl;
+	multiplayer(game);
 	collisions(game, framesToUpdate);
 	update(framesToUpdate, game);
 	draw(game);// draws the games graphics
+
+
+}
+
+void Game::multiplayer(GameEngine * game )
+{
 }
 
 bool Game::loadLevel()
@@ -224,7 +228,7 @@ void Game::initializeTiles(GameEngine*game)
 				//tiles[numOfTiles] = new Platform(collumn, row, D3DXVECTOR2(1.0f, 1.0f), 1, TILEWIDTH, TILEHEIGHT, tileMap[row][collumn]);
 		
 				tiles[row][collumn] = new Platform(collumn, row, D3DXVECTOR2(1.0f, 1.0f), 1, TILEWIDTH, TILEHEIGHT, tileMap[row][collumn],numOfTiles);
-				tiles[row][collumn]->initialize(game->graphics->device3d, "sprite\\TileMap.png", 288, 480, 10, 6, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f);
+				tiles[row][collumn]->initialize(game->graphics->device3d, "sprite\\TileMap.png", 288, 528, 11, 6, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f);
 				numOfTiles++;
 			}
 		}

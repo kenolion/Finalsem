@@ -149,9 +149,138 @@ void PlayerInput::getInput()		//Function that gets the player input
 	if (KEYDOWN(keys, zKey)) {
 		jumpKey = true;
 		keyPressed = true;
-
+	}
+	//NUMBERS ---------------------------------------------------------------------
+	if (KEYDOWN(keys, zroKey)) {
+		zeroKey = true;
+		keyPressed = true;
 	}
 
+	if (zeroKey == true && keys[zroKey] == 0)
+	{
+		zeroKey = false;
+		keyPressed = false;
+	}
+
+	if (KEYDOWN(keys, onKey)) {
+		oneKey = true;
+		keyPressed = true;
+	}
+	
+	if (oneKey == true && keys[onKey] == 0)
+	{
+		oneKey = false;
+		keyPressed = false;
+	}
+
+	if (KEYDOWN(keys, twKey))
+	{
+		twoKey = true;
+		keyPressed = true;
+	}
+
+	if (twoKey == true && keys[twKey] == 0)
+	{
+		twoKey = false;
+		keyPressed = false;
+	}
+
+	if (KEYDOWN(keys, threKey))
+	{
+		threeKey = true;
+		keyPressed = true;
+	}
+
+	if (threeKey == true && keys[threKey] == 0)
+	{
+		threeKey = false;
+		keyPressed = false;
+	}
+
+	if (KEYDOWN(keys, forKey))
+	{
+		fourKey = true;
+		keyPressed = true;
+	}
+
+	if (fourKey == true && keys[forKey] == 0)
+	{
+		fourKey = false;
+		keyPressed = false;
+	}
+
+	if (KEYDOWN(keys, fveKey))
+	{
+		fiveKey = true;
+		keyPressed = true;
+	}
+
+	if (fiveKey == true && keys[fveKey] == 0)
+	{
+		fiveKey = false;
+		keyPressed = false;
+	}
+
+	if (KEYDOWN(keys, sxKey))
+	{
+		sixKey = true;
+		keyPressed = true;
+	}
+
+	if (sixKey == true && keys[sxKey] == 0)
+	{
+		sixKey = false;
+		keyPressed = false;
+	}
+
+	if (KEYDOWN(keys, svenKey))
+	{
+		sevenKey = true;
+		keyPressed = true;
+	}
+
+	if (sevenKey == true && keys[svenKey] == 0)
+	{
+		sevenKey = false;
+		keyPressed = false;
+	}
+
+	if (KEYDOWN(keys, eghtKey))
+	{
+		eightKey = true;
+		keyPressed = true;
+	}
+
+	if (eightKey == true && keys[eghtKey] == 0)
+	{
+		eightKey = false;
+		keyPressed = false;
+	}
+
+	if (KEYDOWN(keys, ninKey))
+	{
+		nineKey = true;
+		keyPressed = true;
+	}
+
+	if (nineKey == true && keys[ninKey] == 0)
+	{
+		nineKey = false;
+		keyPressed = false;
+	}
+
+	if (KEYDOWN(keys, dtKey))
+	{
+		dotKey = true;
+		keyPressed = true;
+	}
+
+	if (dotKey == true && keys[dtKey] == 0)
+	{
+		dotKey = false;
+		keyPressed = false;
+	}
+	//-----------------------------------------------------------------------------
 	if (leftArrowKey == true && keys[leftAKey] ==0) {
 
 		leftArrowKey = false;
@@ -175,11 +304,13 @@ void PlayerInput::getInput()		//Function that gets the player input
 		jumpKey = false;
 		keyPressed = false;
 	}
-	
+
+	//MOUSE INPUT
 	if (m_mouseState.rgbButtons[0])
 	{
-		
+		//If LeftClickDown already true, don't go in.
 		leftClickDown = true;
+		//Check if time passes after 1 second, disable invincibility.
 		
 	}
 	else
@@ -189,7 +320,11 @@ void PlayerInput::getInput()		//Function that gets the player input
 
 	if	(m_mouseState.rgbButtons[1])
 	{
-		std::cout << "Right click is pressed.";
+		rightClickDown = true;
+	}
+	else
+	{
+		rightClickDown = false;
 	}
 	
 }
@@ -203,6 +338,20 @@ PlayerInput::PlayerInput()		//Initialization of player input defailt values
 	downAKey = 208;
 	upAKey = 200;
 	zKey = 44;
+	
+	zroKey = 11;
+	onKey = 2;
+	twKey = 3;
+	threKey = 4;
+	forKey = 5;
+	fveKey = 6;
+	sxKey = 7;
+	svenKey = 8;
+	eghtKey = 9;
+	ninKey = 10;
+
+	dtKey = 52;
+
 	M_Device = 0; //Make Direct Input interface variables to null.
 	m_mouseState.lX = GAME_WIDTH / 2;
 	m_mouseState.lY = GAME_HEIGHT / 2;
