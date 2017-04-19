@@ -9,8 +9,8 @@ LevelMainMenu LevelMainMenu::mainMenuState;
 bool LevelMainMenu::initializeGame(HWND hwnd, GameEngine * game)
 {
 
-	game->sound->playMainMenuMusic();
-	game->sound->channel->setVolume(0.0f);
+	game->sound->playMainMenuMusic2();
+	game->sound->channel->setVolume(0.25f);
 	//======================================================= Create your Game Objects Here =======================================================
 	backgroundImage = new Pictures(0.0f, 0.0f, D3DXVECTOR2(1.0f, 1.0f), 1); //x, y, scaling, animation, speed,mass
 	if (!backgroundImage->initialize(game->graphics->device3d, "sprite\\backgroundimage.png", 1280, 720, 1, 1, true, D3DCOLOR_XRGB(0, 0, 0), 1.0f)) {
@@ -116,98 +116,26 @@ void LevelMainMenu::update(int gameTime, GameEngine * game)
 	textInputButton->update(gameTime, game);
 	hostTextInputButton->update(gameTime, game);
 	acceptConnectionButton->update(gameTime, game);
-//	startClientThreadButton->update(gameTime, game);
+	//	startClientThreadButton->update(gameTime, game);
 
-
-	if (game->input->upArrowKey) {
-		game->network->sendbuf = "up";
-
-	}
-	if (game->input->leftArrowKey) {
-		game->network->sendbuf = "left";
-	}
-	if (game->input->rightArrowKey) {
-		game->network->sendbuf = "right";
-	}
-	if (game->input->jumpKey) {
-		game->network->sendbuf = "jump";
-	}
-
-
-	//if (game->input->leftClickDown)
-	//{
-	//	if (alreadytrue == FALSE)
-	//	{
-	//		printf("|SERVER|\n");
-	//		game->network->resolveAddressAndPort("192.168.0.102");
-	//		game->network->createServerSocket();
-	//		game->network->bindServerSocket();
-	//		game->network->listenOnSocket();
-	//		alreadytrue = TRUE;
-	//	}
-	//}
-	//if (game->input->downArrowKey)
-	//{
-	//	if (alreadytrue2 == FALSE)
-	//	{
-	//		printf("|CLIENT|\n");
-	//		game->network->createClientSocket("192.168.0.102");
-	//		game->network->connectClientSocket();
-	//		alreadytrue2 = TRUE;
-	//	}
-	//}
-	//if (game->input->leftArrowKey)
-	//{
-	//	if (alreadytrue3 == FALSE)
-	//	{
-	//		printf("|SERVER|\n");
-	//		game->network->acceptConnection();
-	//		alreadytrue3 = TRUE;
-	//	}
-	//}
-	//if (game->input->rightArrowKey)
-	//{
-	//	if (alreadytrue4 == FALSE)
-	//	{
-	//		printf("|CLIENT|\n");
-	//		game->netThread = game->network->spawn2();
-	//		game->netThread.detach();
-	//		
-	//		alreadytrue4 = TRUE;
-	//	}
-	//}
-	//if (game->input->upArrowKey)
-	//{
-	//	if (alreadytrue5 == FALSE)
-	//	{
-	//		printf("|SERVER END|\n");
-	//		game->netThread = game->network->spawn();
-	//		game->netThread.detach();
-	//		alreadytrue5 = TRUE;
-	//	}
-	//}
-
-	//if (game->input->zeroKey)
-	//{
-	//	if (alreadytrue6 == FALSE)
-	//	{
-	//		game->network->disconnectAndShutdownSocket();
-	//		alreadytrue6 = TRUE;
-	//	}
-	//}
-
-	
 
 
 }
 
 void LevelMainMenu::collisions(GameEngine * game, int gameTime)
 {
-	//Collision should not update players position
-//	for (int i = 0; i<GOBJECTNUML1; i++) {
-//		object[i]->posVector = object[i]->getObjectPos();
-//	}
-	
+	if (hostTextInputButton->getIsClicked())
+		game->hostIpAddresslocked = false;
+
+	else
+		game->hostIpAddresslocked = true;
+
+	if (textInputButton->getIsClicked())
+		game->ipAddresslocked = false;
+
+	else
+		game->ipAddresslocked = true;
+
 }
 
 void LevelMainMenu::handleEvents(GameEngine *game)
@@ -217,6 +145,7 @@ void LevelMainMenu::handleEvents(GameEngine *game)
 		game->exit = true;
 		break;
 	case GameStates::LEVEL1:
+		game->sound->pauseMainMenuMusic2();
 		game->pushState(FlappyBird::getInstance(), hwnd);
 		break;
 	case GameStates::CONNECTSTATE:
@@ -224,27 +153,28 @@ void LevelMainMenu::handleEvents(GameEngine *game)
 		{
 			hostButton->setPosition(GAME_WIDTH + 100, GAME_HEIGHT + 100);
 			hostTextInputButton->setPosition(GAME_WIDTH + 100, GAME_HEIGHT + 100);
-
+			clientType = 2;
 			printf("REQUESTING CONNECTION WITH SERVER : \n");
 			game->network->createClientSocket(game->ipAddress.c_str());
 			game->network->connectClientSocket();
-
-			game->netThread = game->network->spawn2();
-			game->netThread.detach();
-
+			//game->hThread = (HANDLE)_beginthreadex(NULL, 0, game->network->clientThread, NULL, 0, &game->threadID);
+			game->network->startClientThread(game->hThread, game->threadID);
+			textInputButton->setIsClicked(false);
 			startClientThreadButton->setPosition(550, 330);
-		
+
 			alreadytrue2 = TRUE;
 		}
+
 		break;
 	case GameStates::HOSTSERVER:
 		if (alreadytrue3 == FALSE)
 		{
 			connectButton->setPosition(GAME_WIDTH + 100, GAME_HEIGHT + 100);
 			textInputButton->setPosition(GAME_WIDTH + 100, GAME_HEIGHT + 100);
-
+			clientType = 1;
 			printf("HOSTING SERVER : \n");
 			game->network->resolveAddressAndPort(game->hostIpAddress.c_str());
+			hostTextInputButton->setIsClicked(false);
 			game->network->createServerSocket();
 			game->network->bindServerSocket();
 			game->network->listenOnSocket();
@@ -255,20 +185,12 @@ void LevelMainMenu::handleEvents(GameEngine *game)
 		break;
 	case GameStates::ACCEPTCONNECTION:
 	{
-		if (alreadytrue4 == FALSE)
-		game->network->acceptConnection();
-		game->netThread = game->network->spawn();
-		game->netThread.detach();
-		alreadytrue4 = TRUE;
-	}
-	break;
+		if (alreadytrue4 == FALSE) {
+			game->network->acceptConnection();
+			game->network->startServerThread(game->hThread, game->threadID);
 
-	case GameStates::STARTCLIENTTHREAD:
-	{
-		if(alreadytrue5 == FALSE)
-		game->netThread = game->network->spawn2();
-		game->netThread.detach();
-		alreadytrue5 = TRUE;
+			alreadytrue4 = TRUE;
+		}
 
 	}
 	break;
@@ -281,10 +203,11 @@ void LevelMainMenu::draw(GameEngine * game)
 	game->graphics->clear(D3DCOLOR_XRGB(0, 0, 0)); //255 204 255 = Pink
 	game->graphics->begin();
 
-	game->graphics->createLine();
-	game->graphics->lineBegin();
+
 
 	game->sprite->Begin(D3DXSPRITE_ALPHABLEND);
+	//game->graphics->createLine();
+
 	//======================================================= Draw your Objects in Here =======================================================
 
 	backgroundImage->draw(game);
@@ -298,11 +221,11 @@ void LevelMainMenu::draw(GameEngine * game)
 	acceptConnectionButton->draw(game);
 	//startClientThreadButton->draw(game);
 
+
 	//==============================================================================================================================================
 	game->cursor->draw(game);
 	game->sprite->End();
-
-	game->graphics->lineEnd();
+	
 
 	game->graphics->end();
 	game->graphics->present();

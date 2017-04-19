@@ -12,6 +12,7 @@ Button::Button(float x, float y, D3DXVECTOR2 scaling, int animSpeed, LPCSTR stri
 	this->font = font;
 	this->state = state;
 	this->buttonType = buttonType;
+	isClicked = false;
 }
 
 Button::~Button()
@@ -33,14 +34,16 @@ bool Button::onHover(int mouseX, int mouseY)
 	return false;
 }
 
-bool Button::isClicked(bool leftClickDown)
+bool Button::getIsClicked()
 {
-	if (leftClickDown == true)
-	{
-		return true;
-	}
-	return false;
+	return isClicked;
 }
+
+void Button::setIsClicked(bool click)
+{
+	isClicked = click;
+}
+
 
 
 void Button::draw(GameEngine * game) {
@@ -73,58 +76,34 @@ void Button::update(int &gameTime, GameEngine * game)
 	for (int i = 0; i < gameTime; i++) {
 		if (onHover(game->input->mouseX, game->input->mouseY))
 		{
-			switch (buttonType)
+			if (game->input->windowsLeftClickDown)
 			{
-			case ButtonType::TEXTBUTTON:
-				if (isClicked(game->input->leftClickDown))
-				{
-					textButtonIsClicked = true;
-				}
-				break;
-			case ButtonType::NORMAL:
-				break;
-			}
+				if (!isClicked)
+					isClicked = true;
+				else
+					isClicked = false;
 
-			if (isClicked(game->input->leftClickDown))
-			{
 				game->state = state;
 			}
 
-			if (animTimer >= 60) {
-				animTimer = 0;
-				frame++;
-				if (frame > maxFrame) {
-					frame = maxFrame;
-				}
-			}
-			animTimer += animSpeed;
-		}
 
-		else if(game->input->leftClickDown) {
-			textButtonIsClicked = false;
+			frame = maxFrame;
 		}
 		else {
-			switch (buttonType)
-			{
-			case ButtonType::TEXTBUTTON:
-				if (textButtonIsClicked == true)
-				{
-				
+			if (buttonType == ButtonType::TEXTBUTTON) {
+				if (isClicked)
 					frame = 2;
-				}
 				else
-				{
 					frame = 1;
-				}
-				break;
-			case ButtonType::NORMAL:
+
+			}
+			else if (buttonType == ButtonType::NORMAL) {
+
 				frame = 1;
-				break;
+
 			}
 		}
+		
 	}
-
-
 }
-
 

@@ -45,6 +45,26 @@ void DxSound::loadSounds()
 	}
 	mainmenuMusic->setMode(FMOD_LOOP_NORMAL);
 
+	result = fmodSystem->createStream("sounds\\mainMenuMusic2.mp3", FMOD_DEFAULT, 0, &mainmenuMusic2);
+	if (result != FMOD_OK) {
+		MessageBox(NULL, "ERROR", "Could not load mainMenuMusic2.mp3", MB_ICONERROR);
+	}
+	mainmenuMusic2->setMode(FMOD_LOOP_NORMAL);
+
+	result = fmodSystem->createStream("sounds\\Level1Music.mp3", FMOD_DEFAULT, 0, &level1Music);
+	if (result != FMOD_OK) {
+		MessageBox(NULL, "ERROR", "Could not load Level1Music.mp3", MB_ICONERROR);
+	}
+	level1Music->setMode(FMOD_LOOP_NORMAL);
+
+
+	result = fmodSystem->createStream("sounds\\Level2Music.mp3", FMOD_DEFAULT, 0, &level2Music);
+	if (result != FMOD_OK) {
+		MessageBox(NULL, "ERROR", "Could not load Level2Music.mp3", MB_ICONERROR);
+	}
+	level2Music->setMode(FMOD_LOOP_NORMAL);
+
+
 	result = fmodSystem->createStream("sounds//playerWinMusic.mp3", FMOD_DEFAULT, 0, &playerWinMusic);
 	if (result != FMOD_OK) {
 		MessageBox(NULL, "ERROR", "Could not load playerWinMusic.mp3", MB_ICONERROR);
@@ -73,6 +93,22 @@ void DxSound::playMainMenuMusic()
 
 }
 
+void DxSound::playMainMenuMusic2()
+{
+	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, mainmenuMusic2, false, &channel);
+
+}
+
+void DxSound::playLevel1Music()
+{
+	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, level1Music, false, &channel);
+}
+
+void DxSound::playLevel2Music()
+{
+	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, level2Music, false, &channel);
+}
+
 void DxSound::playClickSound()
 {
 	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, clickSound, false, &channel);
@@ -93,11 +129,26 @@ void DxSound::playDeathSound()
 	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, deathSound, false, &channel);
 }
 
+void DxSound::pauseLevel1Music()
+{
+	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, level1Music, true, &channel);
+}
+
+void DxSound::pauseLevel2Music()
+{
+	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, level2Music, true, &channel);
+}
 
 void DxSound::pauseMainMenuMusic()
 {
 	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, mainmenuMusic, true, &channel);
 }
+
+void DxSound::pauseMainMenuMusic2()
+{
+	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, mainmenuMusic2, true, &channel);
+}
+
 
 void DxSound::pausePlayerWinMusic()
 {

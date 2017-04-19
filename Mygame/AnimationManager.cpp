@@ -2,10 +2,10 @@
 
 
 
-void AnimationManager::initialize(int left, int top, int right, int bottom, int totalFrame, bool loop)
+void AnimationManager::initialize(int left, int top, int right, int bottom, int totalFrame, bool loop, int additionalXOffset, int additionalYOffset)
 {
 	topOffset = top;
-	btmOffset = bottom;
+	btmOffset = bottom ;
 	leftOffset = left;
 	rightOffset = right;
 	maxFrame = totalFrame;
@@ -13,6 +13,8 @@ void AnimationManager::initialize(int left, int top, int right, int bottom, int 
 	this->width = right / totalFrame;
 	this->height = bottom;
 	frame = 1;
+	this->additionalXOffset = additionalXOffset;
+	this->additionalYOffset = additionalYOffset;
 	loopable = loop;
 }
 
@@ -48,11 +50,31 @@ bool AnimationManager::isEOS()
 RECT AnimationManager::getFrame()
 {
 	spriteRect.top = topOffset;
-	spriteRect.bottom = spriteRect.top + height;
+	spriteRect.bottom = spriteRect.top + btmOffset;
 	spriteRect.left = leftOffset + (frame - 1)*width;
 	spriteRect.right = spriteRect.left + width;
-	std::cout << frame << "  " << std::endl;
+	//std::cout << frame << "  " << std::endl;
 	return spriteRect;
+}
+
+int AnimationManager::getHeight()
+{
+	return height;
+}
+
+int AnimationManager::getWidth()
+{
+	return width;
+}
+
+int AnimationManager::getAdditionalXOffset()
+{
+	return additionalXOffset;
+}
+
+int AnimationManager::getAdditionalYOffset()
+{
+	return additionalYOffset;
 }
 
 AnimationManager::AnimationManager()

@@ -31,7 +31,6 @@ public:
 	void begin();
 	
 	//=======================================================USED TO DRAW LINES and font IN YOUR LEVEL================================================================
-	void createLine();  //Needs to be called in your level's draw function if you want to start creating lines. This initializes the line device.
 	void lineBegin(); //Needs to be called in your level's draw function if you want to start creating lines. This begins the line device.
 	void drawLine(D3DXVECTOR2 VECTOR[], int noOfCoordinates, int r, int g, int b); //Call this in your level's draw to draw lines.
 	void lineEnd(); //Needs to be called in your level's draw function if you want to start creating lines. This ends the line device.

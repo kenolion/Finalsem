@@ -32,7 +32,7 @@ public:
 	bool drawAcceptButton = FALSE;
 
 
-	//YOU DONT NEED A HITBOXLINE POINTER OBJECT, BECAUSE GRAPHICS IS ALREADY DECLARED	Graphics * hitBoxLines;
+	
 
 	bool initializeGame(HWND hwnd, GameEngine * game);
 	void update(int gameTime, GameEngine * game);

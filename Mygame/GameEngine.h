@@ -15,6 +15,7 @@ class Game;
 class GameEngine
 {
 public:
+
 	GameEngine();
 	~GameEngine();
 	bool initialize(HWND hwnd);
@@ -24,7 +25,9 @@ public:
 	void popState();
 	void run();
 	static void setDrawingPoint(int x, int y);
-	
+	HANDLE hThread;
+	unsigned threadID;
+
 	GameCamera *camera;
 	Network *network;
 	LPD3DXSPRITE sprite;

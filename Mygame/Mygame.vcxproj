@@ -137,8 +137,11 @@
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="InteractableObjects.h" />
     <ClInclude Include="LevelMainMenu.h" />
+    <ClInclude Include="LevelTwo.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="Pictures.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="LevelPlayerWins.h" />
@@ -159,8 +162,11 @@
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="InteractableObjects.cpp" />
     <ClCompile Include="LevelMainMenu.cpp" />
+    <ClCompile Include="LevelTwo.cpp" />
     <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="Pictures.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="LevelPlayerWins.cpp" />
@@ -171,6 +177,7 @@
   <ItemGroup>
     <Text Include="FontFormats.txt" />
     <Text Include="TileMap.txt" />
+    <Text Include="TileMap2.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="C:\Program Files (x86)\FMOD SoundSystem\FMOD Programmers API Windows\api\lib\fmodex_vc.lib" />

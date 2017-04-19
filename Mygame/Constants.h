@@ -15,9 +15,9 @@ const int REQFPS = 60;
 
 //LEVEL1
 enum class ObjectStatus { Active, Dying, Dead };
-enum class ObjectType { Enemy, Player, Platform };
+enum class ObjectType { Enemy, Player, Platform, InteractableObject };
 enum class TileType {Block};
-const int FLAPPYBIRDOBJECTS = 3;
+const int FLAPPYBIRDOBJECTS = 2;
 const float MAXYVELOCITY = 7;
 
 const int TILEROW = 16;
@@ -30,6 +30,7 @@ enum class GameStates			//Strongly Type enumartions may come in handy if this fr
 	EXITPROGRAM,		//Array 0
 	MENU,				//Array 1
 	LEVEL1,				//Array 2
+	LEVEL2,
 	LEVELPLAYERWIN,		//Array 3
 	CONNECTSTATE,
 	HOSTSERVER,

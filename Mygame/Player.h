@@ -21,13 +21,14 @@ public:
 	//bool    loop;           // true to loop frames
 	//bool    visible;        // true when visible
 	//bool    animComplete;   // true when loop is false and endFrame has finished displaying
-	Player(float x, float y,D3DXVECTOR2 scaling,int animSpeed,int mass);
+	Player(float x, float y,D3DXVECTOR2 scaling,int animSpeed,int mass,int playerType);
 	void update(int &gameTime, GameEngine * game);
 	void physics(PlayerInput *input, int gameTime);
 	void draw(GameEngine * game);
 	float getWalkSpeed();
 	float getJumpSpeed();
-	int face;
+
+	int playerType;
 	CharacterState fsm;
 	CharacterState getCharacterState();
 	~Player();

@@ -25,6 +25,7 @@ public:
 	D3DXVECTOR2 GetMouseLocation();
 	bool leftClickDown;
 	bool rightClickDown;
+	bool windowsLeftClickDown;
 
 	//RAWINPUTDEVICE rawinput[1];
 	bool initializeKeyboard( HWND hwnd);
@@ -44,29 +45,6 @@ public:
 	bool rightArrowKey;
 	bool leftArrowKey;
 	bool jumpKey;
-
-	bool zeroKey;
-	int zroKey;
-	bool oneKey;
-	int onKey;
-	bool twoKey;
-	int twKey;
-	bool threeKey;
-	int threKey;
-	bool fourKey;
-	int forKey;
-	bool fiveKey;
-	int fveKey;
-	bool sixKey;
-	int sxKey;
-	bool sevenKey;
-	int svenKey;
-	bool eightKey;
-	int eghtKey;
-	bool nineKey;
-	int ninKey;
-	bool dotKey;
-	int dtKey;
 
 	bool keyPressed;
 

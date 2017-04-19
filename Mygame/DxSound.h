@@ -21,6 +21,10 @@ public:
 	FMOD::Sound *playerWinMusic;
 	FMOD::Sound *playjumpSound;
 	FMOD::Sound *deathSound;
+	FMOD::Sound *mainmenuMusic2;
+
+	FMOD::Sound *level1Music;
+	FMOD::Sound *level2Music;
 
 	// =======================================================================================================
 	bool initializeSound();
@@ -34,8 +38,15 @@ public:
 	void playPlayerWinMusic();
 	void playJumpSound();
 	void playDeathSound();
+	void playMainMenuMusic2();
+	void playLevel1Music();
+	void playLevel2Music();
+
+	void pauseLevel1Music();
+	void pauseLevel2Music();
 
 	void pauseMainMenuMusic();
+	void pauseMainMenuMusic2();
 	void pausePlayerWinMusic();
 
 	// =======================================================================================================

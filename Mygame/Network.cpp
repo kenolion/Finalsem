@@ -12,65 +12,116 @@ int Network::initializeWinSock()
 		printf("WSAStartup failed : %d\n", iResult);
 		return 1;
 	}
+	sendbuf = "  ";
 	return 0;
 }
 
-void Network::serverThread()
+void Network::startClientThread(HANDLE thread, unsigned threadID)
 {
-	//sendbuf = " MESSAGE FROM SERVER\n";
-	while (true)
-	{
-		if (sendbuf != 0) {
-			iResult = send(ClientSocket, sendbuf, (int)strlen(sendbuf), 0);
-			printf("Bytes sent as Server : %ld\n", iResult);
-			sendbuf = 0;
-		}
-
-		if (iResult == SOCKET_ERROR) {
-			printf("send failed as server: %d\n", WSAGetLastError());
-			closesocket(ClientSocket);
-			WSACleanup();
-		}
-
-		if (iResult != 0)
-		{
-			printf(recvbuf);
-			*recvbuf = { 0 };
-		}
-		
-		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-	}
+	thread = (HANDLE)_beginthreadex(NULL, 0, &Network::clientThread, this, 0, &threadID);
 
 }
 
-void Network::clientThread()
+void Network::startServerThread(HANDLE thread, unsigned threadID)
+{
+	thread = (HANDLE)_beginthreadex(NULL, 0, &Network::serverThread, this, 0, &threadID);
+}
+
+unsigned __stdcall  Network::serverThread(void *pArguments)
+{
+	//sendbuf = " MESSAGE FROM SERVER\n";
+	Network * p_network = static_cast<Network*>(pArguments);
+
+	do
+	{
+		p_network->iResult = recv(p_network->ClientSocket, p_network->recvbuf, p_network->recvbuflen, 0);
+		std::cout << " thread is still running";
+		if (p_network->iResult == SOCKET_ERROR) {
+			printf("send failed as server: %d\n", WSAGetLastError());
+			closesocket(p_network->ClientSocket);
+			_endthreadex(0);
+			WSACleanup();
+		}
+
+		if (p_network->iResult > 0) {
+			printf("Bytes received: %d\n", p_network->iResult);
+			printf(p_network->recvbuf);
+			// Echo the buffer back to the sender
+			p_network->iSendResult = send(p_network->ClientSocket, p_network->recvbuf, p_network->iResult, 0);
+			//*p_network->recvbuf = 0;
+			if (p_network->iSendResult == SOCKET_ERROR) {
+				printf("send failed with error: %d\n", WSAGetLastError());
+				closesocket(p_network->ClientSocket);
+				WSACleanup();
+				_endthreadex(0);
+				return 1;
+			}
+			printf("Bytes sent: %d\n", p_network->iSendResult);
+		}
+		else if (p_network->iResult == 0)
+			printf("Connection closing...\n");
+		else {
+			printf("recv failed with error: %d\n", WSAGetLastError());
+			closesocket(p_network->ClientSocket);
+			WSACleanup();
+			_endthreadex(0);
+			return 1;
+		}
+
+
+	} while (p_network->iResult > 0);
+	return 0;
+
+}
+
+unsigned __stdcall  Network::clientThread(void *pArguments)
 {
 	//sendbuf = "MeSSAGE FROM CLIENT\n";
-	while (true)
+	Network * p_network = static_cast<Network*>(pArguments);
+
+	do
 	{
-		if (sendbuf != 0) {
+		p_network->iResult = recv(p_network->ConnectSocket, p_network->recvbuf, p_network->recvbuflen, 0);
+		/*if (sendbuf != 0) {
 			iResult = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
 			printf("Bytes Sent as Client : %ld\n", iResult);
 			sendbuf = 0;
 
-		}
+		}*/
+		if (p_network->iResult > 0)
+			printf("Bytes received: %d\n", p_network->iResult);
+		else if (p_network->iResult == 0)
+			printf("Connection closed\n");
+		else
+			printf("recv failed with error: %d\n", WSAGetLastError());
 
-		if (iResult == SOCKET_ERROR) {
-			printf("send failed as client: %d\n", WSAGetLastError());
-			closesocket(ConnectSocket);
-			WSACleanup();
-		}
-
-		if (iResult != 0)
+		if (p_network->iResult != 0)
 		{
-			printf(recvbuf);
-			*recvbuf = { 0 };
+			printf(p_network->recvbuf);
 		}
 
-		iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-	
-	}
 
+
+	} while (p_network->iResult > 0);
+	return 0;
+
+}
+
+void Network::sendData(int clientType)
+{
+	if ((int)strlen(sendbuf.c_str())> 0) {
+		if (clientType == 1) {
+			iResult = send(ClientSocket, sendbuf.c_str(), (int)strlen(sendbuf.c_str()), 0);
+			printf("Bytes Sent as Server : %ld\n", iResult);
+		}
+		else if(clientType == 2){
+			iResult = send(ConnectSocket, sendbuf.c_str(), (int)strlen(sendbuf.c_str()), 0);
+			printf("Bytes Sent as Client : %ld\n", iResult);
+		}
+	
+		sendbuf.clear();
+		sendbuf = "  ";   //sets the size of the string so that I dont get string subscript out of range
+	}
 
 }
 
@@ -168,47 +219,7 @@ int Network::acceptConnection()
 
 }
 
-int Network::sendDataAsServer()
-{
-	//SEND TO CLIENT HERE
-	//strcpy_s(MOTD, "Welcome! This is the Message of the Day.")
-	//send(ClientSocket, MOTD.c_str(), sizeof(MOTD), NULL);
-//	strcpy_s(msg, "Welcome, client. This is an automated message from the server.\n");
-	printf("Bytes sent as Server : %ld\n", iResult);
 
-	if (iResult == SOCKET_ERROR) {
-		printf("send failed as server: %d\n", WSAGetLastError());
-		closesocket(ClientSocket);
-		WSACleanup();
-		return 1;
-	}
-
-	return 0;
-}
-
-
-int Network::receiveDataAsServer()
-{
-	//RECEIVE FROM CLIENT HERE
-
-	do {
-		//	iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-		if (iResult > 0)
-		{
-			printf(recvbuf);
-			printf("Bytes received as server: %d\n", iResult);
-		}
-		else if (iResult == 0)
-		{
-		}
-		else
-		{
-			//printf("recv failed as server : %d\n", WSAGetLastError());
-		}
-
-	} while (iResult > 0);
-	return 0;
-}
 
 int Network::disconnectAndShutdownSocket()
 {	//shutdown the send half of the connection since no more data will be sent
@@ -296,56 +307,6 @@ int Network::connectClientSocket()
 	return 0;
 }
 
-int Network::sendDataAsClient()
-{
-	// Send an initial buffer
-	// Send stuff to Server here
-
-	if (iResult == SOCKET_ERROR) {
-		printf("send failed as client: %d\n", WSAGetLastError());
-		closesocket(ConnectSocket);
-		WSACleanup();
-		return 1;
-	}
-
-	printf("Bytes Sent as Client : %ld\n", iResult);
-
-	// shutdown the connection for sending since no more data will be sent
-	// the client can still use the ConnectSocket for receiving data
-	iResult = shutdown(ConnectSocket, SD_SEND);
-	if (iResult == SOCKET_ERROR) {
-		printf("shutdown failed as client: %d\n", WSAGetLastError());
-		closesocket(ConnectSocket);
-		WSACleanup();
-		return 1;
-	}
-	return 0;
-}
-
-int Network::receiveDataAsClient()
-{
-	// Receive data until the server closes the connection
-	do {
-		//RECEIVE STUFF FROM SERVER HERE
-		//	iResult = recv(ConnectSocket, msg, sizeof(msg), NULL);
-
-		if (iResult > 0)
-		{
-			printf(recvbuf);
-			printf("Bytes received as client: %d\n", iResult);
-		}
-		else if (iResult == 0)
-		{
-
-		}
-		else
-		{
-			//printf("recv failed as client: %d\n", WSAGetLastError());
-		}
-	} while (iResult > 0);
-
-	return 0;
-}
 
 
 

@@ -16,7 +16,7 @@ GameEngine::~GameEngine()
 		games.pop_back();
 	}
 	if (exit) {
-
+		CloseHandle(hThread);
 		graphics->cleanup();
 		dltPtr(graphics);
 		dltPtr(gameTime);
@@ -146,6 +146,7 @@ void GameEngine::run()
 
 LRESULT GameEngine::winProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+
 	switch (msg)
 	{
 	case WM_DESTROY:
@@ -170,79 +171,16 @@ LRESULT GameEngine::winProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				break;
 			}
 			break;
-
-			/*
-			case VK_NUMPAD0:
-			gameEngine->keyboardbuffer = '0';
-			break;
-			case VK_NUMPAD1:
-			gameEngine->keyboardbuffer = '1';
-			break;
-			case VK_NUMPAD2
-			gameEngine->keyboardbuffer = '2';
-			break;
-			case VK_NUMPAD3:
-			gameEngine->keyboardbuffer = '3';
-			break;
-			case VK_NUMPAD4:
-			gameEngine->keyboardbuffer = '4';
-			break;
-			case VK_NUMPAD5:
-			gameEngine->keyboardbuffer = '5';
-			break;
-			case VK_NUMPAD6:
-			gameEngine->keyboardbuffer = '6';
-			break;
-			case VK_NUMPAD7:
-			gameEngine->keyboardbuffer = '7';
-			break;
-			case VK_NUMPAD8:
-			gameEngine->keyboardbuffer = '8';
-			break;
-			case VK_NUMPAD9:
-			gameEngine->keyboardbuffer = '9';
-			break;
-			case VK_DECIMAL:
-			gameEngine->keyboardbuffer = '.';
-			break;*/
-
-
 			//case VK_F1:
 			//	input->remapKeys();//<---- underconstruction used to remap keys but needs to be switched to windows input instead of directinput
 
 			//break;
 		}
-		this->wParam = wParam;
+		
 		// static_cast<char>(wParam);
-		if (wParam == VK_RETURN)
-		{
-			if (ipAddresslocked == false)
-			{
-				ipAddresslocked = true;
-			}
-			else
-			{
-				hostIpAddresslocked = true;
-				ipAddresslocked = false;
-			}
-		}
-		if (wParam == VK_OEM_PLUS)
-		{
-			if (hostIpAddresslocked == false)
-			{
-				hostIpAddresslocked = true;
-			}
-			else
-			{
-				ipAddresslocked = true;
-				hostIpAddresslocked = false;
-			}
-		}
-
-
 		if (ipAddresslocked == false)
 		{
-			if (wParam != VK_BACK)
+			if (wParam != VK_BACK && wParam != VK_RETURN)
 			{
 				ipAddress += static_cast<char>(wParam);
 				if (wParam == VK_OEM_PERIOD)
@@ -257,7 +195,7 @@ LRESULT GameEngine::winProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		if (hostIpAddresslocked == false)
 		{
-			if (wParam != VK_BACK)
+			if (wParam != VK_BACK  && wParam != VK_RETURN)
 			{
 				hostIpAddress += static_cast<char>(wParam);
 				if (wParam == VK_OEM_PERIOD)
@@ -271,22 +209,29 @@ LRESULT GameEngine::winProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		break;
 	case WM_LBUTTONDOWN:
+		if (input != NULL)
+			input->windowsLeftClickDown = true;
 		break;
 
+	case WM_LBUTTONUP:
+		if (input != NULL)
+			input->windowsLeftClickDown = false;		//false on default
+		break;
 	}
+	this->wParam = wParam;
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 void GameEngine::setDrawingPoint(int x, int y)
 {
-	
-		COORD coord; //Does not need to be define because if we right click COORD and go to definition it is already defined in another library
-		coord.X = x;
-		coord.Y = y;
-		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 
-	
+	COORD coord; //Does not need to be define because if we right click COORD and go to definition it is already defined in another library
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+
+
 }
 
 
-		
+
 

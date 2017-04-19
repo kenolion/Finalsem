@@ -64,6 +64,13 @@
     <ClCompile Include="AnimationManager.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="InteractableObjects.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelTwo.cpp">
+      <Filter>Game\Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FlappyBird.h">
@@ -129,6 +136,13 @@
     <ClInclude Include="AnimationManager.h">
       <Filter>Engine\Header</Filter>
     </ClInclude>
+    <ClInclude Include="InteractableObjects.h">
+      <Filter>Engine\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelTwo.h">
+      <Filter>Game\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -202,6 +216,9 @@
       <Filter>Game\TextFiles</Filter>
     </Text>
     <Text Include="FontFormats.txt">
+      <Filter>Game\TextFiles</Filter>
+    </Text>
+    <Text Include="TileMap2.txt">
       <Filter>Game\TextFiles</Filter>
     </Text>
   </ItemGroup>

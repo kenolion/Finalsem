@@ -11,6 +11,7 @@ GameObject::GameObject(float x, float y, D3DXVECTOR2 scaling, int mass, int anim
 	color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	this->mass = mass;
 	this->animSpeed = animSpeed;
+
 }
 
 
@@ -54,6 +55,8 @@ bool GameObject::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int wi
 	col_height = this->height *falseColl;
 	col_xOffset = (this->width - col_width) / 2;
 	col_yOffset = (this->height - col_height) / 2;
+	additionalXOffset = 0;
+	additionalYOffset = 0;
 	//col_xOffset = spriteWidth / 3;
 	//col_yOffset = spriteHeight / 3;
 	if (scaling.x > 1) {
@@ -135,39 +138,39 @@ void GameObject::draw(GameEngine * game)		//Function that draw sprite
 {
 	//for RECT collision
 
+	if (status == ObjectStatus::Active) {
+
+		if (frameHorizontal)					//Changes if the sprite sheet frames are going horizontally or vertically
+		{
+			spriteRect.top = (state - 1)*spriteHeight;
+			spriteRect.bottom = spriteRect.top + spriteHeight;
+			spriteRect.left = (frame - 1)*spriteWidth;
+			spriteRect.right = spriteRect.left + spriteWidth;
+		}
+		else
+		{
+			spriteRect.top = (frame - 1)*spriteHeight;
+			spriteRect.bottom = spriteRect.top + spriteHeight;
+			spriteRect.left = (state - 1)*spriteWidth;
+			spriteRect.right = spriteRect.left + spriteWidth;
+
+		}
+
+		spriteCentre = D3DXVECTOR2(spriteWidth / 2, spriteHeight / 2);
+		if (type == ObjectType::Platform || type == ObjectType::InteractableObject) {
 
 
-	if (frameHorizontal)					//Changes if the sprite sheet frames are going horizontally or vertically
-	{
-		spriteRect.top = (state - 1)*spriteHeight;
-		spriteRect.bottom = spriteRect.top + spriteHeight;
-		spriteRect.left = (frame - 1)*spriteWidth;
-		spriteRect.right = spriteRect.left + spriteWidth;
+			D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &screenPos);
+		}
+		else {
+			D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &position);		// This code is for objects that are not affected by camera
+		}
+		game->sprite->SetTransform(&mat);
+		if (game->sprite)
+		{
+			spriteClass->draw(game->sprite, spriteRect, color);
+		}
 	}
-	else
-	{
-		spriteRect.top = (frame - 1)*spriteHeight;
-		spriteRect.bottom = spriteRect.top + spriteHeight;
-		spriteRect.left = (state - 1)*spriteWidth;
-		spriteRect.right = spriteRect.left + spriteWidth;
-
-	}
-
-	spriteCentre = D3DXVECTOR2(spriteWidth / 2, spriteHeight / 2);
-	if ( type == ObjectType::Platform) {
-
-
-		D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &screenPos);
-	}
-	else {
-		D3DXMatrixTransformation2D(&mat, NULL, 0.0, &scaling, &spriteCentre, rotation, &position);		// This code is for objects that are not affected by camera
-	}
-	game->sprite->SetTransform(&mat);
-	if (game->sprite)
-	{
-		spriteClass->draw(game->sprite, spriteRect, color);
-	}
-
 
 }
 
@@ -215,6 +218,16 @@ int GameObject::getTileID()
 	return 0;
 }
 
+int GameObject::getRow()
+{
+	return (position.y+spriteHeight/2)/TILEWIDTH;
+}
+
+int GameObject::getCollumn()
+{
+	return (position.x+spriteWidth/2)/TILEWIDTH;
+}
+
 
 
 void GameObject::calculateVelocity()
@@ -257,11 +270,27 @@ float GameObject::getHeight()
 	return spriteHeight;
 }
 
-bool GameObject::collideWith(GameObject *object)
+bool GameObject::getIsClicked()
+{
+	return false;
+}
+
+void GameObject::setIsClicked(bool click)
 {
 
+}
 
-	if (object->getType() == ObjectType::Enemy) {
+
+bool GameObject::collideWith(GameObject *object)
+{
+	//if (object->getType() == ObjectType::Player) {
+	//	calculateDistance(object);				//calculate distance and current object
+	//	if (distance.x < detectionRadius) {
+	//		objectInRadius = true; // player is in the radius
+	//	}
+	//}
+
+	if (object->getType() == ObjectType::Enemy || object->getType() == ObjectType::InteractableObject || object->getType() == ObjectType::Player) {
 		if (collisionRect.bottom < object->collisionRect.top)return false;
 		if (collisionRect.top > object->collisionRect.bottom)return false;
 		if (collisionRect.right < object->collisionRect.left)return false;
@@ -289,22 +318,6 @@ bool GameObject::collideWith(GameObject *object)
 		}
 
 	}
-
-
-
-
-	//distance = object.getObjectPos() - position;			// Distance = object2 position - object1 position		
-	//
-	//if (D3DXVec2Length(&distance) < (spriteCentre.x + object.spriteCentre.x)) {
-	//	return true;
-	//}
-
-
-	//if (distance.y *distance.y + distance.x*distance.x < (spriteCentre.x + object.spriteCentre.x)*(spriteCentre.y + object.spriteCentre.y)) {			//it is squared to make value x and y positive if the player is on the right side of object or above object		
-	//																																			// spritecentre = object radius
-	//	return true;
-	//}
-
 
 	return true;
 	//means there is collision
@@ -336,12 +349,18 @@ void GameObject::moveXdirection()
 	velocity.x += acceleration.x;
 	posVector.x += velocity.x;
 
-
-	collisionRect.left = posVector.x + col_xOffset - positionOffset.x;
-	collisionRect.right = posVector.x + spriteWidth - col_xOffset - positionOffset.x;
-	collisionRect.top = posVector.y + col_yOffset - positionOffset.y;
-	collisionRect.bottom = posVector.y + spriteHeight*scaling.y - positionOffset.y;
-
+	if (face == 1) {
+		collisionRect.left = posVector.x + col_xOffset - additionalXOffset - positionOffset.x;
+		collisionRect.right = posVector.x + spriteWidth - additionalXOffset - col_xOffset - positionOffset.x;
+		collisionRect.top = posVector.y + col_yOffset - positionOffset.y;
+		collisionRect.bottom = posVector.y + spriteHeight*scaling.y + additionalYOffset - positionOffset.y;
+	}
+	else {
+		collisionRect.left = posVector.x + col_xOffset + additionalXOffset - positionOffset.x;
+		collisionRect.right = posVector.x + spriteWidth  - col_xOffset - positionOffset.x;
+		collisionRect.top = posVector.y + col_yOffset - positionOffset.y;
+		collisionRect.bottom = posVector.y + spriteHeight*scaling.y + additionalYOffset - positionOffset.y;
+	}
 
 }
 
@@ -349,41 +368,63 @@ void GameObject::moveYdirection()
 {
 	velocity.y += acceleration.y;
 	posVector.y += velocity.y;
-
-	collisionRect.left = posVector.x + col_xOffset - positionOffset.x;
-	collisionRect.right = posVector.x + spriteWidth - col_xOffset - positionOffset.x;
-	collisionRect.top = posVector.y + col_yOffset - positionOffset.y;
-	collisionRect.bottom = posVector.y + spriteHeight*scaling.y - positionOffset.y;
-
+	if (face == 1) {
+		collisionRect.left = posVector.x + col_xOffset - additionalXOffset - positionOffset.x;
+		collisionRect.right = posVector.x + spriteWidth - additionalXOffset - col_xOffset - positionOffset.x;
+		collisionRect.top = posVector.y + col_yOffset - positionOffset.y;
+		collisionRect.bottom = posVector.y + spriteHeight*scaling.y + additionalYOffset - positionOffset.y;
+	}
+	else {
+		collisionRect.left = posVector.x + col_xOffset + additionalXOffset - positionOffset.x;
+		collisionRect.right = posVector.x + spriteWidth - col_xOffset - positionOffset.x;
+		collisionRect.top = posVector.y + col_yOffset - positionOffset.y;
+		collisionRect.bottom = posVector.y + spriteHeight*scaling.y + additionalYOffset - positionOffset.y;
+	}
 
 }
 
 void GameObject::handleXAxisCollision()
 {
-	//if (pushesLeftWall) {
-	//	overlap.x = (collisionRect.left + positionOffset.x) - ((int)((collisionRect.right) / 48) * 48);
-	//	//posVector.x -= overlap.x;
-	//}
+	if (pushesLeftWall) {
+		if ((int)positionOffset.x % 48 == 0)
+			overlap.x = (collisionRect.left + positionOffset.x) - ((int)((collisionRect.left + 48) / 48) * 48);
+		else {
+			overlap.x = (collisionRect.left + positionOffset.x - 48) - ((int)((collisionRect.right + positionOffset.x - 48) / 48) * 48);
+		}
+		posVector.x -= overlap.x;
+		std::cout << overlap.x << "   " << std::endl;
+
+	}
+
+	if (pushesRightWall) {
+		if ((int)positionOffset.x % 48 == 0)
+			overlap.x = (collisionRect.right + positionOffset.x) - ((int)((collisionRect.right) / 48) * 48);
+		else {
+			overlap.x = (collisionRect.right + positionOffset.x) - ((int)((collisionRect.right + positionOffset.x) / 48) * 48);
+		}
+		posVector.x -= overlap.x;
+
+	}
 
 
 
-} 
+}
 
 void GameObject::handleYAxisCollision()
 {
 
 	if (onGround) {
-		if((int)positionOffset.y % 48 == 0)
+		if ((int)positionOffset.y % 48 == 0)
 			overlap.y = (collisionRect.bottom) - ((int)(((collisionRect.bottom) / 48) * 48));
 		else {
-			overlap.y = (collisionRect.bottom+positionOffset.y-48) - ((int)((collisionRect.bottom + positionOffset.y - 48) / 48) * 48);
+			overlap.y = (collisionRect.bottom + positionOffset.y - 48) - ((int)((collisionRect.bottom + positionOffset.y - 48) / 48) * 48);
 		}
 		//std::cout << ((int)((((collisionRect.bottom + positionOffset.y - spriteHeight) / 48)) * 48) ) << "        " << std::endl;
 		posVector.y -= overlap.y;
 	}
 
 	if (atCeiling) {
-		overlap.y = (collisionRect.top) - (int)((ceil((collisionRect.bottom) / 48) * 48));
+		overlap.y = (collisionRect.top) - (((int)((collisionRect.top + 48) / 48) * 48));
 		posVector.y -= overlap.y;
 		velocity.y = 0;
 
@@ -431,4 +472,15 @@ float GameObject::getWalkSpeed()
 float GameObject::getJumpSpeed()
 {
 	return 0.0f;
+}
+
+float GameObject::getDistance(GameObject * object)
+{
+	distance = screenPos - object->screenPos;
+	return D3DXVec2Length(&distance);
+}
+
+int GameObject::getDetectionRadius()
+{
+	return 0;
 }

@@ -9,10 +9,9 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
-#include <list>
-#include <set>
+#include "Node.h"
 
-
+typedef int(*AI)(D3DXVECTOR2 start, D3DXVECTOR2 target, float xOffset, float yOffset, float spritesWidth, float spritesHeight);
 class GameEngine;
 
 class Game		//
@@ -21,7 +20,7 @@ protected:
 	HWND hwnd;
 	D3DXVECTOR2 friction;
 public:
-
+	static int clientType;				//1, server 2= client
 	int framesToUpdate;
 	bool initialize;
 	void run(GameEngine * game);
@@ -32,8 +31,10 @@ public:
 	virtual void update(int gameTime, GameEngine * game) = 0;
 	virtual void collisions(GameEngine * game, int gameTime) = 0;
 	virtual void handleEvents(GameEngine *game) = 0;
-	int findPath(D3DXVECTOR2 start, D3DXVECTOR2 target);
-	GameObject *tiles[17][43];
+	void assignInput(GameEngine *game);
+	int findPath(GameObject * object, D3DXVECTOR2 target, float xOffset, float yOffset, float spritesWidth, float spritesHeight);
+	GameObject *tiles[TILEROW][TILECOLUMN];
+	GameObject *object[FLAPPYBIRDOBJECTS];
 	std::string mapName;
 	int tileMap[TILEROW][TILECOLUMN];
 	int numOfTiles;
@@ -45,7 +46,8 @@ public:
 	bool checkRightSide(GameObject *object, int xOffset, int yOffset);
 	bool checkLeftSide(GameObject *object, int xOffset, int yOffset);
 	D3DXVECTOR2 gravity;
-
+	D3DXVECTOR2 lines[50];       //use for drawing lines
+	D3DXVECTOR2 playerCollisionBox[5]; //use for player
 	void initializeTiles(GameEngine*game);
 	//ai path finding
 	/*
@@ -67,35 +69,19 @@ public:
 	*/
 	void initializeAstar();
 	void freeAStar();
-	struct Node {
-		Node *parent;
-		bool walkability ;
-		int id;
-		int parentId;
-		int col;
-		int row;
-
-		int gCost;
-		int hCost;
-		int getFCost() {
-			return gCost + hCost;
-		}
-		int elementNo;
-
-	}target,start,currentNode;
+	Node target,start,currentNode;
 	int movementCostToNeighbour;
 //	Node getNode(int id, std::vector<Node> vecNode);
 	std::vector<Node> openList;
 	std::vector<Node> closeList;
 	std::vector<Node> neighbour;
-	std::list<Node> negs;
-	std::vector<Node> path;
+
 	//std::vector<Node> blocks;
 	Node *blocks[400];
 	int nodeId;
 	bool contains(Node &node, std::vector<Node> vecNode);
 	int getDistance(Node &nodeA, Node & nodeB);
-	void retracePath(Node &start, Node &end);
+	void retracePath(GameObject * object, Node &end, float xOffset, float yOFfset);
 
 protected:
 	

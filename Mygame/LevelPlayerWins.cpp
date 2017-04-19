@@ -11,7 +11,8 @@ bool LevelPlayerWins::initializeGame(HWND hwnd, GameEngine * game)
 {
 
 	game->sound->playPlayerWinMusic();
-	game->sound->channel->setVolume(0.0f);
+
+	game->sound->channel->setVolume(0.25f);
 	//======================================================= Create your Game Objects Here =======================================================
 	backgroundImage = new Pictures(0.0f, 0.0f, D3DXVECTOR2(1.0f, 1.0f), 1); //x, y, scaling, animation, speed,mass
 	if (!backgroundImage->initialize(game->graphics->device3d, "sprite\\backgroundImage.png", 1280, 720, 1, 1, true, D3DCOLOR_XRGB(0, 0, 0), 1.0f)) {
@@ -63,7 +64,7 @@ void LevelPlayerWins::update(int gameTime, GameEngine * game)
 
 void LevelPlayerWins::collisions(GameEngine * game, int gameTime)
 {
-
+	
 
 }
 
@@ -71,6 +72,7 @@ void LevelPlayerWins::handleEvents(GameEngine * game)
 {
 	switch (game->state) {
 	case GameStates::MENU:
+		game->sound->pausePlayerWinMusic();
 		game->popState();
 		break;
 	case GameStates::EXITPROGRAM:

@@ -25,13 +25,9 @@ public:
 	GameStates state;
 	~Button();
 	bool onHover(int mouseX, int mouseY);
-	bool isClicked(bool leftClickDown);
-
-	void numberedTextInput(GameEngine * game);
-
-	bool textButtonIsClicked = false;
-
-
+	bool isClicked;
+	bool getIsClicked();
+	void setIsClicked(bool click);
 	
 
 	

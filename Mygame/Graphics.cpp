@@ -57,6 +57,13 @@ bool Graphics::initialize(HWND hw, int w, int h)
 		MessageBox(NULL, "ERROR", "Could not initialize Font", MB_ICONERROR);
 		return false;
 	}
+	result = D3DXCreateLine(device3d, &line);
+
+	if (FAILED(result))
+	{
+		MessageBox(NULL, "ERROR", "Could not initialize Line", MB_ICONERROR);
+		return false;
+	}
 
 
 	return true;
@@ -86,11 +93,6 @@ void Graphics::begin()
 	device3d->BeginScene();
 }
 
-
-void Graphics::createLine()
-{
-	D3DXCreateLine(device3d, &line);
-}
 
 void Graphics::lineBegin()
 {

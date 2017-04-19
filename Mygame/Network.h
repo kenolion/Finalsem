@@ -6,7 +6,8 @@
 #include <stdio.h> // <- has standard input and output, specifically the printf() function. 
 #include <stdlib.h>
 #include <string>
-#include <thread>
+#include <iostream>
+#include <process.h>
 
 //#pragma comment(lib, "ws2_32.lib") //<- indicates to the linker that Ws2_32.lib is needed. (Remember to link Ws2_32.lib in your project)
 //#pragma comment (lib, "Mswsock.lib")
@@ -18,41 +19,38 @@
 
 class Network
 {
-private :
-	
+private:
+
 	int iResult;
 	int iSendResult;
 	int argc;
 	char **argv;
 
 	struct addrinfo *result = NULL,        //An "addrinfo" object with a "sockaddr" structure. 
-					*ptr = NULL,		   //The "sockaddr" structure includes the IP address of the server that the client will try to connect to and the port number.
-		           	hints;
+		*ptr = NULL,		   //The "sockaddr" structure includes the IP address of the server that the client will try to connect to and the port number.
+		hints;
 
 	int addrlen = sizeof(result->ai_addr);
 	SOCKET ListenSocket = INVALID_SOCKET; //Listening Socket
 	SOCKET ClientSocket = INVALID_SOCKET; // Socket for accepting connections from clients.
+	SOCKET ConnectSocket = INVALID_SOCKET;
 
-	SOCKET ConnectSocket = INVALID_SOCKET; 
 
-	
+
 
 	//int server();
 	//int client();
 
 public:
+	
 	int initializeWinSock();
 	//THREADS
 	//typedef void(Network::*pfunc)(void);
-     void serverThread();
-	 void clientThread();
-	
-	 std::thread spawn() {
-		 return std::thread([this] {this->serverThread(); });
-	 }
-	 std::thread spawn2() {
-		 return std::thread([this] {this->clientThread(); });
-	 }
+	void startClientThread(HANDLE thread, unsigned threadID);
+	void startServerThread(HANDLE thread, unsigned threadID);
+	static unsigned __stdcall  serverThread(void *pArguments);
+	static unsigned __stdcall  clientThread(void *pArguments);
+	void sendData(int clientType);
 
 	char serverBuffer[256];
 	int serverBufferLength;
@@ -68,21 +66,15 @@ public:
 
 	char msg[256];
 
-	int sendDataAsServer();
-	int receiveDataAsServer();
 
 	int disconnectAndShutdownSocket();
 
 	//CLIENT (needs to pass in ip number of server)
 	int createClientSocket(PCSTR ipAddress);
 	int connectClientSocket();
-	int sendDataAsClient();
-	int receiveDataAsClient();
-	int disconnectClientSocket();
-
 
 	int recvbuflen = DEFAULT_BUFLEN;
-	char * sendbuf;
+	std::string sendbuf;
 	char recvbuf[DEFAULT_BUFLEN];
 	char prevrecbuf[DEFAULT_BUFLEN];
 

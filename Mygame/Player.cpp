@@ -1,37 +1,49 @@
 #include "Player.h"
 #include "GameEngine.h"
 
-Player::Player(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int mass) :GameObject(x, y, scaling, animSpeed, mass)
+Player::Player(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int mass, int playerType) :GameObject(x, y, scaling, animSpeed, mass)
 {
 	this->type = ObjectType::Player;
 	jump = false;
 	fsm = CharacterState::Idle;
 	jumpSpeed = -15.0f;
 	walkSpeed = 3.0f;
-	//animation[0] = new AnimationManager();
-	//animation[0]->initialize(0, 183, 276, 86, 4, true);				//idle
-	//animation[1] = new AnimationManager();
-	//animation[1]->initialize(0, 91, 330, 92, 6, true);				//walking
-	//animation[2] = new AnimationManager();
-	//animation[2]->initialize(0, 0, 332, 91, 4, false);		//jumping
-	//animation[3] = new AnimationManager();
-	//animation[3]->initialize(0, 64, 0, 48, 1, true);
-	//animation[4] = new AnimationManager();
-	//animation[4]->initialize(184, 172, 167, 138, 4, true);
-
 	animation[0] = new AnimationManager();
-	animation[0]->initialize(0, 48, 192, 48, 4, true);				//idlek
+	animation[0]->initialize(332, 86, 276, 80, 4, true,0,0);				//idle right
 	animation[1] = new AnimationManager();
-	animation[1]->initialize(192, 0, 192, 48, 6, true);				//walking
+	animation[1]->initialize(0, 274, 330, 80, 6, true,0,0);				//walking			//92
 	animation[2] = new AnimationManager();
-	animation[2]->initialize(0, 144, 192, 48, 4, false);		//jumping
-
+	animation[2]->initialize(15, 94, 310, 80, 4, false,-10,0);		//jumping			91
 	animation[3] = new AnimationManager();
-	animation[3]->initialize(0, 0, 192, 48, 4, true);		// idle left
+	animation[3]->initialize(332, 0, 276, 80, 4, true,0,0);			//idle left
 	animation[4] = new AnimationManager();
-	animation[4]->initialize(0, 96, 192, 48, 4, false); // jump left
+	animation[4]->initialize(0, 0, 332, 80, 4, false,10,0);		//jump left
+
+
+
+
 	animation[5] = new AnimationManager();
-	animation[5]->initialize(0, 192, 192, 48, 6, true); //wlaking
+	animation[5]->initialize(0, 182, 330, 80, 6, true,0,0); //wlaking lkeft
+	this->playerType = playerType;
+	//if (playerType == 1) {   // 1 = tall guy
+		//animation[0] = new AnimationManager();
+		//animation[0]->initialize(0, 48, 192, 48, 4, true);				//idlek
+		//animation[1] = new AnimationManager();
+		//animation[1]->initialize(192, 0, 192, 48, 6, true);				//walking
+		//animation[2] = new AnimationManager();
+		//animation[2]->initialize(0, 144, 192, 48, 4, false);		//jumping
+
+		//animation[3] = new AnimationManager();
+		//animation[3]->initialize(0, 0, 192, 48, 4, true);		// idle left
+		//animation[4] = new AnimationManager();
+		//animation[4]->initialize(0, 96, 192, 48, 4, false); // jump left
+		//animation[5] = new AnimationManager();
+		//animation[5]->initialize(0, 192, 192, 48, 6, true); //wlaking
+	/*}
+	else {
+
+
+	}*/
 	face = 1;
 }
 
@@ -44,6 +56,7 @@ void Player::update(int &gameTime, GameEngine * game)
 
 		//std::cout << position.y << "        " << std::endl;
 	//std::cout << onGround << std::endl;
+		
 		for (int i = 0; i < gameTime; i++) {
 			position = posVector;
 			//scaling = { (float)face,1.0f };
@@ -70,7 +83,7 @@ void Player::update(int &gameTime, GameEngine * game)
 
 void Player::physics(PlayerInput * input, int gameTime)
 {
-
+	
 	//std::cout << "old pos :" << oldPosition.x << "           new pos :" << position.x << "       "<< std::endl;
 	oldPosition = position;
 	oldVelocity = velocity;
@@ -79,47 +92,46 @@ void Player::physics(PlayerInput * input, int gameTime)
 	pushedRightWall = pushesRightWall;
 	pushedLeftWall = pushesLeftWall;
 	wasAtCeiling = atCeiling;
+	
 	switch (fsm) {
 	case CharacterState::Idle:
-		std::cout << "idle" << std::endl;
+		//std::cout << "idle" << std::endl;
 
-		
-			if (face == 1)
-				state = 0;
-			else
-				state = 3;
-			animation[state]->start();
-		
+
+		if (face == 1)
+			state = 0;
+		else
+			state = 3;
+		animation[state]->start();
+
 		if (!onGround) {
 			fsm = CharacterState::Jumping;
 			break;
 		}
-		if (input->rightArrowKey != input->leftArrowKey) {
+		if (rightArrowKey != leftArrowKey) {
 			fsm = CharacterState::Walking;
 			break;
 		}
-		else if (input->jumpKey) {
+		else if (jumpKey) {
 			velocity.y = jumpSpeed;
 			onGround = false;
 			fsm = CharacterState::Jumping;
 			break;
 
 		}
-
-
 		break;
 
 	case CharacterState::Jumping:
 
-		std::cout << "jumping" << std::endl;
-		
+		//std::cout << "jumping" << std::endl;
+
 		animation[state]->start();
 
 		if (!onGround) {
 			velocity.y += GRAVITY;
 			velocity.y = min(velocity.y, 10.0f);
 		}
-		if (input->rightArrowKey == input->leftArrowKey) {
+		if (rightArrowKey == leftArrowKey) {
 			if (face == 1)
 				state = 2;
 			else
@@ -127,7 +139,7 @@ void Player::physics(PlayerInput * input, int gameTime)
 			acceleration.x = 0.0f;
 			//velocity.x = 0.0f;
 		}
-		else if (input->rightArrowKey) {
+		else if (rightArrowKey) {
 			face = 1;
 			state = 2;
 			if (pushesRightWall) {
@@ -141,7 +153,7 @@ void Player::physics(PlayerInput * input, int gameTime)
 				velocity.x = min(velocity.x, 2.0f);
 			}
 		}
-		else if (input->leftArrowKey) {
+		else if (leftArrowKey) {
 			face = -1;
 			state = 4;
 			if (pushesLeftWall) {
@@ -150,14 +162,14 @@ void Player::physics(PlayerInput * input, int gameTime)
 				acceleration.x = 0.0f;
 			}
 			else {
-			
+
 				acceleration.x = -walkSpeed;
 				velocity.x = max(velocity.x, -2.0f);
 			}
 		}
 		if (onGround) {
-			
-			if (input->leftArrowKey == input->rightArrowKey) {
+
+			if (leftArrowKey == rightArrowKey) {
 				fsm = CharacterState::Idle;
 				velocity.x = 0.0f;
 				velocity.y = 0.0f;
@@ -175,33 +187,33 @@ void Player::physics(PlayerInput * input, int gameTime)
 			animation[state]->start();
 
 		//set to walking animation
-		std::cout << "walking" << std::endl;
-		if (input->rightArrowKey == input->leftArrowKey) {
+	//	std::cout << "walking" << std::endl;
+		if (rightArrowKey == leftArrowKey) {
 			//set to idle animation
 			fsm = CharacterState::Idle;
 			acceleration.x = 0.0f;
 			velocity.x = 0.0f;
 			break;
 		}
-		if (input->rightArrowKey) {
+		if (rightArrowKey) {
 			face = 1;
 			state = 1;
 			if (pushesRightWall) {
-				
+
 				acceleration.x = 0.0f;
 				velocity.x = 0.0f;
 			}
 			else {
-		
+
 				acceleration.x = walkSpeed;
 				velocity.x = min(velocity.x, 2.0f);
 			}
 		}
-		else if (input->leftArrowKey) {
+		else if (leftArrowKey) {
 			face = -1;
 			state = 5;
 			if (pushesLeftWall) {
-				
+
 				velocity.x = 0.0f;
 				acceleration.x = 0.0f;
 			}
@@ -210,7 +222,7 @@ void Player::physics(PlayerInput * input, int gameTime)
 				velocity.x = max(velocity.x, -2.0f);
 			}
 		}
-		if (input->jumpKey && onGround) {
+		if (jumpKey && onGround) {
 
 			velocity.y = jumpSpeed;
 			onGround = false;
@@ -227,6 +239,10 @@ void Player::physics(PlayerInput * input, int gameTime)
 
 		break;
 	}
+	spriteWidth = animation[state]->getWidth();
+	spriteHeight = animation[state]->getHeight();
+	additionalXOffset = animation[state]->getAdditionalXOffset();
+	additionalYOffset = animation[state]->getAdditionalYOffset();
 
 }
 

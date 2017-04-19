@@ -1,91 +1,8 @@
 #include "Game.h"
 #include "GameEngine.h"
 #include "Platform.h"
+int Game::clientType;
 
-bool Game::contains(Node & node, std::vector<Node> vecNode)
-{
-	for (int i = 0; i < vecNode.size(); i++)
-		if (node.id == vecNode[i].id) {
-			node.elementNo = i;
-			return true;
-		}
-	return false;
-}
-
-int Game::getDistance(Node & nodeA, Node & nodeB)
-{
-	int distanceY = abs(nodeA.row - nodeB.row);
-	int distanceX = abs(nodeA.col - nodeB.col);
-	if (distanceX > distanceY)
-		return 14 * distanceY + 10 * (distanceX - distanceY);
-	return 14 * distanceX + 10 * (distanceY - distanceX);
-
-
-}
-
-void Game::retracePath(Node &start, Node & end)
-{
-	Node trace = end;
-
-	while (trace.id != start.id) {
-		path.push_back(trace);
-		trace = *trace.parent;
-		std::cout << path.back().col << "       " << path.back().row << std::endl;
-
-
-
-	}
-	std::cout << path.back().parent->col << "       " << path.back().parent->row << std::endl;
-
-}
-
-
-void Game::initializeAstar()
-{
-	//int arrayRow = 0;
-	//int arrayCol = 0;
-	//for (int i = 0; i < TILEROW*TILECOLUMN ; i++) {
-	//	blocks.push_back(Node());
-	//	if (i > TILECOLUMN) {
-	//		arrayRow += (i /TILECOLUMN);
-	//		arrayCol = i % (TILECOLUMN);
-	//	}
-	//	else {
-	//		arrayCol = i;
-	//	}
-	//	std::cout << arrayRow << std::endl;
-	//	if (tileMap[arrayRow][arrayCol] == 0) {
-	//		blocks[i].walkability = true;
-	//	}
-	//	else {
-	//		blocks[i].walkability = false;
-	//	}
-	//	blocks[i].id = i;
-	//	blocks[i].col = arrayCol;
-	//	blocks[i].row = arrayRow;
-	//	arrayRow = 0;
-	//}
-	/*currentNode = new Node;
-	(GAME_HEIGHT / TILEHEIGHT)*(GAME_WIDTH / TILEWIDTH)
-	start = new Node;
-	target = new Node;*/
-	for (int i = 0; i < (GAME_HEIGHT / TILEHEIGHT)*(GAME_WIDTH / TILEWIDTH); i++) {
-		blocks[i] = new Node();
-	}
-
-}
-
-void Game::freeAStar()
-{
-	for (int i = 0; i < (GAME_HEIGHT / TILEHEIGHT)*(GAME_WIDTH / TILEWIDTH); i++) {
-		delete blocks[i];
-	}
-	//if (start != NULL) {
-	//	/*dltPtr(currentNode);
-	//	dltPtr(start);
-	//	dltPtr(target);*/
-	//}
-}
 
 void Game::run(GameEngine * game)	// This function is called repeatedly by main message loop
 {
@@ -94,6 +11,8 @@ void Game::run(GameEngine * game)	// This function is called repeatedly by main 
 	game->input->ReadMouse();												//Read the mouse Device
 	game->input->convertRelativeToAbsolute();								//Converts Relative X and Y mouse position to Absolute position
 	game->cursor->setPosition(game->input->GetMouseLocation().x, game->input->GetMouseLocation().y);		//Sets the Cursor Position to the Absolute MouseX and MouseY in the window.
+	assignInput(game);
+	game->network->sendData(clientType);
 	//std::cout << mouseX << "     " << mouseY << "      " << std::endl;
 	multiplayer(game);
 	collisions(game, framesToUpdate);
@@ -103,8 +22,36 @@ void Game::run(GameEngine * game)	// This function is called repeatedly by main 
 
 }
 
-void Game::multiplayer(GameEngine * game )
+void Game::multiplayer(GameEngine * game)
 {
+	if (object[1] != NULL) {
+		object[1]->upArrowKey = false;
+		object[1]->rightArrowKey = false;
+		object[1]->downArrowKey = false;
+		object[1]->leftArrowKey = false;
+		object[1]->jumpKey = false;
+
+		if (game->network->recvbuf[0] == '1') {
+			object[1]->upArrowKey = true;
+			*game->network->recvbuf = 0;
+		}
+		if (game->network->recvbuf[0] == '2') {
+			object[1]->rightArrowKey = true;
+			*game->network->recvbuf = 0;
+		}
+		if (game->network->recvbuf[0] == '3') {
+			object[1]->downArrowKey = true;
+			*game->network->recvbuf = 0;
+		}
+		if (game->network->recvbuf[0] == '4') {
+			object[1]->leftArrowKey = true;
+			*game->network->recvbuf = 0;
+		}
+		if (game->network->recvbuf[1] == '5') {
+			object[1]->jumpKey = true;
+			*game->network->recvbuf = 0;
+		}
+	}
 }
 
 bool Game::loadLevel()
@@ -143,11 +90,11 @@ bool Game::checkGround(GameObject * object, int xOffset, int yOffset)
 {
 	object->btmLeft = isSolid(object->collisionRect.bottom + yOffset, object->collisionRect.left + xOffset);
 	object->btmRight = isSolid(object->collisionRect.bottom + yOffset, object->collisionRect.right + xOffset);
-	
+
 	//	std::cout << object->onGround << "           " << std::endl << object->btmRight << "           " << std::endl;
 	if (object->btmLeft && object->btmRight) {
-	object->setOnGround(true);
-	//std::cout << object->collisionRect.bottom + yOffset << std::endl;;
+		object->setOnGround(true);
+		//std::cout << object->collisionRect.bottom + yOffset << std::endl;;
 		return true;
 	}
 	if (object->btmLeft && !object->topLeft) {
@@ -166,8 +113,8 @@ bool Game::checkGround(GameObject * object, int xOffset, int yOffset)
 
 bool Game::checkCeiling(GameObject * object, int xOffset, int yOffset)
 {
-	object->topLeft = isSolid(object->collisionRect.top + yOffset , object->collisionRect.left + xOffset);
-	object->topRight = isSolid(object->collisionRect.top +yOffset, object->collisionRect.right + xOffset);
+	object->topLeft = isSolid(object->collisionRect.top + yOffset, object->collisionRect.left + xOffset);
+	object->topRight = isSolid(object->collisionRect.top + yOffset, object->collisionRect.right + xOffset);
 	//	std::cout << (object->collisionRect.right + xOffset) / TILEHEIGHT << "           " << std::endl; //<< yOffset << "           " << std::endl;
 	if (object->topLeft && object->topRight) {
 		object->setAtCeiling(true);
@@ -192,11 +139,20 @@ bool Game::checkCeiling(GameObject * object, int xOffset, int yOffset)
 
 bool Game::checkRightSide(GameObject * object, int xOffset, int yOffset)
 {
-	object->topRight = isSolid(object->collisionRect.top+yOffset, object->collisionRect.right +xOffset);
+	object->topRight = isSolid(object->collisionRect.top + yOffset, object->collisionRect.right + xOffset);
 	object->btmRight = isSolid(object->collisionRect.bottom + yOffset, object->collisionRect.right + xOffset);
-	if (object->topRight && object->btmRight) {
+	object->middleRight = isSolid(object->collisionRect.bottom - (object->getHeight() / 2) + yOffset, object->collisionRect.right + xOffset);
+	if (object->topRight && object->btmRight && !object->pushesLeftWall) {
 		object->pushesRightWall = true;
-		
+
+		return true;
+	}
+	if (object->middleRight && object->topRight) {
+		object->pushesLeftWall = true;
+		return true;
+	}
+	if (object->middleRight && object->btmRight) {
+		object->pushesLeftWall = true;
 		return true;
 	}
 	object->pushesRightWall = false;
@@ -208,9 +164,18 @@ bool Game::checkLeftSide(GameObject * object, int xOffset, int yOffset)
 {
 	object->topLeft = isSolid(object->collisionRect.top + yOffset, object->collisionRect.left + xOffset);
 	object->btmLeft = isSolid(object->collisionRect.bottom + yOffset, object->collisionRect.left + xOffset);
+	object->middleLeft = isSolid(object->collisionRect.bottom - (object->getHeight() / 2) + yOffset, object->collisionRect.left + xOffset);
 	if (object->topLeft && object->btmLeft) {
 		object->pushesLeftWall = true;
-		
+
+		return true;
+	}
+	if (object->middleLeft && object->topLeft) {
+		object->pushesLeftWall = true;
+		return true;
+	}
+	if (object->middleLeft && object->btmLeft) {
+		object->pushesLeftWall = true;
 		return true;
 	}
 	object->pushesLeftWall = false;
@@ -226,8 +191,7 @@ void Game::initializeTiles(GameEngine*game)
 
 			if (tileMap[row][collumn] > 0) {
 				//tiles[numOfTiles] = new Platform(collumn, row, D3DXVECTOR2(1.0f, 1.0f), 1, TILEWIDTH, TILEHEIGHT, tileMap[row][collumn]);
-		
-				tiles[row][collumn] = new Platform(collumn, row, D3DXVECTOR2(1.0f, 1.0f), 1, TILEWIDTH, TILEHEIGHT, tileMap[row][collumn],numOfTiles);
+				tiles[row][collumn] = new Platform(collumn, row, D3DXVECTOR2(1.0f, 1.0f), 1, TILEWIDTH, TILEHEIGHT, tileMap[row][collumn], numOfTiles);
 				tiles[row][collumn]->initialize(game->graphics->device3d, "sprite\\TileMap.png", 288, 528, 11, 6, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f);
 				numOfTiles++;
 			}
@@ -238,7 +202,117 @@ void Game::initializeTiles(GameEngine*game)
 
 }
 
-int Game::findPath(D3DXVECTOR2 startpoint, D3DXVECTOR2 end)
+void Game::assignInput(GameEngine *game)
+{
+	if (object[0] != NULL) {
+		object[0]->upArrowKey = game->input->upArrowKey;
+		object[0]->rightArrowKey = game->input->rightArrowKey;
+		object[0]->downArrowKey = game->input->downArrowKey;
+		object[0]->leftArrowKey = game->input->leftArrowKey;
+		object[0]->jumpKey = game->input->jumpKey;
+		if (game->input->upArrowKey == true) {
+			game->network->sendbuf[0] = '1';
+		}
+		if (game->input->rightArrowKey == true) {
+			game->network->sendbuf[0] = '2';
+		}
+		if (game->input->downArrowKey == true) {
+			game->network->sendbuf[0] = '3';
+		}
+		if (game->input->leftArrowKey == true) {
+			game->network->sendbuf[0] = '4';
+		}
+		if (game->input->jumpKey == true) {
+			game->network->sendbuf[1] = '5';
+		}
+	}
+
+
+}
+
+
+bool Game::contains(Node & node, std::vector<Node> vecNode)
+{
+	for (int i = 0; i < vecNode.size(); i++)
+		if (node.row == vecNode[i].row && node.col == vecNode[i].col) {
+			node.elementNo = i;
+			return true;
+		}
+	return false;
+}
+
+int Game::getDistance(Node & nodeA, Node & nodeB)
+{
+	int distanceY = abs(nodeA.row - nodeB.row);
+	int distanceX = abs(nodeA.col - nodeB.col);
+	if (distanceX > distanceY)
+		return 14 * distanceY + 10 * (distanceX - distanceY);
+	return 14 * distanceX + 10 * (distanceY - distanceX);
+
+
+}
+
+void Game::retracePath(GameObject * object, Node & end, float xOffset, float yOffset)
+{
+	object->path.clear();
+	object->path.shrink_to_fit();
+	Node trace = end;
+	int i = 0;
+
+	while (trace.id != start.id) {
+
+		object->path.push_back(trace);
+		lines[i] = { (float)(((object->path.back().col *TILEHEIGHT) - xOffset) + TILEHEIGHT / 2),(float)((object->path.back().row *TILEHEIGHT) - yOffset + TILEHEIGHT / 2) };
+		trace = *trace.parent;
+		std::cout << object->path.back().col << "       " << object->path.back().row << std::endl;
+
+
+		i++;
+	}
+
+//	std::cout << path.back().parent->col << "       " << path.back().parent->row << std::endl;
+	//lines[path.size()] = { (float)(path.back().col *TILEHEIGHT),(float)(path.back().col *TILEHEIGHT) };
+
+}
+
+
+void Game::initializeAstar()
+{
+
+	for (int i = 0; i < (GAME_HEIGHT / TILEHEIGHT)*(GAME_WIDTH / TILEWIDTH); i++) {
+		blocks[i] = new Node();
+	}
+	//int arrayRow = 0;
+	//int arrayCol = 0;
+	//for (int i = 0; i < TILEROW*TILECOLUMN ; i++) {
+	//	blocks.push_back(Node());
+	//	if (i > TILECOLUMN) {
+	//		arrayRow += (i /TILECOLUMN);
+	//		arrayCol = i % (TILECOLUMN);
+	//	}
+	//	else {
+	//		arrayCol = i;
+	//	}
+	//	std::cout << arrayRow << std::endl;
+	//	if (tileMap[arrayRow][arrayCol] == 0) {
+	//		blocks[i].walkability = true;
+	//	}
+	//	else {
+	//		blocks[i].walkability = false;
+	//	}
+	//	blocks[i].id = i;
+	//	blocks[i].col = arrayCol;
+	//	blocks[i].row = arrayRow;
+	//	arrayRow = 0;
+	//}
+	/*currentNode = new Node;
+	(GAME_HEIGHT / TILEHEIGHT)*(GAME_WIDTH / TILEWIDTH)
+	start = new Node;
+	target = new Node;*/
+}
+
+
+int Game::findPath(GameObject * object, D3DXVECTOR2 end, float xOffset, float yOffset,float spritesWidth, float spritesHeight)
 {
 	/*
 		for (int i = 0; i < (GAME_HEIGHT / TILEHEIGHT)*(GAME_WIDTH / TILEWIDTH); i++) {
@@ -250,12 +324,23 @@ int Game::findPath(D3DXVECTOR2 startpoint, D3DXVECTOR2 end)
 			}
 		}
 	*/
+	object->path.clear();
+	openList.clear();
+	closeList.clear();
+	neighbour.clear();
+	object->path.shrink_to_fit();
+	openList.shrink_to_fit();
+	closeList.shrink_to_fit();
+	neighbour.shrink_to_fit();
+
 	nodeId = 1;
-	start.col = startpoint.x / TILEWIDTH;
-	start.row = startpoint.y / TILEHEIGHT;
-	target.row = end.x / TILEWIDTH;
-	target.col = end.y / TILEHEIGHT;
+	start.col = object->getCollumn();
+	start.row = object->getRow();
+	target.row = (end.y+(spritesHeight/2)) / TILEWIDTH;
+	target.col = (end.x+(spritesWidth/2)) / TILEHEIGHT;
 	if (tileMap[target.row][target.col] > 0) {
+		std::cout << "path not found";
+
 		return 0;
 	}
 	start.gCost = 0;
@@ -265,8 +350,8 @@ int Game::findPath(D3DXVECTOR2 startpoint, D3DXVECTOR2 end)
 	blocks[nodeId]->row = start.row;
 	blocks[nodeId]->walkability = true;
 	start.walkability = true;
-	std::cout << " START : " << start.col << " ," << start.row << "  " << std::endl;
-	std::cout << " END : " << target.col << " ," << target.row << "  " << std::endl;
+	std::cout << " START : " << start.row  << " ," << start.col << "  " << std::endl;
+	std::cout << " END : " << target.row << " ," << target.col << "  " << std::endl;
 	openList.push_back(start);				// step 1. add start point to open list
 	//openList.insert(*start);
 	while (openList.size() > 0) {
@@ -274,6 +359,7 @@ int Game::findPath(D3DXVECTOR2 startpoint, D3DXVECTOR2 end)
 
 		for (int i = 1; i < openList.size(); i++)
 			if (openList[i].getFCost() < currentNode.getFCost() || (openList[i].getFCost() == currentNode.getFCost() && openList[i].hCost < currentNode.hCost)) {
+				//if (openList[i].getFCost() <= currentNode.getFCost()) {
 				currentNode = openList[i];
 			}
 		if (contains(currentNode, openList)) {			//check if currentNode is inside and if it is inside i need to know what is his element number in order for me to delete
@@ -285,7 +371,10 @@ int Game::findPath(D3DXVECTOR2 startpoint, D3DXVECTOR2 end)
 		//blocks.push_back(currentNode);
 		if (currentNode.row == target.row && currentNode.col == target.col) {
 
-			retracePath(start, currentNode);
+			retracePath(object, currentNode, xOffset, yOffset);
+			openList.clear();
+			closeList.clear();
+			neighbour.clear();
 			return 1;
 		}
 
@@ -296,18 +385,17 @@ int Game::findPath(D3DXVECTOR2 startpoint, D3DXVECTOR2 end)
 				//arrayRow += (i / (GAME_WIDTH / TILEWIDTH));
 				//arrayCol = i % (GAME_WIDTH / TILEWIDTH);
 
-				if (tileMap[currentNode.row + y][currentNode.col + x] == 0) {
-					neighbour.push_back(Node());
-					nodeId++;
-					neighbour.back().walkability = blocks[nodeId]->walkability = true;
-					neighbour.back().col = blocks[nodeId]->col = currentNode.col + x;
-					neighbour.back().row = blocks[nodeId]->row = currentNode.row + y;
-					//neighbour.back().parent = &closeList.back();//&blocks[((currentNode.row + x)*TILECOLUMN)+];
+				if (currentNode.row + y > 0 || currentNode.row + y < TILEROW || currentNode.col + x < TILECOLUMN || currentNode.col + x >0) {
+					if (tileMap[currentNode.row + y][currentNode.col + x] == 0) {
+						neighbour.push_back(Node());
+						neighbour.back().walkability = true;
+						neighbour.back().col = currentNode.col + x;
+						neighbour.back().row = currentNode.row + y;
+						//neighbour.back().parent = &closeList.back();//&blocks[((currentNode.row + x)*TILECOLUMN)+];
+						//neighbour.back().id = currentNode.id;
 
-					neighbour.back().id = blocks[nodeId]->id = nodeId;
-
+					}
 				}
-
 			}
 		}
 
@@ -319,11 +407,14 @@ int Game::findPath(D3DXVECTOR2 startpoint, D3DXVECTOR2 end)
 
 			if (movementCostToNeighbour < neighbour.gCost || !contains(neighbour, openList)) 				// if neighbour not inside openlist
 			{
+				nodeId++;
+				neighbour.id = nodeId;
 				neighbour.gCost = blocks[neighbour.id]->gCost = movementCostToNeighbour;
 				neighbour.hCost = blocks[neighbour.id]->hCost = getDistance(neighbour, target);
 				neighbour.parentId = blocks[neighbour.id]->parentId = closeList.back().id;
 				neighbour.parent = blocks[neighbour.parentId];
 				blocks[neighbour.id]->parent = blocks[neighbour.parentId];
+				*blocks[nodeId] = neighbour;
 				if (!contains(neighbour, openList)) {
 					openList.push_back(neighbour);
 
@@ -334,30 +425,34 @@ int Game::findPath(D3DXVECTOR2 startpoint, D3DXVECTOR2 end)
 
 			}
 		}
+		neighbour.clear();
 
 
-
-
-
-
-		//start.x = startpoint.x / TILEWIDTH;
-		//start.y = startpoint.y / TILEHEIGHT;
-
-		//target.x = end.x / TILEWIDTH;
-		//target.y = end.y / TILEHEIGHT;
-
-		//if (start.x == target.x && start.y == target.y) {
-		//	return 1; // path found
-		//}
 
 
 	}
 	//nodeId = 0;
+	std::cout << "path not found";
+	openList.clear();
+	closeList.clear();
+	neighbour.clear();
+
+
 
 
 	return 0;
 }
-
+void Game::freeAStar()
+{
+	for (int i = 0; i < (GAME_HEIGHT / TILEHEIGHT)*(GAME_WIDTH / TILEWIDTH); i++) {
+		delete blocks[i];
+	}
+	//if (start != NULL) {
+	//	/*dltPtr(currentNode);
+	//	dltPtr(start);
+	//	dltPtr(target);*/
+	//}
+}
 
 
 Game::Game()
@@ -370,5 +465,6 @@ Game::Game()
 
 Game::~Game()
 {
+
 
 }

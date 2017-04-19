@@ -8,9 +8,10 @@
 #include "Constants.h"
 #include "PlayerInput.h"
 #include "AnimationManager.h"
+#include "Node.h"
+#include <vector>
 
 class GameEngine;
-
 class GameObject
 {
 public:
@@ -34,13 +35,19 @@ public:
 	float rotation;
 	float getWidth();
 	float getHeight();
+	virtual bool getIsClicked();
+	virtual void setIsClicked(bool click);
+	
 
 	//physics
 	void setAcceleration(D3DXVECTOR2 accel);
 	void setVelocity(float x, float y);
 	virtual float getWalkSpeed();
 	virtual float getJumpSpeed();
-
+	float getDistance(GameObject * object);
+	int getDetectionRadius();
+	int detectionRadius;
+	bool objectInRadius;
 	D3DXVECTOR2 getAcceleration();
 	D3DXVECTOR2 getVelocity();
 	void setScaling(D3DXVECTOR2 scaling);
@@ -53,8 +60,8 @@ public:
 	void setAtCeiling(bool onGround);
 	void handleXAxisCollision();
 	void handleYAxisCollision();
-	void moveXdirection();
-	void moveYdirection();
+	virtual void moveXdirection();
+	virtual void moveYdirection();
 	D3DXVECTOR2 overlap;
 	//TEMP data used for calculating physics
 	D3DXVECTOR2 getObjectPos();
@@ -77,6 +84,8 @@ public:
 	RECT spriteRect; // to cut out the prites
 	RECT collisionRect; //used if you want to make additional rectangles to check for collision
 	RECT legRect;
+	int additionalXOffset; // use for offsetting the collision rectangle for certain animations
+	int additionalYOffset;
 	////////
 	RECT headRect;
 	RECT leftBodyRect;
@@ -106,9 +115,22 @@ public:
 	bool btmRight;
 	bool topLeft;
 	bool topRight;
+	bool middleLeft;
+	bool middleRight;
+
 
 	D3DXVECTOR2 positionOffset;
 	D3DXVECTOR2 screenPos;
+
+	bool upArrowKey;
+	bool downArrowKey;
+	bool rightArrowKey;
+	bool leftArrowKey;
+	bool jumpKey;
+	int face;
+	int getRow();
+	int getCollumn();
+	std::vector<Node> path;
 protected:
 	//informational data(name, desc wtv u want)
 	std::string name;
@@ -117,9 +139,6 @@ protected:
 
 	D3DXVECTOR2 oldPosition;
 	D3DXVECTOR2 position;
-
-
-
 	
 	D3DXVECTOR2 oldVelocity;
 	D3DXVECTOR2 velocity;

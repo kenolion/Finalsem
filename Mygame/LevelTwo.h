@@ -1,11 +1,11 @@
-#ifndef FLAPPYBIRD_H
-#define FLAPPYBIRD_H
+#ifndef LEVELTWO_H
+#define LEVELTWO_H
+
 #include "Game.h"
 #include <time.h>
 #include <math.h>
 
-
-class FlappyBird:public Game
+class LevelTwo :public Game
 {
 public:
 	bool initializeGame(HWND hwnd, GameEngine * game);
@@ -14,14 +14,13 @@ public:
 	void collisions(GameEngine * game, int gameTime);
 	void deleteAll();
 	void handleEvents(GameEngine *game);
-	GameObject *enemy[2];
 
-	
+	void multiplayer(GameEngine * game);
+
 	GameObject *menuButton;
-	GameObject *tempObject;
+
 	GameObject * parallaxBG1;
 	GameObject * parallaxBG2;
-	GameObject * parallaxBG3;
 
 	GameObject * dungeonKey;
 	GameObject * dungeonDoor;
@@ -31,15 +30,14 @@ public:
 
 	bool keyObtained = false;
 
-
-	static FlappyBird* getInstance() {
-		return &level1State;
+	static LevelTwo* getInstance() {
+		return &level2State;
 	}
 private:
-	static FlappyBird level1State;
-protected:
-	FlappyBird();
-	~FlappyBird();
+	static LevelTwo level2State;
+
+	LevelTwo();
+	~LevelTwo();
 };
 
-#endif // !FLAPPYBIRD_H
+#endif
