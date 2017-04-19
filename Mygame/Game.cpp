@@ -222,6 +222,7 @@ void Game::initializeTiles(GameEngine*game)
 
 			if (tileMap[row][collumn] > 0) {
 				//tiles[numOfTiles] = new Platform(collumn, row, D3DXVECTOR2(1.0f, 1.0f), 1, TILEWIDTH, TILEHEIGHT, tileMap[row][collumn]);
+		
 				tiles[row][collumn] = new Platform(collumn, row, D3DXVECTOR2(1.0f, 1.0f), 1, TILEWIDTH, TILEHEIGHT, tileMap[row][collumn],numOfTiles);
 				tiles[row][collumn]->initialize(game->graphics->device3d, "sprite\\TileMap.png", 288, 480, 10, 6, true, D3DCOLOR_XRGB(255, 255, 255), 1.0f);
 				numOfTiles++;

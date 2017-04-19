@@ -304,16 +304,6 @@ bool GameObject::collideWith(GameObject *object)
 	//																																			// spritecentre = object radius
 	//	return true;
 	//}
-	if (legRectCollided == true && bodyRectCollided == true) {
-		onGround = true;
-
-	}
-
-	if (onGround && velocity.y > 0) {
-		velocity.y = 0;
-		position.y = object->position.y - object->spriteHeight;
-
-	}
 
 
 	return true;
