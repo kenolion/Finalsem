@@ -64,6 +64,11 @@ void DxSound::loadSounds()
 	}
 	level2Music->setMode(FMOD_LOOP_NORMAL);
 
+	result = fmodSystem->createStream("sounds//failMusic.mp3", FMOD_DEFAULT, 0, &failMusic);
+	if (result != FMOD_OK) {
+		MessageBox(NULL, "ERROR", "Could not load failMusic.mp3", MB_ICONERROR);
+	}
+	failMusic->setMode(FMOD_LOOP_OFF);
 
 	result = fmodSystem->createStream("sounds//playerWinMusic.mp3", FMOD_DEFAULT, 0, &playerWinMusic);
 	if (result != FMOD_OK) {
@@ -84,6 +89,18 @@ void DxSound::loadSounds()
 	}
 	deathSound->setMode(FMOD_LOOP_OFF);
 
+	result = fmodSystem->createStream("sounds//explodeSound.mp3", FMOD_DEFAULT, 0, &explodeSound);
+	if (result != FMOD_OK) {
+		MessageBox(NULL, "ERROR", "Could not load boomSound", MB_ICONERROR);
+	}
+	deathSound->setMode(FMOD_LOOP_OFF);
+
+
+	result = fmodSystem->createStream("sounds//erapowerup.mp3", FMOD_DEFAULT, 0, &pickUpKeySound);
+	if (result != FMOD_OK) {
+		MessageBox(NULL, "ERROR", "Could not load pickup Sound", MB_ICONERROR);
+	}
+	deathSound->setMode(FMOD_LOOP_OFF);
 
 }
 
@@ -127,6 +144,21 @@ void DxSound::playJumpSound()
 void DxSound::playDeathSound()
 {
 	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, deathSound, false, &channel);
+}
+
+void DxSound::playFailMusic()
+{
+	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, failMusic, false, &channel);
+}
+
+void DxSound::playExplosionSound()
+{
+	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, explodeSound, false, &channel);
+}
+
+void DxSound::playPickUpKeySound()
+{
+	result = fmodSystem->playSound(FMOD_CHANNEL_FREE, pickUpKeySound, false, &channel);
 }
 
 void DxSound::pauseLevel1Music()

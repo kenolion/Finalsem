@@ -125,7 +125,6 @@ void Graphics::drawfont(std::string text, int number , int noOfChar, float x, fl
 	fontRect.bottom = fontRect.top + bottom;
 	
 	
-
 	font->DrawText(sprite,
 		text.c_str(),
 		text.length(),				

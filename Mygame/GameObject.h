@@ -78,7 +78,7 @@ public:
 	//
 	void printData(); // used to print players data
 	void setMatrix(D3DXVECTOR2 scaling, D3DXVECTOR2 spriteCentre, float rotation, D3DXVECTOR2 position, GameEngine * game);	//scaling,spritecentre,rotation,position
-	D3DXVECTOR2 CollisionBox[5]; //use for displaying lines
+	D3DXVECTOR2 CollisionBox[5]; //use for displaying lines				<-------- use this
 
 	//TILES
 	TileType tile;

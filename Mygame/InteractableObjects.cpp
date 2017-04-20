@@ -15,6 +15,11 @@ InteractableObjects::~InteractableObjects()
 void InteractableObjects::update(int &gameTime, GameEngine * game)
 {
 	for (int i = 0; i < gameTime; i++) {
+		CollisionBox[0] = { (float)collisionRect.left ,(float)collisionRect.top };			//<---- this for player 
+		CollisionBox[1] = { (float)collisionRect.left ,(float)collisionRect.bottom };
+		CollisionBox[2] = { (float)collisionRect.right ,(float)collisionRect.bottom };
+		CollisionBox[3] = { (float)collisionRect.right ,(float)collisionRect.top };
+		CollisionBox[4] = { (float)collisionRect.left ,(float)collisionRect.top };
 		//position += velocity;
 		positionOffset.x = game->camera->getXOffset();
 		positionOffset.y = game->camera->getYOffset();
@@ -28,14 +33,21 @@ void InteractableObjects::update(int &gameTime, GameEngine * game)
 		if (position.x <= -100) {
 			position.x = GAME_WIDTH;
 		}
+		if (position.y >= GAME_HEIGHT + 100)
+		{
+			position.y = 432;
+		}
 		if (animTimer >= 60) {
 			animTimer = 0;
-			frame++;
-			if (frame > maxFrame) {
-				frame = maxFrame;
-			}
 		}
 		animTimer += animSpeed;
 
+		if (status == ObjectStatus::Dead)
+		{
+			collisionRect.left -= GAME_WIDTH;
+			collisionRect.right -= GAME_WIDTH;
+			collisionRect.top -= GAME_HEIGHT;
+			collisionRect.bottom -= GAME_HEIGHT;
+		}
 	}
 }

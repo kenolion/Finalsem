@@ -196,6 +196,11 @@ void Game::assignInput(GameEngine *game)
 			game->network->sendbuf[0] = 'Y';
 		}
 		if (game->input->jumpKey == true) {
+			if (object[0]->onGround)
+			{
+		
+				game->sound->playJumpSound();
+			}
 			game->network->sendbuf[2] = '5';
 			game->network->sendbuf[0] = 'Y';
 		}

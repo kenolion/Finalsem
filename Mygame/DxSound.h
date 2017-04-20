@@ -22,6 +22,9 @@ public:
 	FMOD::Sound *playjumpSound;
 	FMOD::Sound *deathSound;
 	FMOD::Sound *mainmenuMusic2;
+	FMOD::Sound *failMusic;
+	FMOD::Sound *explodeSound;
+	FMOD::Sound *pickUpKeySound;
 
 	FMOD::Sound *level1Music;
 	FMOD::Sound *level2Music;
@@ -41,6 +44,9 @@ public:
 	void playMainMenuMusic2();
 	void playLevel1Music();
 	void playLevel2Music();
+	void playFailMusic();
+	void playExplosionSound();
+	void playPickUpKeySound();
 
 	void pauseLevel1Music();
 	void pauseLevel2Music();

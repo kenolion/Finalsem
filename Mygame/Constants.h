@@ -21,7 +21,7 @@ const int FLAPPYBIRDOBJECTS = 2;
 const float MAXYVELOCITY = 7;
 
 const int TILEROW = 16;
-const int TILECOLUMN = 32;
+const int TILECOLUMN = 64;
 const int TILEWIDTH = 48;
 const int TILEHEIGHT = 48;
 

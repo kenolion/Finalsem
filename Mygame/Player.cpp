@@ -124,7 +124,7 @@ void Player::physics(PlayerInput * input, int gameTime)
 	case CharacterState::Jumping:
 
 		//std::cout << "jumping" << std::endl;
-
+		
 		animation[state]->start();
 
 		if (!onGround) {
@@ -266,7 +266,7 @@ void Player::draw(GameEngine * game)
 	//	spriteRect.right = spriteRect.left + spriteWidth;
 
 	//}
-	CollisionBox[0] = { (float)collisionRect.left ,(float)collisionRect.top };
+	CollisionBox[0] = { (float)collisionRect.left ,(float)collisionRect.top };			//<---- this for player
 	CollisionBox[1] = { (float)collisionRect.left ,(float)collisionRect.bottom };
 	CollisionBox[2] = { (float)collisionRect.right ,(float)collisionRect.bottom };
 	CollisionBox[3] = { (float)collisionRect.right ,(float)collisionRect.top };
