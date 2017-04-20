@@ -6,6 +6,7 @@ class Enemy : public GameObject
 {
 private:
 	float walkSpeed;				//player and enemy has this which means i should make a class called moveable objects inheriting gameObjects
+
 public:
 
 	//void seekTarget(AI findpath,GameObject *object);
@@ -16,7 +17,7 @@ public:
 	void draw(GameEngine * game);
 	void moveXdirection();			//since enemies have their own way of moving 
 	void moveYdirection();
-	AnimationManager *animation[2];
+	AnimationManager *animation[3];
 };
 
 #endif

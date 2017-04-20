@@ -41,7 +41,7 @@ bool GameObject::initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int wi
 {
 	status = ObjectStatus::Active;
 	spriteClass = new GameSprite();
-
+	counter = 0;
 	// SPRITE IS EMPTY
 	this->frameHorizontal = frameHorizontal;
 	spriteClass->initializeTex(device3d, file, width, height, row, col, color);  //When a game object is created, a game sprite is created.
@@ -213,6 +213,7 @@ void GameObject::setMatrix(D3DXVECTOR2 scaling, D3DXVECTOR2 spriteCentre, float 
 	game->sprite->SetTransform(&mat);
 }
 
+
 int GameObject::getTileID()
 {
 	return 0;
@@ -295,6 +296,9 @@ bool GameObject::collideWith(GameObject *object)
 		if (collisionRect.top > object->collisionRect.bottom)return false;
 		if (collisionRect.right < object->collisionRect.left)return false;
 		if (collisionRect.left > object->collisionRect.right)return false;
+		if (object->getType() == ObjectType::Enemy) {
+			status = ObjectStatus::Dead;
+		}
 	}
 
 	if (object->getType() == ObjectType::Platform) {

@@ -11,7 +11,7 @@ LevelTwo LevelTwo::level2State;
 
 bool LevelTwo::initializeGame(HWND hwnd, GameEngine * game)
 {
-
+	counter = 0;
 	mapName = "TileMap2.txt";
 	game->sound->playLevel2Music();
 	game->sound->channel->setVolume(0.25f);
@@ -242,20 +242,7 @@ void LevelTwo::handleEvents(GameEngine * game)
 
 void LevelTwo::multiplayer(GameEngine * game)
 {
-	if (game->network->recvbuf == "left") {
-		object[2]->setPosition(object[2]->getObjectPos().x + 1, object[2]->getObjectPos().y);
-		*game->network->recvbuf = 0;
-	}
-	if (game->network->recvbuf == "right") {
-		*game->network->recvbuf = 0;
-	}
-	if (game->network->recvbuf == "jump") {
-		*game->network->recvbuf = 0;
-	}
-	if (game->network->recvbuf == "up") {
-		*game->network->recvbuf = 0;
-	}
-
+	
 }
 
 

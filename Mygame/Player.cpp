@@ -8,42 +8,42 @@ Player::Player(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int mass, i
 	fsm = CharacterState::Idle;
 	jumpSpeed = -15.0f;
 	walkSpeed = 3.0f;
-	animation[0] = new AnimationManager();
-	animation[0]->initialize(332, 86, 276, 80, 4, true,0,0);				//idle right
-	animation[1] = new AnimationManager();
-	animation[1]->initialize(0, 274, 330, 80, 6, true,0,0);				//walking			//92
-	animation[2] = new AnimationManager();
-	animation[2]->initialize(15, 94, 310, 80, 4, false,-10,0);		//jumping			91
-	animation[3] = new AnimationManager();
-	animation[3]->initialize(332, 0, 276, 80, 4, true,0,0);			//idle left
-	animation[4] = new AnimationManager();
-	animation[4]->initialize(0, 0, 332, 80, 4, false,10,0);		//jump left
 
 
 
 
-	animation[5] = new AnimationManager();
-	animation[5]->initialize(0, 182, 330, 80, 6, true,0,0); //wlaking lkeft
+
 	this->playerType = playerType;
-	//if (playerType == 1) {   // 1 = tall guy
-		//animation[0] = new AnimationManager();
-		//animation[0]->initialize(0, 48, 192, 48, 4, true);				//idlek
-		//animation[1] = new AnimationManager();
-		//animation[1]->initialize(192, 0, 192, 48, 6, true);				//walking
-		//animation[2] = new AnimationManager();
-		//animation[2]->initialize(0, 144, 192, 48, 4, false);		//jumping
+	if (playerType == 1) {   // 1 = tall guy			as of now i need to do this until i make a fat guy class with his own animations
+		animation[0] = new AnimationManager();
+		animation[0]->initialize(332, 86, 276, 80, 4, true, 0, 0, 5);				//idle right
+		animation[1] = new AnimationManager();
+		animation[1]->initialize(0, 274, 330, 80, 6, true, 0, 0, 5);				//walking			//92
+		animation[2] = new AnimationManager();
+		animation[2]->initialize(15, 94, 310, 80, 4, false, 10, 0, 5);		//jumping			91
+		animation[3] = new AnimationManager();
+		animation[3]->initialize(332, 0, 276, 80, 4, true, 0, 0, 5);			//idle left
+		animation[4] = new AnimationManager();
+		animation[4]->initialize(0, 0, 332, 80, 4, false, 10, 0, 5);		//jump left
 
-		//animation[3] = new AnimationManager();
-		//animation[3]->initialize(0, 0, 192, 48, 4, true);		// idle left
-		//animation[4] = new AnimationManager();
-		//animation[4]->initialize(0, 96, 192, 48, 4, false); // jump left
-		//animation[5] = new AnimationManager();
-		//animation[5]->initialize(0, 192, 192, 48, 6, true); //wlaking
-	/*}
+		animation[5] = new AnimationManager();
+		animation[5]->initialize(0, 182, 330, 80, 6, true, 0, 0, 5); //wlaking lkeft
+	}
 	else {
+		animation[0] = new AnimationManager();
+		animation[0]->initialize(0, 48, 384, 48, 8, true, 0, 0, 5);				//idle right
+		animation[1] = new AnimationManager();
+		animation[1]->initialize(0, 144, 384, 48, 8, true, 0, 0, 5);				//walking			//92
+		animation[2] = new AnimationManager();
+		animation[2]->initialize(0, 240, 288, 48, 6, false, 0, 0, 5);		//jumping			91
+		animation[3] = new AnimationManager();
+		animation[3]->initialize(0, 0, 384, 48, 8, true, 0, 0, 5);			//idle left
+		animation[4] = new AnimationManager();
+		animation[4]->initialize(0, 192, 288, 48, 6, false, 0, 0, 5);		//jump left
+		animation[5] = new AnimationManager();
+		animation[5]->initialize(0, 96, 384, 48, 8, true, 0, 0, 5); //wlaking lkeft
 
-
-	}*/
+	}
 	face = 1;
 }
 
@@ -71,7 +71,7 @@ void Player::update(int &gameTime, GameEngine * game)
 				animTimer = 0;
 				animation[state]->nextFrame();
 			}
-			animTimer += animSpeed;
+			animTimer += animation[state]->getAnimationSpeed();
 
 		}
 	}
@@ -170,11 +170,13 @@ void Player::physics(PlayerInput * input, int gameTime)
 		if (onGround) {
 
 			if (leftArrowKey == rightArrowKey) {
+				animation[state]->setFrame(1);
 				fsm = CharacterState::Idle;
 				velocity.x = 0.0f;
 				velocity.y = 0.0f;
 			}
 			else {
+				animation[state]->setFrame(1);
 				fsm = CharacterState::Walking;
 				velocity.x = 0.0f;
 			}
@@ -264,6 +266,11 @@ void Player::draw(GameEngine * game)
 	//	spriteRect.right = spriteRect.left + spriteWidth;
 
 	//}
+	CollisionBox[0] = { (float)collisionRect.left ,(float)collisionRect.top };
+	CollisionBox[1] = { (float)collisionRect.left ,(float)collisionRect.bottom };
+	CollisionBox[2] = { (float)collisionRect.right ,(float)collisionRect.bottom };
+	CollisionBox[3] = { (float)collisionRect.right ,(float)collisionRect.top };
+	CollisionBox[4] = { (float)collisionRect.left ,(float)collisionRect.top };
 
 	spriteCentre = D3DXVECTOR2((spriteWidth) / 2, (spriteHeight) / 2);
 
@@ -272,6 +279,8 @@ void Player::draw(GameEngine * game)
 	if (game->sprite)
 	{
 		spriteClass->draw(game->sprite, animation[state]->getFrame(), color);
+
+
 	}
 
 

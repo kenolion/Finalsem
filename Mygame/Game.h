@@ -47,7 +47,7 @@ public:
 	bool checkLeftSide(GameObject *object, int xOffset, int yOffset);
 	D3DXVECTOR2 gravity;
 	D3DXVECTOR2 lines[50];       //use for drawing lines
-	D3DXVECTOR2 playerCollisionBox[5]; //use for player
+	int counter;			// used to count 1 second
 	void initializeTiles(GameEngine*game);
 	//ai path finding
 	/*

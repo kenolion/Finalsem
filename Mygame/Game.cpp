@@ -22,37 +22,6 @@ void Game::run(GameEngine * game)	// This function is called repeatedly by main 
 
 }
 
-void Game::multiplayer(GameEngine * game)
-{
-	if (object[1] != NULL) {
-		object[1]->upArrowKey = false;
-		object[1]->rightArrowKey = false;
-		object[1]->downArrowKey = false;
-		object[1]->leftArrowKey = false;
-		object[1]->jumpKey = false;
-
-		if (game->network->recvbuf[0] == '1') {
-			object[1]->upArrowKey = true;
-			*game->network->recvbuf = 0;
-		}
-		if (game->network->recvbuf[0] == '2') {
-			object[1]->rightArrowKey = true;
-			*game->network->recvbuf = 0;
-		}
-		if (game->network->recvbuf[0] == '3') {
-			object[1]->downArrowKey = true;
-			*game->network->recvbuf = 0;
-		}
-		if (game->network->recvbuf[0] == '4') {
-			object[1]->leftArrowKey = true;
-			*game->network->recvbuf = 0;
-		}
-		if (game->network->recvbuf[1] == '5') {
-			object[1]->jumpKey = true;
-			*game->network->recvbuf = 0;
-		}
-	}
-}
 
 bool Game::loadLevel()
 {
@@ -211,23 +180,71 @@ void Game::assignInput(GameEngine *game)
 		object[0]->leftArrowKey = game->input->leftArrowKey;
 		object[0]->jumpKey = game->input->jumpKey;
 		if (game->input->upArrowKey == true) {
-			game->network->sendbuf[0] = '1';
+			game->network->sendbuf[1] = '1';
+			game->network->sendbuf[0] = 'Y';
 		}
 		if (game->input->rightArrowKey == true) {
-			game->network->sendbuf[0] = '2';
+			game->network->sendbuf[1] = '2';
+			game->network->sendbuf[0] = 'Y';
 		}
 		if (game->input->downArrowKey == true) {
-			game->network->sendbuf[0] = '3';
+			game->network->sendbuf[1] = '3';
+			game->network->sendbuf[0] = 'Y';
 		}
 		if (game->input->leftArrowKey == true) {
-			game->network->sendbuf[0] = '4';
+			game->network->sendbuf[1] = '4';
+			game->network->sendbuf[0] = 'Y';
 		}
 		if (game->input->jumpKey == true) {
-			game->network->sendbuf[1] = '5';
+			game->network->sendbuf[2] = '5';
+			game->network->sendbuf[0] = 'Y';
+		}
+		if(game->network->counter >= 60){
+		game->network->sendbuf += std::to_string(object[0]->getObjectPos().x) + std::to_string(object[0]->getObjectPos().y);
+		game->network->sendbuf[0] = 'Y';
+		game->network->counter = 0;
 		}
 	}
 
 
+
+}
+void Game::multiplayer(GameEngine * game)
+{
+	if (object[1] != NULL) {
+		object[1]->upArrowKey = false;
+		object[1]->rightArrowKey = false;
+		object[1]->downArrowKey = false;
+		object[1]->leftArrowKey = false;
+		object[1]->jumpKey = false;
+
+		if (game->network->recvbuf[1] == '1') {
+			object[1]->upArrowKey = true;
+			game->network->recvbuf[1] = 0;
+
+		}
+		if (game->network->recvbuf[1] == '2') {
+			object[1]->rightArrowKey = true;
+			game->network->recvbuf[1] = 0;
+
+
+		}
+		if (game->network->recvbuf[1] == '3') {
+			object[1]->downArrowKey = true;
+			game->network->recvbuf[1] = 0;
+
+		}
+		if (game->network->recvbuf[1] == '4') {
+			object[1]->leftArrowKey = true;
+			game->network->recvbuf[1] = 0;
+
+		}
+		if (game->network->recvbuf[2] == '5') {
+			object[1]->jumpKey = true;
+			game->network->recvbuf[2] = 0;
+
+		}
+	}
 }
 
 
@@ -270,8 +287,8 @@ void Game::retracePath(GameObject * object, Node & end, float xOffset, float yOf
 		i++;
 	}
 
-//	std::cout << path.back().parent->col << "       " << path.back().parent->row << std::endl;
-	//lines[path.size()] = { (float)(path.back().col *TILEHEIGHT),(float)(path.back().col *TILEHEIGHT) };
+	//	std::cout << path.back().parent->col << "       " << path.back().parent->row << std::endl;
+		//lines[path.size()] = { (float)(path.back().col *TILEHEIGHT),(float)(path.back().col *TILEHEIGHT) };
 
 }
 
@@ -312,7 +329,7 @@ void Game::initializeAstar()
 }
 
 
-int Game::findPath(GameObject * object, D3DXVECTOR2 end, float xOffset, float yOffset,float spritesWidth, float spritesHeight)
+int Game::findPath(GameObject * object, D3DXVECTOR2 end, float xOffset, float yOffset, float spritesWidth, float spritesHeight)
 {
 	/*
 		for (int i = 0; i < (GAME_HEIGHT / TILEHEIGHT)*(GAME_WIDTH / TILEWIDTH); i++) {
@@ -324,115 +341,122 @@ int Game::findPath(GameObject * object, D3DXVECTOR2 end, float xOffset, float yO
 			}
 		}
 	*/
-	object->path.clear();
+
 	openList.clear();
 	closeList.clear();
 	neighbour.clear();
-	object->path.shrink_to_fit();
+
 	openList.shrink_to_fit();
 	closeList.shrink_to_fit();
 	neighbour.shrink_to_fit();
 
 	nodeId = 1;
-	start.col = object->getCollumn();
-	start.row = object->getRow();
-	target.row = (end.y+(spritesHeight/2)) / TILEWIDTH;
-	target.col = (end.x+(spritesWidth/2)) / TILEHEIGHT;
-	if (tileMap[target.row][target.col] > 0) {
-		std::cout << "path not found";
+	if (object->prevCol != target.col && object->prevRow != target.row) {
+		start.col = object->getCollumn();
+		start.row = object->getRow();
+		target.row = (end.y + (spritesHeight / 2)) / TILEWIDTH;
+		target.col = (end.x + (spritesWidth / 2)) / TILEHEIGHT;
+		object->prevCol = target.col;					//this stores the previous so that if its the same i dont need to path find again( should not use this if there are moving platforms in my game)
+		object->prevRow = target.row;
+		object->path.clear();
+		object->path.shrink_to_fit();
+		if (tileMap[target.row][target.col] > 0) {
+			std::cout << "path not found";
+			object->prevCol = 0;
+			object->prevRow = 0;
+			return 0;
+		}
+		start.gCost = 0;
+		start.hCost = 0;
+		start.id = blocks[nodeId]->id = nodeId;
+		blocks[nodeId]->col = start.col;
+		blocks[nodeId]->row = start.row;
+		blocks[nodeId]->walkability = true;
+		start.walkability = true;
+		std::cout << " START : " << start.row << " ," << start.col << "  " << std::endl;
+		std::cout << " END : " << target.row << " ," << target.col << "  " << std::endl;
+		openList.push_back(start);				// step 1. add start point to open list
+		//openList.insert(*start);
+		while (openList.size() > 0) {
+			currentNode = openList[0];
 
-		return 0;
-	}
-	start.gCost = 0;
-	start.hCost = 0;
-	start.id = blocks[nodeId]->id = nodeId;
-	blocks[nodeId]->col = start.col;
-	blocks[nodeId]->row = start.row;
-	blocks[nodeId]->walkability = true;
-	start.walkability = true;
-	std::cout << " START : " << start.row  << " ," << start.col << "  " << std::endl;
-	std::cout << " END : " << target.row << " ," << target.col << "  " << std::endl;
-	openList.push_back(start);				// step 1. add start point to open list
-	//openList.insert(*start);
-	while (openList.size() > 0) {
-		currentNode = openList[0];
-
-		for (int i = 1; i < openList.size(); i++)
-			if (openList[i].getFCost() < currentNode.getFCost() || (openList[i].getFCost() == currentNode.getFCost() && openList[i].hCost < currentNode.hCost)) {
-				//if (openList[i].getFCost() <= currentNode.getFCost()) {
-				currentNode = openList[i];
+			for (int i = 1; i < openList.size(); i++)
+				if (openList[i].getFCost() < currentNode.getFCost() || (openList[i].getFCost() == currentNode.getFCost() && openList[i].hCost < currentNode.hCost)) {
+					//if (openList[i].getFCost() <= currentNode.getFCost()) {
+					currentNode = openList[i];
+				}
+			if (contains(currentNode, openList)) {			//check if currentNode is inside and if it is inside i need to know what is his element number in order for me to delete
+				openList.erase(openList.begin() + currentNode.elementNo);
 			}
-		if (contains(currentNode, openList)) {			//check if currentNode is inside and if it is inside i need to know what is his element number in order for me to delete
-			openList.erase(openList.begin() + currentNode.elementNo);
-		}
-		//	openList.
+			//	openList.
 
-		closeList.push_back(currentNode);
-		//blocks.push_back(currentNode);
-		if (currentNode.row == target.row && currentNode.col == target.col) {
+			closeList.push_back(currentNode);
+			//blocks.push_back(currentNode);
+			if (currentNode.row == target.row && currentNode.col == target.col) {
 
-			retracePath(object, currentNode, xOffset, yOffset);
-			openList.clear();
-			closeList.clear();
-			neighbour.clear();
-			return 1;
-		}
+				retracePath(object, currentNode, xOffset, yOffset);
+				openList.clear();
+				closeList.clear();
+				neighbour.clear();
+				return 1;
+			}
 
-		for (int x = -1; x <= 1; x++) {
-			for (int y = -1; y <= 1; y++) {
-				if (x == 0 && y == 0)
-					continue;
-				//arrayRow += (i / (GAME_WIDTH / TILEWIDTH));
-				//arrayCol = i % (GAME_WIDTH / TILEWIDTH);
+			for (int x = -1; x <= 1; x++) {
+				for (int y = -1; y <= 1; y++) {
+					if (x == 0 && y == 0)
+						continue;
+					//arrayRow += (i / (GAME_WIDTH / TILEWIDTH));
+					//arrayCol = i % (GAME_WIDTH / TILEWIDTH);
 
-				if (currentNode.row + y > 0 || currentNode.row + y < TILEROW || currentNode.col + x < TILECOLUMN || currentNode.col + x >0) {
-					if (tileMap[currentNode.row + y][currentNode.col + x] == 0) {
-						neighbour.push_back(Node());
-						neighbour.back().walkability = true;
-						neighbour.back().col = currentNode.col + x;
-						neighbour.back().row = currentNode.row + y;
-						//neighbour.back().parent = &closeList.back();//&blocks[((currentNode.row + x)*TILECOLUMN)+];
-						//neighbour.back().id = currentNode.id;
+					if (currentNode.row + y > 0 || currentNode.row + y < TILEROW || currentNode.col + x < TILECOLUMN || currentNode.col + x >0) {
+						if (tileMap[currentNode.row + y][currentNode.col + x] == 0) {
+							neighbour.push_back(Node());
+							neighbour.back().walkability = true;
+							neighbour.back().col = currentNode.col + x;
+							neighbour.back().row = currentNode.row + y;
+							//neighbour.back().parent = &closeList.back();//&blocks[((currentNode.row + x)*TILECOLUMN)+];
+							//neighbour.back().id = currentNode.id;
 
+						}
 					}
 				}
 			}
-		}
 
-		for (auto& neighbour : neighbour) {
-			if (contains(neighbour, closeList))
-				continue;
+			for (auto& neighbour : neighbour) {
+				if (contains(neighbour, closeList))
+					continue;
 
-			movementCostToNeighbour = currentNode.gCost + getDistance(currentNode, neighbour);
+				movementCostToNeighbour = currentNode.gCost + getDistance(currentNode, neighbour);
 
-			if (movementCostToNeighbour < neighbour.gCost || !contains(neighbour, openList)) 				// if neighbour not inside openlist
-			{
-				nodeId++;
-				neighbour.id = nodeId;
-				neighbour.gCost = blocks[neighbour.id]->gCost = movementCostToNeighbour;
-				neighbour.hCost = blocks[neighbour.id]->hCost = getDistance(neighbour, target);
-				neighbour.parentId = blocks[neighbour.id]->parentId = closeList.back().id;
-				neighbour.parent = blocks[neighbour.parentId];
-				blocks[neighbour.id]->parent = blocks[neighbour.parentId];
-				*blocks[nodeId] = neighbour;
-				if (!contains(neighbour, openList)) {
-					openList.push_back(neighbour);
+				if (movementCostToNeighbour < neighbour.gCost || !contains(neighbour, openList)) 				// if neighbour not inside openlist
+				{
+					nodeId++;
+					neighbour.id = nodeId;
+					neighbour.gCost = blocks[neighbour.id]->gCost = movementCostToNeighbour;
+					neighbour.hCost = blocks[neighbour.id]->hCost = getDistance(neighbour, target);
+					neighbour.parentId = blocks[neighbour.id]->parentId = closeList.back().id;
+					neighbour.parent = blocks[neighbour.parentId];
+					blocks[neighbour.id]->parent = blocks[neighbour.parentId];
+					*blocks[nodeId] = neighbour;
+					if (!contains(neighbour, openList)) {
+						openList.push_back(neighbour);
+
+					}
+					/*if (!(std::find(openList.begin(), openList.end(), neighbour) != openList.end())) {
+						openList.push_back(neighbour);
+					}*/
 
 				}
-				/*if (!(std::find(openList.begin(), openList.end(), neighbour) != openList.end())) {
-					openList.push_back(neighbour);
-				}*/
-
 			}
+			neighbour.clear();
+
+
+
+
 		}
-		neighbour.clear();
-
-
-
-
 	}
 	//nodeId = 0;
-	std::cout << "path not found";
+	std::cout << "path is the same";
 	openList.clear();
 	closeList.clear();
 	neighbour.clear();

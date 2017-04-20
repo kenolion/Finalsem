@@ -11,7 +11,6 @@ bool LevelPlayerWins::initializeGame(HWND hwnd, GameEngine * game)
 {
 
 	game->sound->playPlayerWinMusic();
-
 	game->sound->channel->setVolume(0.25f);
 	//======================================================= Create your Game Objects Here =======================================================
 	backgroundImage = new Pictures(0.0f, 0.0f, D3DXVECTOR2(1.0f, 1.0f), 1); //x, y, scaling, animation, speed,mass

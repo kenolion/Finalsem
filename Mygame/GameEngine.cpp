@@ -208,15 +208,7 @@ LRESULT GameEngine::winProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 
 		break;
-	case WM_LBUTTONDOWN:
-		if (input != NULL)
-			input->windowsLeftClickDown = true;
-		break;
 
-	case WM_LBUTTONUP:
-		if (input != NULL)
-			input->windowsLeftClickDown = false;		//false on default
-		break;
 	}
 	this->wParam = wParam;
 	return DefWindowProc(hwnd, msg, wParam, lParam);

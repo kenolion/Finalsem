@@ -19,7 +19,7 @@ public:
 
 	//FUNCTIONS
 	Button(float x, float y, D3DXVECTOR2 scaling, int animSpeed, LPCSTR string,int noOfCharacters,int r, int g, int b, LPD3DXFONT font,GameStates state, ButtonType buttonType);
-
+	void physics(PlayerInput *input, int gameTime);
 	void draw(GameEngine * game);
 	void update(int &gameTime, GameEngine * game);
 	GameStates state;

@@ -15,6 +15,13 @@ Button::Button(float x, float y, D3DXVECTOR2 scaling, int animSpeed, LPCSTR stri
 	isClicked = false;
 }
 
+void Button::physics(PlayerInput * input, int gameTime)
+{
+
+
+
+}
+
 Button::~Button()
 {
 
@@ -76,13 +83,23 @@ void Button::update(int &gameTime, GameEngine * game)
 	for (int i = 0; i < gameTime; i++) {
 		if (onHover(game->input->mouseX, game->input->mouseY))
 		{
-			if (game->input->windowsLeftClickDown)
+			if (game->input->leftClickDown)
 			{
-				if (!isClicked)
-					isClicked = true;
-				else
-					isClicked = false;
+				if (!isClicked) {
+					if (counter >= 30) {
+						isClicked = true;
+						std::cout << "clickeD!" << std::endl;
+						counter = 0;
+					}
+				}
 
+				else {
+					if(counter >=30){
+					isClicked = false;
+					std::cout << "not click" << std::endl;
+					counter = 0;
+					}
+				}
 				game->state = state;
 			}
 
@@ -103,7 +120,8 @@ void Button::update(int &gameTime, GameEngine * game)
 
 			}
 		}
-		
+
+		counter++;
 	}
 }
 

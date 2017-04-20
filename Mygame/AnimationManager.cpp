@@ -2,7 +2,7 @@
 
 
 
-void AnimationManager::initialize(int left, int top, int right, int bottom, int totalFrame, bool loop, int additionalXOffset, int additionalYOffset)
+void AnimationManager::initialize(int left, int top, int right, int bottom, int totalFrame, bool loop, int additionalXOffset, int additionalYOffset,int animationSpd)
 {
 	topOffset = top;
 	btmOffset = bottom ;
@@ -13,6 +13,7 @@ void AnimationManager::initialize(int left, int top, int right, int bottom, int 
 	this->width = right / totalFrame;
 	this->height = bottom;
 	frame = 1;
+	animationSpeed = animationSpd;
 	this->additionalXOffset = additionalXOffset;
 	this->additionalYOffset = additionalYOffset;
 	loopable = loop;
@@ -57,6 +58,11 @@ RECT AnimationManager::getFrame()
 	return spriteRect;
 }
 
+void AnimationManager::setFrame(int frame)
+{
+	this->frame = frame;
+}
+
 int AnimationManager::getHeight()
 {
 	return height;
@@ -75,6 +81,11 @@ int AnimationManager::getAdditionalXOffset()
 int AnimationManager::getAdditionalYOffset()
 {
 	return additionalYOffset;
+}
+
+int AnimationManager::getAnimationSpeed()
+{
+	return animationSpeed;
 }
 
 AnimationManager::AnimationManager()

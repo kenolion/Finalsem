@@ -21,7 +21,8 @@ public:
 	GameObject(float x, float y, D3DXVECTOR2 scaling, int mass);
 	int row;
 	int column;
-
+	int prevRow;
+	int prevCol;
 	~GameObject();
 	virtual bool initialize(LPDIRECT3DDEVICE9 device3d, std::string file, int width, int height, int row, int col, bool frameHorizontal, D3DXCOLOR color, float falseColl);
 	virtual void update(int &gameTime, GameEngine * game) = 0;
@@ -40,6 +41,7 @@ public:
 	
 
 	//physics
+	int counter;
 	void setAcceleration(D3DXVECTOR2 accel);
 	void setVelocity(float x, float y);
 	virtual float getWalkSpeed();
@@ -76,7 +78,8 @@ public:
 	//
 	void printData(); // used to print players data
 	void setMatrix(D3DXVECTOR2 scaling, D3DXVECTOR2 spriteCentre, float rotation, D3DXVECTOR2 position, GameEngine * game);	//scaling,spritecentre,rotation,position
-	
+	D3DXVECTOR2 CollisionBox[5]; //use for displaying lines
+
 	//TILES
 	TileType tile;
 	virtual int getTileID();

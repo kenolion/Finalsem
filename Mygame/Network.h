@@ -42,7 +42,7 @@ private:
 	//int client();
 
 public:
-	
+	int counter;
 	int initializeWinSock();
 	//THREADS
 	//typedef void(Network::*pfunc)(void);
@@ -77,8 +77,7 @@ public:
 	std::string sendbuf;
 	char recvbuf[DEFAULT_BUFLEN];
 	char prevrecbuf[DEFAULT_BUFLEN];
-
-	std::string test;
+	char tempSendbuf[1];
 
 	Network();
 	~Network();

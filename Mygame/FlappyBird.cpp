@@ -19,9 +19,9 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 	game->sound->channel->setVolume(0.25f);
 
 
-	object[1] = new Player(200, 248, D3DXVECTOR2(1.0f, 1.0f), 10, 5, 2);
-	object[0] = new Player(GAME_WIDTH / 2, GAME_HEIGHT / 2, D3DXVECTOR2(1.0f, 1.0f), 10, 5, 1);
-	enemy[0] = new Enemy(26 * TILEWIDTH, 12 * TILEHEIGHT, { 1.0f,1.0f }, 10, 1);
+	object[1] = new Player(200, 248, D3DXVECTOR2(1.0f, 1.0f), 10, 5, 2);									//last parameter is player type 2 is fatguy
+	object[0] = new Player(16 * TILEWIDTH, 13 * TILEHEIGHT, D3DXVECTOR2(1.0f, 1.0f), 10, 5, 1);				//animationspeed no longer set here! it is now set at animation manager because some animations might have diferent speed
+	enemy[0] = new Enemy(26 * TILEWIDTH, 4 * TILEHEIGHT, { 1.0f,1.0f }, 10, 1);
 	parallaxBG1 = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);
 	parallaxBG2 = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);
 	parallaxBG3 = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);
@@ -48,11 +48,11 @@ bool FlappyBird::initializeGame(HWND hwnd, GameEngine * game)
 		return initialize = false;
 	}
 
-	if (!object[1]->initialize(game->graphics->device3d, "sprite\\ben.png", 128, 192, 4, 4, true, D3DCOLOR_XRGB(0, 0, 0), 0.90f)) {
+	if (!object[1]->initialize(game->graphics->device3d, "sprite\\fatguysmall.png", 512, 512, 6,8, true, D3DCOLOR_XRGB(0, 0, 0), 1.0f)) {
 		MessageBox(NULL, "There was an issue creating the sprite", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
 		return initialize = false;
 	}
-	if (!enemy[0]->initialize(game->graphics->device3d, "sprite\\ben.png", 128, 192, 4, 4, true, D3DCOLOR_XRGB(0, 0, 0), 0.90f)) {
+	if (!enemy[0]->initialize(game->graphics->device3d, "sprite\\batfull.png", 256, 62, 8, 2, true, D3DCOLOR_XRGB(0, 0, 0), 0.90f)) {
 		MessageBox(NULL, "There was an issue creating the enemy sprite", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
 		return initialize = false;
 	}
@@ -124,7 +124,7 @@ void FlappyBird::collisions(GameEngine * game, int gameTime)
 		if (checkCeiling(object[0], game->camera->getXOffset(), game->camera->getYOffset())) {
 			object[0]->handleYAxisCollision();
 		}
-	
+
 
 		object[1]->moveYdirection();
 		if (checkGround(object[1], game->camera->getXOffset(), game->camera->getYOffset())) {			// to do split x and y and calculate overlap.
@@ -143,13 +143,12 @@ void FlappyBird::collisions(GameEngine * game, int gameTime)
 
 
 		for (int i = 0; i < FLAPPYBIRDOBJECTS; i++) {
-
-			if (enemy[0]->getDistance(object[i]) < enemy[0]->detectionRadius) {//calculate distance and current object
+			object[0]->collideWith(enemy[0]);
+			if (enemy[0]->getDistance(object[0]) < enemy[0]->detectionRadius) {//calculate distance and current object
 																			   //enemy[0]->objectInRadius = true; // player is in the radius
-				if (counter >= 60) {
-					findPath(enemy[0], object[i]->getObjectPos(), game->camera->getXOffset(), game->camera->getYOffset(),object[i]->getWidth(), object[i]->getHeight());
-					
-					counter = 0;
+				if (counter >= 30) {
+					findPath(enemy[0], object[0]->getObjectPos(), game->camera->getXOffset(), game->camera->getYOffset(), object[0]->getWidth(), object[0]->getHeight());
+					counter = 0;	
 				}
 				enemy[0]->moveXdirection();
 				enemy[0]->moveYdirection();
@@ -169,19 +168,17 @@ void FlappyBird::collisions(GameEngine * game, int gameTime)
 				//win the game;
 			}
 		}
+		game->network->counter++;
 		counter++;
 	}
 
 
-	
+
 }
 
 
 void FlappyBird::update(int gameTime, GameEngine * game)
 {
-	if (game->input->windowsLeftClickDown) {
-		findPath(enemy[0], game->cursor->getObjectPos(), game->camera->getXOffset(), game->camera->getYOffset(),0,0);
-	}
 
 	for (int row = 0; row < TILEROW; row++) {
 		for (int col = 0; col < TILECOLUMN; col++) {
@@ -217,18 +214,14 @@ void FlappyBird::draw(GameEngine * game)
 	game->graphics->clear(D3DCOLOR_XRGB(255, 255, 255));
 	//game->graphics->clear(D3DCOLOR_XRGB(0, 100, 100), object[1]->collisionRect);
 	//game->graphics->clear(D3DCOLOR_XRGB(100, 0, 0), object[1]->legRect);
-	game->graphics->begin();
+
+	game->graphics->begin();	
+
 	game->sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
 	parallaxBG1->draw(game);
 	parallaxBG2->draw(game);
 	parallaxBG3->draw(game);
-
-
-		playerCollisionBox[0] = {(float)object[0]->collisionRect.left ,(float)object[0]->collisionRect.top};
-		playerCollisionBox[1] = { (float)object[0]->collisionRect.left ,(float)object[0]->collisionRect.bottom };
-		playerCollisionBox[2] = { (float)object[0]->collisionRect.right ,(float)object[0]->collisionRect.bottom };
-		playerCollisionBox[3] = { (float)object[0]->collisionRect.right ,(float)object[0]->collisionRect.top };
-		playerCollisionBox[4] = { (float)object[0]->collisionRect.left ,(float)object[0]->collisionRect.top };
 
 	for (int row = 0; row < TILEROW; row++) {
 		for (int col = 0; col < TILECOLUMN; col++) {
@@ -249,11 +242,14 @@ void FlappyBird::draw(GameEngine * game)
 	game->cursor->setMatrix(D3DXVECTOR2(1.0f, 1.0f), D3DXVECTOR2(0.0f, 0.0f), 0.0f, D3DXVECTOR2(GAME_WIDTH / 2, 25), game);		//Set this to draw my font
 	game->graphics->drawfont("Score : ", timer * 10, 13, 500, 50, game->sprite, D3DCOLOR_XRGB(255, 0, 0), 30);			// last parameter depends on the size of your font
 	game->cursor->draw(game);
+
 	game->sprite->End();
 	game->graphics->lineBegin();
-	game->graphics->drawLine(playerCollisionBox, 5, 255, 0, 0);
 	game->graphics->drawLine(lines, enemy[0]->path.size(), 255, 0, 0);
+	game->graphics->drawLine(object[0]->CollisionBox, 5, 255, 0, 0);
+	game->graphics->drawLine(enemy[0]->CollisionBox, 5, 255, 0, 0);
 	game->graphics->lineEnd();
+
 	game->graphics->end();
 	game->graphics->present();
 }
@@ -268,7 +264,7 @@ void FlappyBird::deleteAll()
 		}
 
 	}
-
+	
 	dltPtr(menuButton);
 	dltPtr(parallaxBG1);
 	dltPtr(parallaxBG2);

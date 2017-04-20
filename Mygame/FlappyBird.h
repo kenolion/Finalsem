@@ -27,7 +27,7 @@ public:
 	GameObject * dungeonDoor;
 
 	int timer;				//increase by 1 each time count reaches the targeted fps
-	int counter;			// used to count 1 second
+
 
 	bool keyObtained = false;
 

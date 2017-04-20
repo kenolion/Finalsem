@@ -1,0 +1,6 @@
+fatguyidleLEFT = 0 184 593 87
+fatguyidleRIGHT = 0 271 593 87
+fatguywalkLEFT = 0 0 729 92
+fatguywalkRIGHt = 0 92 711 92
+ShortGuyJumpLeft = 0 358 478 110
+ShortGuyJumpright = 478 358 478 110

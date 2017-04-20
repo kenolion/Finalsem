@@ -70,7 +70,9 @@
     <ClCompile Include="LevelTwo.cpp">
       <Filter>Game\Cpp</Filter>
     </ClCompile>
-    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Node.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FlappyBird.h">
@@ -142,7 +144,9 @@
     <ClInclude Include="LevelTwo.h">
       <Filter>Game\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Node.h" />
+    <ClInclude Include="Node.h">
+      <Filter>Engine\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">

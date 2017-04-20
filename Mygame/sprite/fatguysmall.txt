@@ -1,0 +1,6 @@
+fatguyidleLEFTsmall = 0 0 384 48
+fatguyidleRIGHTsmall = 0 48 384 48
+fatguywalkLEFTsmall = 0 96 384 48
+fatguywalkRIGHtsmall = 0 144 384 48
+ShortGuyJumpLeftsmall = 0 192 288 48
+ShortGuyJumpright = 0 240 288 48

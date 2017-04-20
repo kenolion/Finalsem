@@ -124,6 +124,7 @@ void LevelMainMenu::update(int gameTime, GameEngine * game)
 
 void LevelMainMenu::collisions(GameEngine * game, int gameTime)
 {
+
 	if (hostTextInputButton->getIsClicked())
 		game->hostIpAddresslocked = false;
 

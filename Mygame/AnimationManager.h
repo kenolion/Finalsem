@@ -19,19 +19,22 @@ private:
 	int additionalYOffset;
 	int height;
 	int width;
-	RECT spriteRect;
-
+	RECT spriteRect;	
+	int animationSpeed;
 public:
-	void initialize(int left, int top, int right, int bottom,int totalFrame,bool loop,int additionalXOffset,int additionalYOffset);
+	void initialize(int left, int top, int right, int bottom,int totalFrame,bool loop,int additionalXOffset,int additionalYOffset,int animationSpd);
 	bool loopable;
 	void start();
 	void nextFrame();
 	bool isEOS();
 	RECT getFrame();
+	void setFrame(int frame);
 	int getHeight();
 	int getWidth();
 	int getAdditionalXOffset();
 	int getAdditionalYOffset();
+	int getAnimationSpeed();
+	
 	AnimationManager();
 	~AnimationManager();
 };

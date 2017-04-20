@@ -12,7 +12,8 @@ int Network::initializeWinSock()
 		printf("WSAStartup failed : %d\n", iResult);
 		return 1;
 	}
-	sendbuf = "  ";
+	counter = 0;
+	sendbuf = "   ";
 	return 0;
 }
 
@@ -35,7 +36,6 @@ unsigned __stdcall  Network::serverThread(void *pArguments)
 	do
 	{
 		p_network->iResult = recv(p_network->ClientSocket, p_network->recvbuf, p_network->recvbuflen, 0);
-		std::cout << " thread is still running";
 		if (p_network->iResult == SOCKET_ERROR) {
 			printf("send failed as server: %d\n", WSAGetLastError());
 			closesocket(p_network->ClientSocket);
@@ -44,10 +44,15 @@ unsigned __stdcall  Network::serverThread(void *pArguments)
 		}
 
 		if (p_network->iResult > 0) {
-			printf("Bytes received: %d\n", p_network->iResult);
-			printf(p_network->recvbuf);
+		//	printf("Bytes received: %d\n", p_network->iResult);
 			// Echo the buffer back to the sender
-			p_network->iSendResult = send(p_network->ClientSocket, p_network->recvbuf, p_network->iResult, 0);
+			if (p_network->recvbuf[0] != 'N') {
+				printf(p_network->recvbuf);
+				std::cout << std::endl;
+			}
+			p_network->tempSendbuf[0] = 'N';
+			p_network->iSendResult = send(p_network->ClientSocket, p_network->tempSendbuf, p_network->iResult, 0);
+
 			//*p_network->recvbuf = 0;
 			if (p_network->iSendResult == SOCKET_ERROR) {
 				printf("send failed with error: %d\n", WSAGetLastError());
@@ -56,7 +61,7 @@ unsigned __stdcall  Network::serverThread(void *pArguments)
 				_endthreadex(0);
 				return 1;
 			}
-			printf("Bytes sent: %d\n", p_network->iSendResult);
+			//printf("Bytes sent: %d\n", p_network->iSendResult);
 		}
 		else if (p_network->iResult == 0)
 			printf("Connection closing...\n");
@@ -97,7 +102,11 @@ unsigned __stdcall  Network::clientThread(void *pArguments)
 
 		if (p_network->iResult != 0)
 		{
-			printf(p_network->recvbuf);
+			if (p_network->recvbuf[0] != 'N') {
+				printf(p_network->recvbuf);
+				std::cout << std::endl;
+			}
+
 		}
 
 
@@ -109,18 +118,19 @@ unsigned __stdcall  Network::clientThread(void *pArguments)
 
 void Network::sendData(int clientType)
 {
-	if ((int)strlen(sendbuf.c_str())> 0) {
+	if (sendbuf[0] == 'Y') {
 		if (clientType == 1) {
 			iResult = send(ClientSocket, sendbuf.c_str(), (int)strlen(sendbuf.c_str()), 0);
 			printf("Bytes Sent as Server : %ld\n", iResult);
 		}
-		else if(clientType == 2){
+		else if (clientType == 2) {
 			iResult = send(ConnectSocket, sendbuf.c_str(), (int)strlen(sendbuf.c_str()), 0);
 			printf("Bytes Sent as Client : %ld\n", iResult);
 		}
-	
+
 		sendbuf.clear();
-		sendbuf = "  ";   //sets the size of the string so that I dont get string subscript out of range
+		sendbuf = "   ";			//change here if i want to send more data
+		sendbuf[0] = 'N';   //sets the size of the string so that I dont get string subscript out of range
 	}
 
 }
