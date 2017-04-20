@@ -10,6 +10,7 @@
 #include <vector>
 #include <algorithm>
 #include "Node.h"
+#include <sstream>
 
 typedef int(*AI)(D3DXVECTOR2 start, D3DXVECTOR2 target, float xOffset, float yOffset, float spritesWidth, float spritesHeight);
 class GameEngine;
@@ -47,6 +48,10 @@ public:
 	bool checkLeftSide(GameObject *object, int xOffset, int yOffset);
 	D3DXVECTOR2 gravity;
 	D3DXVECTOR2 lines[50];       //use for drawing lines
+	std::string tempStringPos;
+	int tempPosX;
+	int tempPosY;
+	std::stringstream convert;
 	int counter;			// used to count 1 second
 	void initializeTiles(GameEngine*game);
 	//ai path finding

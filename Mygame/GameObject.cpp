@@ -396,7 +396,7 @@ void GameObject::handleXAxisCollision()
 			overlap.x = (collisionRect.left + positionOffset.x - 48) - ((int)((collisionRect.right + positionOffset.x - 48) / 48) * 48);
 		}
 		posVector.x -= overlap.x;
-		std::cout << overlap.x << "   " << std::endl;
+	//	std::cout << overlap.x << "   " << std::endl;
 
 	}
 

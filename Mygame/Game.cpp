@@ -173,7 +173,7 @@ void Game::initializeTiles(GameEngine*game)
 
 void Game::assignInput(GameEngine *game)
 {
-	if (object[0] != NULL) {
+	if (object[0] != NULL) {						//this function assignsinput and the input is send over the network by modifying the sendbuf variable
 		object[0]->upArrowKey = game->input->upArrowKey;
 		object[0]->rightArrowKey = game->input->rightArrowKey;
 		object[0]->downArrowKey = game->input->downArrowKey;
@@ -199,11 +199,12 @@ void Game::assignInput(GameEngine *game)
 			game->network->sendbuf[2] = '5';
 			game->network->sendbuf[0] = 'Y';
 		}
-		if(game->network->counter >= 60){
-		game->network->sendbuf += std::to_string(object[0]->getObjectPos().x) + std::to_string(object[0]->getObjectPos().y);
-		game->network->sendbuf[0] = 'Y';
-		game->network->counter = 0;
+		if (game->network->counter >= 30) {
+			game->network->sendbuf += std::to_string((int)object[0]->getObjectPos().x) + 'Y' + std::to_string((int)object[0]->getObjectPos().y) + 'E';		// e stands for end of sendbuffer for now 
+			game->network->sendbuf[0] = 'P';
+			game->network->counter = 0;
 		}
+
 	}
 
 
@@ -244,7 +245,30 @@ void Game::multiplayer(GameEngine * game)
 			game->network->recvbuf[2] = 0;
 
 		}
+		if (game->network->recvbuf[0] == 'P') {				//first check type of message receive if its P then it has position in it
+			for (int i = 3;; i++) {								//i begins at 3 because first 2 characters are input of player
+				if (game->network->recvbuf[i] == 'Y') {				//check if my current i is going to have the Y position if yes then assign temp string pos to X first 
+					tempPosX =atoi(tempStringPos.c_str());		
+					tempStringPos.clear();	
+					tempStringPos.shrink_to_fit();
+					continue;									//continue through the loop for Y position
+				}
+				if (game->network->recvbuf[i] == 'E')				//if the message has come to an end then exit
+					break;
+				tempStringPos += game->network->recvbuf[i];			// this assigns char to string for me to use ATOI later
+				game->network->recvbuf[i] = 0;						//recvbuf is cleared here
+				game->network->recvbuf[0] = 0;
+
+			}
+			tempPosY = atoi(tempStringPos.c_str());					//assign Y value when it exits
+			tempStringPos.clear();
+			tempStringPos.shrink_to_fit();
+			object[1]->posVector = { (float)tempPosX, (float)tempPosY };
+		}
+
+
 	}
+
 }
 
 
