@@ -23,6 +23,7 @@ void InteractableObjects::update(int &gameTime, GameEngine * game)
 		//position += velocity;
 		positionOffset.x = game->camera->getXOffset();
 		positionOffset.y = game->camera->getYOffset();
+
 		collisionRect.left = screenPos.x + col_xOffset;
 		collisionRect.right = screenPos.x + spriteWidth;
 		collisionRect.top = screenPos.y + col_yOffset;

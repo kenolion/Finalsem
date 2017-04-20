@@ -118,7 +118,7 @@ unsigned __stdcall  Network::clientThread(void *pArguments)
 
 void Network::sendData(int clientType)
 {
-	if (sendbuf[0] == 'Y') {
+	if (sendbuf[0] == 'Y' || sendbuf[0] == 'P') {
 		if (clientType == 1) {
 			iResult = send(ClientSocket, sendbuf.c_str(), (int)strlen(sendbuf.c_str()), 0);
 			printf("Bytes Sent as Server : %ld\n", iResult);
@@ -129,6 +129,7 @@ void Network::sendData(int clientType)
 		}
 
 		sendbuf.clear();
+		sendbuf.shrink_to_fit();
 		sendbuf = "   ";			//change here if i want to send more data
 		sendbuf[0] = 'N';   //sets the size of the string so that I dont get string subscript out of range
 	}
