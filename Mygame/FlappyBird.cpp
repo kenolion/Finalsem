@@ -479,7 +479,7 @@ void FlappyBird::draw(GameEngine * game)
 	game->sprite->End();
 	game->graphics->lineBegin();
 	game->graphics->drawLine(lines, enemy[0]->path.size(), 255, 0, 0);
-
+	game->graphics->drawLine(enemy[0]->CollisionBox, 5, 255, 0, 0);
 	for (int i = 0; i < 7; i++)
 	{
 		game->graphics->drawLine(spikes[i]->CollisionBox, 5, 255, 0, 0);
