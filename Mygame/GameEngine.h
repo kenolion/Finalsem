@@ -8,6 +8,7 @@
 #include "PlayerInput.h"
 #include "GameCamera.h"
 #include "LevelMainMenu.h"
+#include "LevelYouFail.h"
 #include <thread>
 
 class Game;

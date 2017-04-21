@@ -24,7 +24,7 @@ public:
 
 	GameObject * dungeonKey;
 	GameObject * dungeonDoor;
-
+	GameObject *tempObject;
 	int timer;				//increase by 1 each time count reaches the targeted fps
 	int counter;			// used to count 1 second
 

@@ -56,7 +56,7 @@ void Player::update(int &gameTime, GameEngine * game)
 
 		//std::cout << position.y << "        " << std::endl;
 	//std::cout << onGround << std::endl;
-		
+
 		for (int i = 0; i < gameTime; i++) {
 			position = posVector;
 			//scaling = { (float)face,1.0f };
@@ -77,8 +77,13 @@ void Player::update(int &gameTime, GameEngine * game)
 	}
 	else if (status == ObjectStatus::Dead) {
 		state = 4;
+	}
+	else if (status == ObjectStatus::Waiting)
+	{
 
 	}
+
+
 }
 
 void Player::physics(PlayerInput * input, int gameTime)
@@ -240,7 +245,9 @@ void Player::physics(PlayerInput * input, int gameTime)
 	case CharacterState::LedgeGrab:
 
 		break;
+
 	}
+
 	spriteWidth = animation[state]->getWidth();
 	spriteHeight = animation[state]->getHeight();
 	additionalXOffset = animation[state]->getAdditionalXOffset();

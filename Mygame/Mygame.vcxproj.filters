@@ -73,6 +73,9 @@
     <ClCompile Include="Node.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="LevelYouFail.cpp">
+      <Filter>Game\Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FlappyBird.h">
@@ -146,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="Node.h">
       <Filter>Engine\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelYouFail.h">
+      <Filter>Game\Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

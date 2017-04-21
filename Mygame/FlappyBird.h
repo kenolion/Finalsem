@@ -51,7 +51,7 @@ public:
 	bool keyObtained = false;
 	bool doOnce = true;
 	bool teleportAble = false;
-
+	
 
 	static FlappyBird* getInstance() {
 		return &level1State;

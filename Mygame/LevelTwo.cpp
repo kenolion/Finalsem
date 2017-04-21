@@ -32,7 +32,6 @@ bool LevelTwo::initializeGame(HWND hwnd, GameEngine * game)
 	}
 	object[0]->setPosition(GAME_WIDTH / 2, GAME_HEIGHT / 2);
 
-
 	parallaxBG1 = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);
 	parallaxBG2 = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);
 
@@ -84,6 +83,12 @@ bool LevelTwo::initializeGame(HWND hwnd, GameEngine * game)
 	//findPath(object[1]->getObjectPos(), D3DXVECTOR2(200,600));
 	game->exit = false;
 	game->state = GameStates::LEVEL1;
+
+	if (clientType == 2) {
+		tempObject = object[1];
+		object[1] = object[0];
+		object[0] = tempObject;
+	}
 	return initialize = true;
 }
 
