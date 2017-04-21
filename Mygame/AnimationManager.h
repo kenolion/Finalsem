@@ -7,7 +7,7 @@ class AnimationManager
 {
 private:
 	int frame;
-	int maxFrame;
+
 	int row;
 	int col;
 	int currentRow;
@@ -19,13 +19,15 @@ private:
 	int additionalYOffset;
 	int height;
 	int width;
-	RECT spriteRect;	
+	RECT spriteRect;
 	int animationSpeed;
 public:
-	void initialize(int left, int top, int right, int bottom,int totalFrame,bool loop,int additionalXOffset,int additionalYOffset,int animationSpd);
+	void initialize(int left, int top, int right, int bottom, int totalFrame, bool loop, int additionalXOffset, int additionalYOffset, int animationSpd, bool isReverse);
+	bool isReverse;
 	bool loopable;
-	void start();
+	int maxFrame;
 	void nextFrame();
+	void start();
 	bool isEOS();
 	RECT getFrame();
 	void setFrame(int frame);
@@ -34,7 +36,7 @@ public:
 	int getAdditionalXOffset();
 	int getAdditionalYOffset();
 	int getAnimationSpeed();
-	
+
 	AnimationManager();
 	~AnimationManager();
 };

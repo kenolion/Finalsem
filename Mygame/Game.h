@@ -34,8 +34,10 @@ public:
 	virtual void handleEvents(GameEngine *game) = 0;
 	void assignInput(GameEngine *game);
 	int findPath(GameObject * object, D3DXVECTOR2 target, float xOffset, float yOffset, float spritesWidth, float spritesHeight);
+	void changePlayers(GameEngine *game);
 	GameObject *tiles[TILEROW][TILECOLUMN];
 	GameObject *object[FLAPPYBIRDOBJECTS];
+	GameObject *tempObject;
 	std::string mapName;
 	int tileMap[TILEROW][TILECOLUMN];
 	int numOfTiles;
@@ -46,6 +48,7 @@ public:
 	bool checkCeiling(GameObject *object, int xOffset, int yOffset);
 	bool checkRightSide(GameObject *object, int xOffset, int yOffset);
 	bool checkLeftSide(GameObject *object, int xOffset, int yOffset);
+	int cheat;
 	D3DXVECTOR2 gravity;
 	D3DXVECTOR2 lines[50];       //use for drawing lines
 	std::string tempStringPos;

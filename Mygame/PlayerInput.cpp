@@ -84,7 +84,7 @@ bool PlayerInput::initializeKeyboard(HWND hwnd)		//Function that displays error 
 		system("pause");
 		return false;
 	}
-	
+	counter = 0;
 	return true;
 
 }
@@ -152,6 +152,10 @@ void PlayerInput::getInput()		//Function that gets the player input
 		jumpKey = false;
 		keyPressed = false;
 	}
+	if (changeKey == true && keys[cKey] == 0) {
+		changeKey = false;
+		keyPressed = false;
+	}
 
 	if (KEYDOWN(keys, leftAKey)) {
 		leftArrowKey = true;
@@ -174,7 +178,11 @@ void PlayerInput::getInput()		//Function that gets the player input
 		jumpKey = true;
 		keyPressed = true;
 	}
-	
+	if (KEYDOWN(keys, cKey)) {
+		changeKey = true;
+		keyPressed = true;
+	}
+
 	
 
 	//MOUSE INPUT
@@ -210,6 +218,7 @@ PlayerInput::PlayerInput()		//Initialization of player input defailt values
 	downAKey = 208;
 	upAKey = 200;
 	zKey = 44;
+	cKey = 46;
 
 	windowsLeftClickDown = false;
 	M_Device = 0; //Make Direct Input interface variables to null.

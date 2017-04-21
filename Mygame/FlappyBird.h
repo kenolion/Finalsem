@@ -18,7 +18,7 @@ public:
 	
 	
 	GameObject *menuButton;
-	GameObject *tempObject;
+
 
 	GameObject * parallaxBG1;
 	GameObject * parallaxBG2;

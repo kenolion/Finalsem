@@ -22,11 +22,11 @@ Enemy::Enemy(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int mass) :Ga
 	detectionRadius = 500.0f;  // 10 pixels	
 	type = ObjectType::Enemy;
 	animation[0] = new AnimationManager();
-	animation[0]->initialize(96, 0, 96, 32, 3, true, 0, 0,5);				//idle				
+	animation[0]->initialize(96, 0, 96, 32, 3, true, 0, 0,5,false);				//idle				
 	animation[1] = new AnimationManager();
-	animation[1]->initialize(0, 0, 96, 32, 3, true, 0, 0,5);				//fly right
+	animation[1]->initialize(0, 0, 96, 32, 3, true, 0, 0,5, false);				//fly right
 	animation[2] = new AnimationManager();
-	animation[2]->initialize(0, 32, 96, 32, 3, true, 0, 0,5);				//fly left
+	animation[2]->initialize(0, 32, 96, 32, 3, true, 0, 0,5, false);				//fly left
 	walkSpeed = 2.0f;
 	prevCol = 1;
 	prevRow = 1;

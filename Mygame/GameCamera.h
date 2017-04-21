@@ -13,7 +13,12 @@ public:
 	GameCamera(float xOffset, float yOffset);
 	void setXOffset(float xOffset);
 	void setYOffset(float yOffset);
+	void followObject(GameObject *object);
 	void centerOnObject(GameObject *object);
+	float offsetXdiff;
+	float offsetYdiff;
+	float oldYOffset;
+	float oldXOffset;
 	~GameCamera();
 private:
 	float xOffset;
