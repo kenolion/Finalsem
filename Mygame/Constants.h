@@ -14,7 +14,7 @@ const float PLAYERMAXVEL = 1.0f;
 const int REQFPS = 60;
 
 //LEVEL1
-enum class ObjectStatus { Active, Dying, Dead };
+enum class ObjectStatus { Active, Dying, Dead, Waiting };
 enum class ObjectType { Enemy, Player, Platform, InteractableObject };
 enum class TileType {Block};
 const int FLAPPYBIRDOBJECTS = 2;
@@ -32,6 +32,7 @@ enum class GameStates			//Strongly Type enumartions may come in handy if this fr
 	LEVEL1,				//Array 2
 	LEVEL2,
 	LEVELPLAYERWIN,		//Array 3
+	LEVELYouFail,
 	CONNECTSTATE,
 	HOSTSERVER,
 	ACCEPTCONNECTION,

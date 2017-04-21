@@ -140,6 +140,7 @@
     <ClInclude Include="InteractableObjects.h" />
     <ClInclude Include="LevelMainMenu.h" />
     <ClInclude Include="LevelTwo.h" />
+    <ClInclude Include="LevelYouFail.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Pictures.h" />
@@ -165,6 +166,7 @@
     <ClCompile Include="InteractableObjects.cpp" />
     <ClCompile Include="LevelMainMenu.cpp" />
     <ClCompile Include="LevelTwo.cpp" />
+    <ClCompile Include="LevelYouFail.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Pictures.cpp" />

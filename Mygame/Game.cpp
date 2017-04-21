@@ -18,7 +18,8 @@ void Game::run(GameEngine * game)	// This function is called repeatedly by main 
 	collisions(game, framesToUpdate);
 	update(framesToUpdate, game);
 	draw(game);// draws the games graphics
-
+	if (clientType == 0)		//0 when multiplayer is not initialized
+		changePlayers(game);
 
 }
 
@@ -181,7 +182,7 @@ void Game::assignInput(GameEngine *game)
 		object[0]->jumpKey = game->input->jumpKey;
 		if (game->input->upArrowKey == true) {
 			game->network->sendbuf[1] = '1';
-			game->network->sendbuf[0] = 'Y';
+			game->network->sendbuf[0] = 'Y';			// setting the type of message at first i put Y or N only which is yes or not		//so 
 		}
 		if (game->input->rightArrowKey == true) {
 			game->network->sendbuf[1] = '2';
@@ -190,7 +191,7 @@ void Game::assignInput(GameEngine *game)
 		if (game->input->downArrowKey == true) {
 			game->network->sendbuf[1] = '3';
 			game->network->sendbuf[0] = 'Y';
-		}
+		}//in your client u arre object 0 but to the other guy u are object 1 ojhhh so does that mean the death is noy synchronized alreadyi hop oke
 		if (game->input->leftArrowKey == true) {
 			game->network->sendbuf[1] = '4';
 			game->network->sendbuf[0] = 'Y';
@@ -198,15 +199,25 @@ void Game::assignInput(GameEngine *game)
 		if (game->input->jumpKey == true) {
 			if (object[0]->onGround)
 			{
-		
 				game->sound->playJumpSound();
 			}
 			game->network->sendbuf[2] = '5';
 			game->network->sendbuf[0] = 'Y';
 		}
-		if (game->network->counter >= 30) {
+		if (object[0]->getStatus() == ObjectStatus::Dead)
+		{
+			game->network->sendbuf[0] = 'D';		//ya thats great but theres some other stuff to do usually i use 0 as a code to tell what message is it. 0? oh
+		}
+
+		if (object[0]->getStatus() == ObjectStatus::Waiting)
+		{
+			game->network->sendbuf[0] = 'W';
+		}
+
+
+		if (game->network->counter >= 30) {			//this one makes it so that it doesnt send every frame
 			game->network->sendbuf += std::to_string((int)object[0]->getObjectPos().x) + 'Y' + std::to_string((int)object[0]->getObjectPos().y) + 'E';		// e stands for end of sendbuffer for now 
-			game->network->sendbuf[0] = 'P';
+			game->network->sendbuf[0] = 'P';			//then i implemented this postion thingy and realised i needed more type of messages of i put P er
 			game->network->counter = 0;
 		}
 
@@ -231,7 +242,7 @@ void Game::multiplayer(GameEngine * game)
 		}
 		if (game->network->recvbuf[1] == '2') {
 			object[1]->rightArrowKey = true;
-			game->network->recvbuf[1] = 0;
+			game->network->recvbuf[1] = 0;			//
 
 
 		}
@@ -250,11 +261,25 @@ void Game::multiplayer(GameEngine * game)
 			game->network->recvbuf[2] = 0;
 
 		}
+
+		if (game->network->recvbuf[0] == 'D') {
+			object[1]->setStatus(ObjectStatus::Dead);
+			game->network->recvbuf[0] == 0; //always rmember set to 0 just incase
+		}
+
+		if (game->network->recvbuf[0] == 'W') {
+			if (object[0]->getStatus() == (ObjectStatus::Waiting))
+			{
+				game->state = GameStates::LEVEL2;
+			}
+			game->network->recvbuf[0] == 0;
+		}
+
 		if (game->network->recvbuf[0] == 'P') {				//first check type of message receive if its P then it has position in it
 			for (int i = 3;; i++) {								//i begins at 3 because first 2 characters are input of player
 				if (game->network->recvbuf[i] == 'Y') {				//check if my current i is going to have the Y position if yes then assign temp string pos to X first 
-					tempPosX =atoi(tempStringPos.c_str());		
-					tempStringPos.clear();	
+					tempPosX = atoi(tempStringPos.c_str());
+					tempStringPos.clear();
 					tempStringPos.shrink_to_fit();
 					continue;									//continue through the loop for Y position
 				}
@@ -494,6 +519,20 @@ int Game::findPath(GameObject * object, D3DXVECTOR2 end, float xOffset, float yO
 
 
 	return 0;
+}
+void Game::changePlayers(GameEngine *game)
+{
+
+	if (object[1] != NULL && object[0] != NULL) {
+		if (game->input->counter >= 30 && game->input->changeKey) {
+			tempObject = object[1];
+			object[1] = object[0];
+			object[0] = tempObject;
+			game->input->counter = 0;
+			game->camera->centerOnObject(tempObject);
+		
+		}
+	}
 }
 void Game::freeAStar()
 {

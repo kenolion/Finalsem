@@ -26,7 +26,7 @@ public:
 	bool leftClickDown;
 	bool rightClickDown;
 	bool windowsLeftClickDown;
-
+	int counter;
 	//RAWINPUTDEVICE rawinput[1];
 	bool initializeKeyboard( HWND hwnd);
 	bool initializeMouse(HWND hwnd);
@@ -37,16 +37,19 @@ public:
 	int downAKey;
 	int upAKey;
 	int zKey;
+	int cKey;
 	int tempRemapKey;
 
-	void remapKeys();
+	//void remapKeys();	  // not yet implemented			
 	bool upArrowKey;
 	bool downArrowKey;
 	bool rightArrowKey;
 	bool leftArrowKey;
 	bool jumpKey;
-
 	bool keyPressed;
+	//these booleans are game specific other games may not need this)
+	bool changeKey;
+
 
 	HRESULT hr;
 	PlayerInput();

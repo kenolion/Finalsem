@@ -2,10 +2,10 @@
 
 
 
-void AnimationManager::initialize(int left, int top, int right, int bottom, int totalFrame, bool loop, int additionalXOffset, int additionalYOffset,int animationSpd)
+void AnimationManager::initialize(int left, int top, int right, int bottom, int totalFrame, bool loop, int additionalXOffset, int additionalYOffset, int animationSpd, bool isReverse)
 {
 	topOffset = top;
-	btmOffset = bottom ;
+	btmOffset = bottom;
 	leftOffset = left;
 	rightOffset = right;
 	maxFrame = totalFrame;
@@ -17,35 +17,58 @@ void AnimationManager::initialize(int left, int top, int right, int bottom, int 
 	this->additionalXOffset = additionalXOffset;
 	this->additionalYOffset = additionalYOffset;
 	loopable = loop;
+	this->isReverse = isReverse;
+
 }
 
 void AnimationManager::start()
 {
-	if (loopable && isEOS()) {
+	if (loopable && isEOS() && !isReverse) {
 		frame = 1;
+	}
+	else if (loopable && isEOS() && isReverse) {
+		frame = maxFrame;
 	}
 
 }
 
 void AnimationManager::nextFrame()
 {
-	if(frame!= maxFrame)
-	frame++;
-	if (frame > maxFrame) {
-		if (loopable && isEOS())
-			frame = 1;
+	if (!isReverse) {
+		if (frame != maxFrame)
+			frame++;
+		if (frame > maxFrame) {
+			if (loopable && isEOS())
+				frame = 1;
+		}
 	}
-
+	else {
+		if (frame != 1)
+			frame--;
+		if (frame < 1) {
+			if (loopable && isEOS())
+				frame = maxFrame;
+		}
+	}
 
 }
 
 bool AnimationManager::isEOS()
 {
-	if (frame == maxFrame) {
+	if (!isReverse) {
+		if (frame == maxFrame) {
 
-		return true;
+			return true;
+		}
+		return false;
 	}
-	return false;
+	else {
+		if (frame == 1) {
+
+			return true;
+		}
+		return false;
+	}
 }
 
 RECT AnimationManager::getFrame()

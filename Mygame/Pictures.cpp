@@ -7,9 +7,9 @@ Pictures::Pictures()
 }
 
 
-Pictures::Pictures(float x, float y, D3DXVECTOR2 scaling,int animSpeed) : GameObject(x, y, scaling, animSpeed)
+Pictures::Pictures(float x, float y, D3DXVECTOR2 scaling, int animSpeed) : GameObject(x, y, scaling, animSpeed)
 {
-
+	status == ObjectStatus::Active;
 }
 
 Pictures::~Pictures()
@@ -18,19 +18,28 @@ Pictures::~Pictures()
 
 void Pictures::update(int &gameTime, GameEngine * game)
 {
-	for (int i = 0; i < gameTime; i++) {
+	if (status == ObjectStatus::Active) {
+		for (int i = 0; i < gameTime; i++) {
 			//position += velocity;
-			if (position.x <= -100) {
-				position.x = GAME_WIDTH;
-			}
+
 			if (animTimer >= 60) {
-				animTimer = 0;
+				animTimer = 0;			//if i do like this den all pictures like background might or might not get affefctedyn
 				frame++;
+				if (frame == maxFrame && state == spriteRow) {
+					status = ObjectStatus::Dead;
+				}
 				if (frame > maxFrame) {
-					frame = maxFrame;
+					frame = 1;
+					state++;
+					if (state > spriteRow) {
+						state = 1;
+
+					}
+				
 				}
 			}
 			animTimer += animSpeed;
-		
+
+		}
 	}
 }

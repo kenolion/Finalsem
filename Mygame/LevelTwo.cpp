@@ -18,7 +18,7 @@ bool LevelTwo::initializeGame(HWND hwnd, GameEngine * game)
 	keyObtained = false;
 	if (object[1] == NULL) {
 		object[1] = new Player(200, 200, D3DXVECTOR2(1.0f, 1.0f), 10, 5,2);
-		if (!object[1]->initialize(game->graphics->device3d, "sprite\\ben.png", 128, 192, 4, 4, true, D3DCOLOR_XRGB(0, 0, 0), 0.90f)) {
+		if (!object[1]->initialize(game->graphics->device3d, "sprite\\ShortBandit.png", 512, 512, 6, 8, true, D3DCOLOR_XRGB(0, 0, 0), 0.95f)) {
 			MessageBox(NULL, "There was an issue creating the sprite", NULL, NULL);			//Device3d,sprite file name, width , height , row,collumn
 			return initialize = false;
 		}
@@ -31,7 +31,6 @@ bool LevelTwo::initializeGame(HWND hwnd, GameEngine * game)
 		}
 	}
 	object[0]->setPosition(GAME_WIDTH / 2, GAME_HEIGHT / 2);
-
 
 	parallaxBG1 = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);
 	parallaxBG2 = new Pictures(0, 0, D3DXVECTOR2(1.0f, 1.0f), 1);
@@ -84,6 +83,12 @@ bool LevelTwo::initializeGame(HWND hwnd, GameEngine * game)
 	//findPath(object[1]->getObjectPos(), D3DXVECTOR2(200,600));
 	game->exit = false;
 	game->state = GameStates::LEVEL1;
+
+	if (clientType == 2) {
+		tempObject = object[1];
+		object[1] = object[0];
+		object[0] = tempObject;
+	}
 	return initialize = true;
 }
 

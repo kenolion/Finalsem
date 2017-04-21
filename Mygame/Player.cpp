@@ -16,32 +16,32 @@ Player::Player(float x, float y, D3DXVECTOR2 scaling, int animSpeed, int mass, i
 	this->playerType = playerType;
 	if (playerType == 1) {   // 1 = tall guy			as of now i need to do this until i make a fat guy class with his own animations
 		animation[0] = new AnimationManager();
-		animation[0]->initialize(332, 86, 276, 80, 4, true, 0, 0, 5);				//idle right
+		animation[0]->initialize(332, 86, 276, 80, 4, true, 0, 0, 5, false);				//idle right
 		animation[1] = new AnimationManager();
-		animation[1]->initialize(0, 274, 330, 80, 6, true, 0, 0, 5);				//walking			//92
+		animation[1]->initialize(0, 274, 330, 80, 6, true, 0, 0, 5, false);				//walking			//92
 		animation[2] = new AnimationManager();
-		animation[2]->initialize(15, 94, 310, 80, 4, false, 10, 0, 5);		//jumping			91
+		animation[2]->initialize(15, 94, 310, 80, 4, false, 10, 0, 5, false);		//jumping			91
 		animation[3] = new AnimationManager();
-		animation[3]->initialize(332, 0, 276, 80, 4, true, 0, 0, 5);			//idle left
+		animation[3]->initialize(332, 0, 276, 80, 4, true, 0, 0, 5, false);			//idle left
 		animation[4] = new AnimationManager();
-		animation[4]->initialize(0, 0, 332, 80, 4, false, 10, 0, 5);		//jump left
+		animation[4]->initialize(0, 0, 332, 80, 4, false, 10, 0, 5, true);		//jump left
 
 		animation[5] = new AnimationManager();
-		animation[5]->initialize(0, 182, 330, 80, 6, true, 0, 0, 5); //wlaking lkeft
+		animation[5]->initialize(0, 182, 330, 80, 6, true, 0, 0, 5, false); //wlaking lkeft
 	}
 	else {
 		animation[0] = new AnimationManager();
-		animation[0]->initialize(0, 48, 384, 48, 8, true, 0, 0, 5);				//idle right
+		animation[0]->initialize(0, 240, 384, 48, 8, true, 0, 0, 5, false);				//idle right
 		animation[1] = new AnimationManager();
-		animation[1]->initialize(0, 144, 384, 48, 8, true, 0, 0, 5);				//walking			//92
+		animation[1]->initialize(0, 288, 384, 48, 8, true, 0, 0, 5, false);				//walking			//92
 		animation[2] = new AnimationManager();
-		animation[2]->initialize(0, 240, 288, 48, 6, false, 0, 0, 5);		//jumping			91
+		animation[2]->initialize(96, 384, 288, 48, 6, false, 0, 0, 5, true);		//jumping			91
 		animation[3] = new AnimationManager();
-		animation[3]->initialize(0, 0, 384, 48, 8, true, 0, 0, 5);			//idle left
+		animation[3]->initialize(0, 0, 384, 48, 8, true, 0, 0, 5, false);			//idle left
 		animation[4] = new AnimationManager();
-		animation[4]->initialize(0, 192, 288, 48, 6, false, 0, 0, 5);		//jump left
+		animation[4]->initialize(0, 144, 288, 48, 6, false, 0, 0, 5, false);		//jump left
 		animation[5] = new AnimationManager();
-		animation[5]->initialize(0, 96, 384, 48, 8, true, 0, 0, 5); //wlaking lkeft
+		animation[5]->initialize(0, 48, 384, 48, 8, true, 0, 0, 5, true); //wlaking lkeft
 
 	}
 	face = 1;
@@ -56,13 +56,13 @@ void Player::update(int &gameTime, GameEngine * game)
 
 		//std::cout << position.y << "        " << std::endl;
 	//std::cout << onGround << std::endl;
-		
+
 		for (int i = 0; i < gameTime; i++) {
 			position = posVector;
 			//scaling = { (float)face,1.0f };
 			positionOffset.x = game->camera->getXOffset();
 			positionOffset.y = game->camera->getYOffset();
-
+			//if(!game->input->changeKey)
 			screenPos = position - positionOffset;
 
 			//std::cout << positionOffset.x << "     " << std::endl;
@@ -77,8 +77,13 @@ void Player::update(int &gameTime, GameEngine * game)
 	}
 	else if (status == ObjectStatus::Dead) {
 		state = 4;
+	}
+	else if (status == ObjectStatus::Waiting)
+	{
 
 	}
+
+
 }
 
 void Player::physics(PlayerInput * input, int gameTime)
@@ -180,6 +185,10 @@ void Player::physics(PlayerInput * input, int gameTime)
 				fsm = CharacterState::Walking;
 				velocity.x = 0.0f;
 			}
+			if (!animation[state]->isReverse)
+				animation[state]->setFrame(1);
+			else
+				animation[state]->setFrame(animation[state]->maxFrame);
 		}
 		break;
 	case CharacterState::Walking:
@@ -240,7 +249,9 @@ void Player::physics(PlayerInput * input, int gameTime)
 	case CharacterState::LedgeGrab:
 
 		break;
+
 	}
+
 	spriteWidth = animation[state]->getWidth();
 	spriteHeight = animation[state]->getHeight();
 	additionalXOffset = animation[state]->getAdditionalXOffset();

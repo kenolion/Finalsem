@@ -18,7 +18,7 @@ public:
 	
 	
 	GameObject *menuButton;
-	GameObject *tempObject;
+
 
 	GameObject * parallaxBG1;
 	GameObject * parallaxBG2;
@@ -51,7 +51,7 @@ public:
 	bool keyObtained = false;
 	bool doOnce = true;
 	bool teleportAble = false;
-
+	
 
 	static FlappyBird* getInstance() {
 		return &level1State;

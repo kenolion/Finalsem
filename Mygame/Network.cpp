@@ -118,7 +118,7 @@ unsigned __stdcall  Network::clientThread(void *pArguments)
 
 void Network::sendData(int clientType)
 {
-	if (sendbuf[0] == 'Y' || sendbuf[0] == 'P') {
+	if (sendbuf[0] != 'N') {
 		if (clientType == 1) {
 			iResult = send(ClientSocket, sendbuf.c_str(), (int)strlen(sendbuf.c_str()), 0);
 			printf("Bytes Sent as Server : %ld\n", iResult);
