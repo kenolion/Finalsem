@@ -280,7 +280,7 @@ void FlappyBird::collisions(GameEngine * game, int gameTime)
 					object[0]->setStatus(ObjectStatus::Waiting);
 				}
 			}
-
+		
 			if (tallGuyDoor->collideWith(object[i]))
 			{
 				if (teleportAble == true)
@@ -354,7 +354,7 @@ void FlappyBird::update(int gameTime, GameEngine * game)
 	parallaxBG1->update(gameTime, game);
 	parallaxBG2->update(gameTime, game);
 	parallaxBG3->update(gameTime, game);
-	menuButton->update(gameTime, game);
+	menuButton->update(gameTime, game);	
 
 	dungeonKey->update(gameTime, game);
 	dungeonDoor->update(gameTime, game);
@@ -405,7 +405,7 @@ void FlappyBird::draw(GameEngine * game)
 	//	game->graphics->drawfont("Key obtained, next level door unlocked", NULL, 38, 300, 300, game->sprite, D3DCOLOR_XRGB(10, 255, 255), 700);
 	parallaxBG1->draw(game);
 	parallaxBG2->draw(game);
-	parallaxBG3->draw(game);
+	parallaxBG3->draw(game); 
 
 	for (int row = 0; row < TILEROW; row++) {
 		for (int col = 0; col < TILECOLUMN; col++) {
@@ -417,7 +417,21 @@ void FlappyBird::draw(GameEngine * game)
 	dungeonDoor->draw(game);
 	dungeonKey->draw(game);
 
+	if (object[0]->getStatus() == ObjectStatus::Dead)
+	{
 
+		if(doOnce == true)
+		{
+		game->sound->playDeathSound();
+		game->sound->playExplosionSound();
+
+		explosionSprite->setPosition(object[0]->getObjectPos().x, object[0]->getObjectPos().y);
+
+		explosionSprite->draw(game);
+		
+		doOnce = false;
+		}
+	}
 
 	for (int i = 0; i < 7; i++)
 	{
@@ -467,7 +481,6 @@ void FlappyBird::draw(GameEngine * game)
 			doOnce = false;
 		}
 
-	}
 	enemy[0]->draw(game);
 	menuButton->draw(game);
 
